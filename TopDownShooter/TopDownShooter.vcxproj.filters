@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Src">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Inc">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Content">
+      <UniqueIdentifier>{a1703125-4249-4816-bdca-afb350d5adef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Content\Fonts">
+      <UniqueIdentifier>{3af70e07-bf9c-4a95-84d3-6e66881bcf41}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="StepTimer.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="DeviceResources.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="DeviceResources.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Content\Fonts\SegoeUI_18.spritefont">
+      <Filter>Content\Fonts</Filter>
+    </None>
+  </ItemGroup>
+</Project>
