@@ -4,8 +4,6 @@
 
 using namespace DirectX;
 
-extern void ExitGame();
-
 void IntroState::Initialise(DX::DeviceResources const& deviceResources)
 {
 
@@ -31,7 +29,7 @@ void IntroState::Update(DX::StepTimer const& timer, Game* game)
 
 		if (padTracker.menu == GamePad::ButtonStateTracker::PRESSED)
 		{
-			ExitGame();
+			game->Quit();
 		}
 	}
 
@@ -44,7 +42,7 @@ void IntroState::Update(DX::StepTimer const& timer, Game* game)
 
 	if (keyboardTracker.IsKeyPressed(Keyboard::Keys::Escape))
 	{
-		ExitGame();
+		game->Quit();
 	}
 }
 

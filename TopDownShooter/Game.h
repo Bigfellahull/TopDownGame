@@ -25,6 +25,8 @@ public:
 	void OnResuming();
 	void OnWindowSizeChanged(int width, int height);
 
+	void Quit();
+
 	void GetDefaultSize(int& width, int& height) const;
 
 	DX::DeviceResources* GetDeviceResources() { return m_deviceResources.get(); }

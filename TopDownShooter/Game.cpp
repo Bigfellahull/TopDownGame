@@ -3,6 +3,8 @@
 #include "Game.h"
 #include "GameState.h"
 
+extern void ExitGame();
+
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
 
@@ -105,6 +107,11 @@ void Game::OnWindowSizeChanged(int width, int height)
 	}
 
 	m_currentState->WindowSizeChanged(m_deviceResources->GetScreenViewport());
+}
+
+void Game::Quit()
+{
+	ExitGame();
 }
 
 void Game::GetDefaultSize(int& width, int& height) const
