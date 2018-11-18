@@ -29,6 +29,18 @@
     <ClInclude Include="DeviceResources.h">
       <Filter>Inc</Filter>
     </ClInclude>
+    <ClInclude Include="GameState.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="IntroState.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayState.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -41,6 +53,15 @@
       <Filter>Src</Filter>
     </ClCompile>
     <ClCompile Include="DeviceResources.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="IntroState.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayState.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="InputManager.cpp">
       <Filter>Src</Filter>
     </ClCompile>
   </ItemGroup>

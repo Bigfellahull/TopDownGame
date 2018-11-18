@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "Game.h"
 
-extern void ExitGame();
+#include "Game.h"
+#include "GameState.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -21,19 +21,11 @@ Game::Game()
 
 void Game::Initialise(HWND window, int width, int height)
 {
-	m_gamePad = std::make_unique<GamePad>();
-	m_keyboard = std::make_unique<Keyboard>();
-
-	m_mouse = std::make_unique<Mouse>();
-	m_mouse->SetWindow(window);
+	m_inputManager = std::make_unique<InputManager>();
 
 	m_deviceResources->SetWindow(window, width, height);
-
 	m_deviceResources->CreateDeviceResources();
-	CreateDeviceDependentResources();
-
 	m_deviceResources->CreateWindowSizeDependentResources();
-	CreateWindowSizeDependentResources();
 }
 
 void Game::Tick()
@@ -48,20 +40,9 @@ void Game::Tick()
 
 void Game::Update(DX::StepTimer const& timer)
 {
-	auto pad = m_gamePad->GetState(0);
-	if (pad.IsConnected())
-	{
-		if (pad.IsViewPressed())
-		{
-			ExitGame();
-		}
-	}
+	m_inputManager->Update();
 
-	auto kb = m_keyboard->GetState();
-	if (kb.Escape)
-	{
-		ExitGame();
-	}
+	m_currentState->Update(timer, this);
 }
 
 void Game::Render()
@@ -71,36 +52,44 @@ void Game::Render()
 		return;
 	}
 
-	Clear();
-
-	auto context = m_deviceResources->GetD3DDeviceContext();
-
-	m_sprites->Begin();
-
-#if _DEBUG
-	wchar_t fpsBuffer[100] = {};
-	swprintf_s(fpsBuffer, L"FPS %d\n", m_timer.GetFramesPerSecond());
-	m_font->DrawString(m_sprites.get(), fpsBuffer, XMFLOAT2(10, 10), Colors::White, 0.0f, XMFLOAT2(0, 0), 0.7f);
-#endif
-
-	m_sprites->End();
-
-	m_deviceResources->Present();
-}
-
-void Game::Clear()
-{
 	auto context = m_deviceResources->GetD3DDeviceContext();
 	auto renderTarget = m_deviceResources->GetRenderTargetView();
 	auto depthStencil = m_deviceResources->GetDepthStencilView();
 
 	context->ClearRenderTargetView(renderTarget, Colors::CornflowerBlue);
 	context->ClearDepthStencilView(depthStencil, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-
 	context->OMSetRenderTargets(1, &renderTarget, depthStencil);
 
 	auto viewport = m_deviceResources->GetScreenViewport();
 	context->RSSetViewports(1, &viewport);
+
+	m_currentState->Render(*m_deviceResources.get());
+
+	m_deviceResources->Present();
+}
+
+void Game::ChangeCurrentState(std::unique_ptr<GameState> state)
+{
+	state->Initialise(*m_deviceResources.get());
+
+	if (m_currentState)
+	{
+		m_currentState->CleanUp();
+	}
+	
+	m_currentState.swap(state);
+}
+
+void Game::OnActivated()
+{
+}
+
+void Game::OnDeactivated()
+{
+}
+
+void Game::OnSuspending()
+{
 }
 
 void Game::OnResuming()
@@ -115,7 +104,7 @@ void Game::OnWindowSizeChanged(int width, int height)
 		return;
 	}
 
-	CreateWindowSizeDependentResources();
+	m_currentState->WindowSizeChanged(m_deviceResources->GetScreenViewport());
 }
 
 void Game::GetDefaultSize(int& width, int& height) const
@@ -124,31 +113,12 @@ void Game::GetDefaultSize(int& width, int& height) const
 	height = 720;
 }
 
-void Game::CreateDeviceDependentResources()
-{
-	auto context = m_deviceResources->GetD3DDeviceContext();
-	auto device = m_deviceResources->GetD3DDevice();
-
-	m_states = std::make_unique<CommonStates>(device);
-	m_sprites = std::make_unique<SpriteBatch>(context);
-	m_font = std::make_unique<SpriteFont>(device, L"Fonts\\SegoeUI_18.spritefont");
-}
-
-void Game::CreateWindowSizeDependentResources()
-{
-	auto viewport = m_deviceResources->GetScreenViewport();
-	m_sprites->SetViewport(viewport);
-}
-
 void Game::OnDeviceLost()
 {
-	m_states.reset();
-	m_sprites.reset();
-	m_font.reset();
+	m_currentState->CleanUp();
 }
 
 void Game::OnDeviceRestored()
 {
-	CreateDeviceDependentResources();
-	CreateWindowSizeDependentResources();
+	m_currentState->Initialise(*m_deviceResources.get());
 }

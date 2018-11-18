@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "DeviceResources.h"
 
 using namespace DirectX;
