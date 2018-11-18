@@ -11,6 +11,9 @@ public:
 	virtual void Initialise(DX::DeviceResources const& deviceResources) = 0;
 	virtual void CleanUp() = 0;
 
+	virtual void Pause() = 0;
+	virtual void Resume() = 0;
+
 	virtual void WindowSizeChanged(D3D11_VIEWPORT viewPort) = 0;
 
 	virtual void Update(DX::StepTimer const& timer, Game* game) = 0;

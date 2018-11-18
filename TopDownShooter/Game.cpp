@@ -44,7 +44,7 @@ void Game::Update(DX::StepTimer const& timer)
 {
 	m_inputManager->Update();
 
-	m_currentState->Update(timer, this);
+	m_states.back()->Update(timer, this);
 }
 
 void Game::Render()
@@ -65,21 +65,46 @@ void Game::Render()
 	auto viewport = m_deviceResources->GetScreenViewport();
 	context->RSSetViewports(1, &viewport);
 
-	m_currentState->Render(*m_deviceResources.get());
+	m_states.back()->Render(*m_deviceResources.get());
 
 	m_deviceResources->Present();
 }
 
-void Game::ChangeCurrentState(std::unique_ptr<GameState> state)
+void Game::ChangeState(std::unique_ptr<GameState> state)
 {
-	state->Initialise(*m_deviceResources.get());
-
-	if (m_currentState)
+	if (!m_states.empty())
 	{
-		m_currentState->CleanUp();
+		m_states.back()->CleanUp();
+		m_states.pop_back();
 	}
-	
-	m_currentState.swap(state);
+
+	m_states.push_back(std::move(state));
+	m_states.back()->Initialise(*m_deviceResources.get());
+}
+
+void Game::PushState(std::unique_ptr<GameState> state)
+{
+	if (!m_states.empty())
+	{
+		m_states.back()->Pause();
+	}
+
+	m_states.push_back(std::move(state));
+	m_states.back()->Initialise(*m_deviceResources.get());
+}
+
+void Game::PopState()
+{
+	if (!m_states.empty())
+	{
+		m_states.back()->CleanUp();
+		m_states.pop_back();
+	}
+
+	if (!m_states.empty()) 
+	{
+		m_states.back()->Resume();
+	}
 }
 
 void Game::OnActivated()
@@ -106,7 +131,7 @@ void Game::OnWindowSizeChanged(int width, int height)
 		return;
 	}
 
-	m_currentState->WindowSizeChanged(m_deviceResources->GetScreenViewport());
+	m_states.back()->WindowSizeChanged(m_deviceResources->GetScreenViewport());
 }
 
 void Game::Quit()
@@ -122,10 +147,10 @@ void Game::GetDefaultSize(int& width, int& height) const
 
 void Game::OnDeviceLost()
 {
-	m_currentState->CleanUp();
+	m_states.back()->CleanUp();
 }
 
 void Game::OnDeviceRestored()
 {
-	m_currentState->Initialise(*m_deviceResources.get());
+	m_states.back()->Initialise(*m_deviceResources.get());
 }

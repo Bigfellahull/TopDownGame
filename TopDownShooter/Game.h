@@ -17,7 +17,9 @@ public:
 	virtual void OnDeviceLost() override;
 	virtual void OnDeviceRestored() override;
 
-	void ChangeCurrentState(std::unique_ptr<GameState> state);
+	void ChangeState(std::unique_ptr<GameState> state);
+	void PushState(std::unique_ptr<GameState> state);
+	void PopState();
 
 	void OnActivated();
 	void OnDeactivated();
@@ -39,6 +41,6 @@ private:
 	DX::StepTimer m_timer;
 
 	std::unique_ptr<DX::DeviceResources> m_deviceResources;
-	std::unique_ptr<GameState> m_currentState;
+	std::vector<std::unique_ptr<GameState>> m_states;
 	std::unique_ptr<InputManager> m_inputManager;
 };

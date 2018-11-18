@@ -88,7 +88,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
 	g_game->Initialise(hWnd, rc.right - rc.left, rc.bottom - rc.top);
 
 	auto introState = std::make_unique<IntroState>();
-	g_game->ChangeCurrentState(std::move(introState));
+	g_game->ChangeState(std::move(introState));
 
 	MSG msg = {};
 

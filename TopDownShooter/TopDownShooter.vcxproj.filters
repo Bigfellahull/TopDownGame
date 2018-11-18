@@ -41,6 +41,9 @@
     <ClInclude Include="InputManager.h">
       <Filter>Inc</Filter>
     </ClInclude>
+    <ClInclude Include="PauseState.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -62,6 +65,9 @@
       <Filter>Src</Filter>
     </ClCompile>
     <ClCompile Include="InputManager.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="PauseState.cpp">
       <Filter>Src</Filter>
     </ClCompile>
   </ItemGroup>

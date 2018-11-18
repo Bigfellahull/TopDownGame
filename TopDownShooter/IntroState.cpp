@@ -24,7 +24,7 @@ void IntroState::Update(DX::StepTimer const& timer, Game* game)
 		if (padTracker.start == GamePad::ButtonStateTracker::PRESSED)
 		{
 			auto playState = std::make_unique<PlayState>();
-			game->ChangeCurrentState(std::move(playState));
+			game->ChangeState(std::move(playState));
 		}
 
 		if (padTracker.menu == GamePad::ButtonStateTracker::PRESSED)
@@ -37,13 +37,23 @@ void IntroState::Update(DX::StepTimer const& timer, Game* game)
 	if (keyboardTracker.IsKeyPressed(Keyboard::Keys::Space))
 	{
 		auto playState = std::make_unique<PlayState>();
-		game->ChangeCurrentState(std::move(playState));
+		game->ChangeState(std::move(playState));
 	}
 
 	if (keyboardTracker.IsKeyPressed(Keyboard::Keys::Escape))
 	{
 		game->Quit();
 	}
+}
+
+void IntroState::Pause()
+{
+
+}
+
+void IntroState::Resume()
+{
+
 }
 
 void IntroState::WindowSizeChanged(D3D11_VIEWPORT viewPort)

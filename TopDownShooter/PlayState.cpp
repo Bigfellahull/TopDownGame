@@ -1,6 +1,8 @@
 #include "stdafx.h"
+
 #include "PlayState.h"
 #include "IntroState.h"
+#include "PauseState.h"
 
 using namespace DirectX;
 
@@ -31,7 +33,13 @@ void PlayState::Update(DX::StepTimer const& timer, Game* game)
 		if (padTracker.menu == GamePad::ButtonStateTracker::PRESSED)
 		{
 			auto introState = std::make_unique<IntroState>();
-			game->ChangeCurrentState(std::move(introState));
+			game->ChangeState(std::move(introState));
+		}
+
+		if (padTracker.start == GamePad::ButtonStateTracker::PRESSED)
+		{
+			auto pauseState = std::make_unique<PauseState>();
+			game->PushState(std::move(pauseState));
 		}
 	}
 
@@ -39,12 +47,28 @@ void PlayState::Update(DX::StepTimer const& timer, Game* game)
 	if (keyboardTracker.IsKeyPressed(Keyboard::Keys::Escape))
 	{
 		auto introState = std::make_unique<IntroState>();
-		game->ChangeCurrentState(std::move(introState));
+		game->ChangeState(std::move(introState));
+	}
+
+	if (keyboardTracker.IsKeyPressed(Keyboard::Keys::P))
+	{
+		auto pauseState = std::make_unique<PauseState>();
+		game->PushState(std::move(pauseState));
 	}
 
 #if _DEBUG
 	swprintf_s(m_framesPerSecond, L"FPS %d\n", timer.GetFramesPerSecond());
 #endif
+}
+
+void PlayState::Pause()
+{
+
+}
+
+void PlayState::Resume()
+{
+
 }
 
 void PlayState::WindowSizeChanged(D3D11_VIEWPORT viewPort)

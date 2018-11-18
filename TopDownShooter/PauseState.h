@@ -2,10 +2,10 @@
 
 #include "GameState.h"
 
-class PlayState : public GameState
+class PauseState : public GameState
 {
 public:
-	PlayState() { }
+	PauseState() { }
 
 	void Initialise(DX::DeviceResources const& deviceResources);
 	void CleanUp();
@@ -17,9 +17,4 @@ public:
 
 	void Update(DX::StepTimer const& timer, Game* game);
 	void Render(DX::DeviceResources const& deviceResources);
-private:
-	std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
-	std::unique_ptr<DirectX::SpriteFont> m_spriteFont;
-
-	wchar_t m_framesPerSecond[100];
 };
