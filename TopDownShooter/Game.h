@@ -4,7 +4,7 @@
 #include "StepTimer.h"
 #include "InputManager.h"
 
-class GameState;
+interface IGameState;
 
 class Game : public DX::IDeviceNotify
 {
@@ -17,8 +17,8 @@ public:
 	virtual void OnDeviceLost() override;
 	virtual void OnDeviceRestored() override;
 
-	void ChangeState(std::unique_ptr<GameState> state);
-	void PushState(std::unique_ptr<GameState> state);
+	void ChangeState(std::unique_ptr<IGameState> state);
+	void PushState(std::unique_ptr<IGameState> state);
 	void PopState();
 
 	void OnActivated();
@@ -41,6 +41,6 @@ private:
 	DX::StepTimer m_timer;
 
 	std::unique_ptr<DX::DeviceResources> m_deviceResources;
-	std::vector<std::unique_ptr<GameState>> m_states;
+	std::vector<std::unique_ptr<IGameState>> m_states;
 	std::unique_ptr<InputManager> m_inputManager;
 };

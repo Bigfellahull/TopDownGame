@@ -3,11 +3,9 @@
 #include "StepTimer.h"
 #include "Game.h"
 
-class GameState
+interface IGameState
 {
 public:
-	GameState() { }
-
 	virtual void Initialise(DX::DeviceResources const& deviceResources) = 0;
 	virtual void CleanUp() = 0;
 

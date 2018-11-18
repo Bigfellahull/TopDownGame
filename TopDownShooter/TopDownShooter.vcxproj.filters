@@ -29,9 +29,6 @@
     <ClInclude Include="DeviceResources.h">
       <Filter>Inc</Filter>
     </ClInclude>
-    <ClInclude Include="GameState.h">
-      <Filter>Inc</Filter>
-    </ClInclude>
     <ClInclude Include="IntroState.h">
       <Filter>Inc</Filter>
     </ClInclude>
@@ -42,6 +39,9 @@
       <Filter>Inc</Filter>
     </ClInclude>
     <ClInclude Include="PauseState.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="IGameState.h">
       <Filter>Inc</Filter>
     </ClInclude>
   </ItemGroup>

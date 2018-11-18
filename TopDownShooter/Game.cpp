@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "Game.h"
-#include "GameState.h"
+#include "IGameState.h"
 
 extern void ExitGame();
 
@@ -70,7 +70,7 @@ void Game::Render()
 	m_deviceResources->Present();
 }
 
-void Game::ChangeState(std::unique_ptr<GameState> state)
+void Game::ChangeState(std::unique_ptr<IGameState> state)
 {
 	if (!m_states.empty())
 	{
@@ -82,7 +82,7 @@ void Game::ChangeState(std::unique_ptr<GameState> state)
 	m_states.back()->Initialise(*m_deviceResources.get());
 }
 
-void Game::PushState(std::unique_ptr<GameState> state)
+void Game::PushState(std::unique_ptr<IGameState> state)
 {
 	if (!m_states.empty())
 	{

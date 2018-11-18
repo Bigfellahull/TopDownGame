@@ -151,7 +151,7 @@
   <ItemGroup>
     <ClInclude Include="DeviceResources.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="GameState.h" />
+    <ClInclude Include="IGameState.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="IntroState.h" />
     <ClInclude Include="PauseState.h" />
