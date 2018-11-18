@@ -1,6 +1,7 @@
 #pragma once
 
 #include "IGameState.h"
+#include "EntityManager.h"
 
 class PlayState : public IGameState
 {
@@ -22,4 +23,7 @@ private:
 	std::unique_ptr<DirectX::SpriteFont> m_spriteFont;
 
 	wchar_t m_framesPerSecond[100];
+
+	std::unique_ptr<EntityManager> m_entityManager;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_texture;
 };

@@ -15,16 +15,29 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_spriteBatch->SetViewport(deviceResources.GetScreenViewport());
 
 	m_spriteFont = std::make_unique<SpriteFont>(device, L"Fonts\\SegoeUI_18.spritefont");
+
+	DX::ThrowIfFailed(
+		CreateDDSTextureFromFile(device, L"Player.dds", nullptr, m_texture.ReleaseAndGetAddressOf())
+	);
+
+	m_entityManager = std::make_unique<EntityManager>();
+
+	// This is just a test. Memory leaks abound.
+	auto te = new Entity(XMFLOAT2(200, 200));
+	m_entityManager->Add(te);
 }
 
 void PlayState::CleanUp() 
 {
 	m_spriteBatch.reset();
 	m_spriteFont.reset();
+	m_entityManager.reset();
 }
 
 void PlayState::Update(DX::StepTimer const& timer, Game* game)
 {
+	m_entityManager->Update(timer, game);
+
 	auto inputManager = game->GetInputManager();
 
 	auto padTracker = inputManager->GetGamePadTracker();
@@ -85,9 +98,11 @@ void PlayState::Render(DX::DeviceResources const& deviceResources)
 
 	m_spriteBatch->Begin();
 
+	m_entityManager->Draw(*m_spriteBatch.get(), m_texture.Get());
+
 #if _DEBUG
 	m_spriteFont->DrawString(m_spriteBatch.get(), m_framesPerSecond, XMFLOAT2(10, 10), Colors::White, 0.0f, XMFLOAT2(0, 0), 0.7f);
 #endif
 
 	m_spriteBatch->End();
-}
+};
