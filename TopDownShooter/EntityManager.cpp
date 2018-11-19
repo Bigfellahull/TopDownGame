@@ -2,19 +2,24 @@
 
 #include "EntityManager.h"
 
-void EntityManager::Add(std::unique_ptr<Entity> entity)
-{
-	m_entities.push_back(std::move(entity));
-}
-
 void EntityManager::Update(DX::StepTimer const& timer, Game* game)
 {
     auto size = m_entities.size();
 
-    for (auto i = 0; i < size; ++i) 
+    for (size_t i = 0; i < size; ++i) 
     {
         m_entities[i]->Update(timer, game);
     }
+
+	auto toRemove = std::remove_if(
+		std::begin(m_entities), 
+		std::end(m_entities), 
+		[](const auto& e)
+	{
+		return !e->IsAlive();
+	});
+
+	m_entities.erase(toRemove, std::end(m_entities));
 }
 
 void EntityManager::Draw(DirectX::SpriteBatch& spriteBatch, ID3D11ShaderResourceView* tex)

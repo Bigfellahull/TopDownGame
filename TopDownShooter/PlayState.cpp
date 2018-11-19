@@ -23,8 +23,7 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 
 	m_entityManager = std::make_unique<EntityManager>();
 
-    auto te = std::make_unique<PlayerShip>(XMFLOAT2(200, 200));
-	m_entityManager->Add(std::move(te));
+	m_entityManager->Add<PlayerShip>(XMFLOAT2(200, 200));
 }
 
 void PlayState::CleanUp() 

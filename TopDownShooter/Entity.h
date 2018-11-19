@@ -19,6 +19,8 @@ public:
     virtual void Draw(DirectX::SpriteBatch& spriteBatch, ID3D11ShaderResourceView* tex) = 0;
 
 	void Kill() { m_alive = false; }
+
+	bool IsAlive() { return m_alive; }
 protected:
 	bool m_alive;
 };
