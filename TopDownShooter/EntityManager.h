@@ -7,11 +7,10 @@
 class EntityManager
 {
 public:
-	void Add(Entity* entity);
+	void Add(std::unique_ptr<Entity> entity);
 	void Update(DX::StepTimer const& timer, Game* game);
 	void Draw(DirectX::SpriteBatch& spriteBatch, ID3D11ShaderResourceView* tex);
 
 private:
-	std::vector<Entity*> m_entities;
-	std::vector<Entity*> m_addedEntities;
+	std::vector<std::unique_ptr<Entity>> m_entities;
 };

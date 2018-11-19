@@ -3,6 +3,7 @@
 #include "PlayState.h"
 #include "IntroState.h"
 #include "PauseState.h"
+#include "PlayerShip.h"
 
 using namespace DirectX;
 
@@ -22,9 +23,8 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 
 	m_entityManager = std::make_unique<EntityManager>();
 
-	// This is just a test. Memory leaks abound.
-	auto te = new Entity(XMFLOAT2(200, 200));
-	m_entityManager->Add(te);
+    auto te = std::make_unique<PlayerShip>(XMFLOAT2(200, 200));
+	m_entityManager->Add(std::move(te));
 }
 
 void PlayState::CleanUp() 
