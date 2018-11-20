@@ -6,7 +6,9 @@
 class PlayState : public IGameState
 {
 public:
-	PlayState() { }
+	PlayState() :
+		m_framesPerSecond()
+	{ }
 
 	void Initialise(DX::DeviceResources const& deviceResources);
 	void CleanUp();

@@ -10,10 +10,10 @@ public:
 
 	void Update();
 
-	DirectX::GamePad::State GetGamePadState();
+	DirectX::GamePad::State const GetGamePadState();
 	DirectX::GamePad::ButtonStateTracker& GetGamePadTracker();
 
-	DirectX::Keyboard::State GetKeyboardState();
+	DirectX::Keyboard::State const GetKeyboardState();
 	DirectX::Keyboard::KeyboardStateTracker& GetKeyboardTracker();
 private:
 	std::unique_ptr<DirectX::GamePad> m_gamePad;

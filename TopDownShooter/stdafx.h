@@ -54,7 +54,9 @@ namespace DX
 	class com_exception : public std::exception
 	{
 	public:
-		com_exception(HRESULT hr) : result(hr) {}
+		com_exception(HRESULT hr) : 
+			result(hr) 
+		{ }
 
 		virtual const char* what() const override
 		{

@@ -10,7 +10,9 @@ class Entity
 	friend class EntityManager;
 
 public:
-	Entity() { }
+	Entity():
+		m_alive(true)
+	{ }
 
 	virtual ~Entity() { }
 
@@ -20,7 +22,7 @@ public:
 
 	void Kill() { m_alive = false; }
 
-	bool IsAlive() { return m_alive; }
+	bool IsAlive() const { return m_alive; }
 protected:
 	bool m_alive;
 };

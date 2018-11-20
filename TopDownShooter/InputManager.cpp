@@ -26,7 +26,7 @@ void InputManager::Update()
 	m_keyboardTracker->Update(keyboardState);
 }
 
-GamePad::State InputManager::GetGamePadState()
+const GamePad::State InputManager::GetGamePadState()
 {
 	return m_gamePad->GetState(0);
 }
@@ -36,7 +36,7 @@ GamePad::ButtonStateTracker& InputManager::GetGamePadTracker()
 	return *m_gamePadTracker;
 }
 
-Keyboard::State InputManager::GetKeyboardState()
+const Keyboard::State InputManager::GetKeyboardState()
 {
 	return m_keyboard->GetState();
 }

@@ -31,8 +31,8 @@ public:
 
 	void GetDefaultSize(int& width, int& height) const;
 
-	DX::DeviceResources* GetDeviceResources() { return m_deviceResources.get(); }
-	InputManager* GetInputManager() { return m_inputManager.get(); }
+	DX::DeviceResources* GetDeviceResources() const { return m_deviceResources.get(); }
+	InputManager* GetInputManager() const { return m_inputManager.get(); }
 
 private:
 	void Update(DX::StepTimer const& timer);
