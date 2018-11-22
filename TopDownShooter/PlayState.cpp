@@ -14,6 +14,7 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 
 	m_spriteBatch = std::make_unique<SpriteBatch>(context);
 	m_spriteBatch->SetViewport(deviceResources.GetScreenViewport());
+    m_states = std::make_unique<CommonStates>(device);
 
 	m_spriteFont = std::make_unique<SpriteFont>(device, L"Fonts\\SegoeUI_18.spritefont");
 
@@ -22,14 +23,14 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	);
 
 	m_entityManager = std::make_unique<EntityManager>();
-
-	m_entityManager->Add<PlayerShip>(XMFLOAT2(200, 200));
+    m_entityManager->Add<PlayerShip>(XMFLOAT2(200, 200));
 }
 
 void PlayState::CleanUp() 
 {
 	m_spriteBatch.reset();
 	m_spriteFont.reset();
+    m_states.reset();
 	m_entityManager.reset();
 }
 
@@ -44,28 +45,24 @@ void PlayState::Update(DX::StepTimer const& timer, Game* game)
 	{
 		if (padTracker.menu == GamePad::ButtonStateTracker::PRESSED)
 		{
-			auto introState = std::make_unique<IntroState>();
-			game->ChangeState(std::move(introState));
+			game->ChangeState(std::move(std::make_unique<IntroState>()));
 		}
 
 		if (padTracker.start == GamePad::ButtonStateTracker::PRESSED)
 		{
-			auto pauseState = std::make_unique<PauseState>();
-			game->PushState(std::move(pauseState));
+			game->PushState(std::move(std::make_unique<PauseState>()));
 		}
 	}
 
 	auto keyboardTracker = inputManager->GetKeyboardTracker();
 	if (keyboardTracker.IsKeyPressed(Keyboard::Keys::Escape))
 	{
-		auto introState = std::make_unique<IntroState>();
-		game->ChangeState(std::move(introState));
+		game->ChangeState(std::move(std::make_unique<IntroState>()));
 	}
 
 	if (keyboardTracker.IsKeyPressed(Keyboard::Keys::P))
 	{
-		auto pauseState = std::make_unique<PauseState>();
-		game->PushState(std::move(pauseState));
+		game->PushState(std::move(std::make_unique<PauseState>()));
 	}
 
 #if _DEBUG
@@ -75,12 +72,10 @@ void PlayState::Update(DX::StepTimer const& timer, Game* game)
 
 void PlayState::Pause()
 {
-
 }
 
 void PlayState::Resume()
 {
-
 }
 
 void PlayState::WindowSizeChanged(D3D11_VIEWPORT viewPort)
@@ -95,13 +90,15 @@ void PlayState::Render(DX::DeviceResources const& deviceResources)
 	
 	context->ClearRenderTargetView(renderTarget, DirectX::Colors::Red);
 
-	m_spriteBatch->Begin();
+	m_spriteBatch->Begin(SpriteSortMode_Deferred, m_states->NonPremultiplied());
 
 	m_entityManager->Draw(*m_spriteBatch.get(), m_texture.Get());
 
-#if _DEBUG
-	m_spriteFont->DrawString(m_spriteBatch.get(), m_framesPerSecond, XMFLOAT2(10, 10), Colors::White, 0.0f, XMFLOAT2(0, 0), 0.7f);
-#endif
-
 	m_spriteBatch->End();
+
+#if _DEBUG
+    m_spriteBatch->Begin();
+    m_spriteFont->DrawString(m_spriteBatch.get(), m_framesPerSecond, XMFLOAT2(10, 10), Colors::White, 0.0f, XMFLOAT2(0, 0), 0.7f);
+    m_spriteBatch->End();
+#endif
 };

@@ -6,8 +6,10 @@
 class PlayerShip : public Entity
 {
 public:
-    PlayerShip(DirectX::XMFLOAT2 position)
-        : m_position(position)
+    PlayerShip(DirectX::XMFLOAT2 position) :
+        m_position(position),
+        m_orientation(0)
+
     {
     }
 
@@ -42,17 +44,21 @@ public:
             direction.Normalize();
         }
 
-        auto t = DirectX::SimpleMath::Vector2(m_position);
-
-        t += 10.0f * direction;
-
-        m_position = t;
+        m_velocity = 10.0f * direction;
+        m_position += m_velocity;
+                
+        if (m_velocity.LengthSquared() > 0)
+        {
+            m_orientation = static_cast<float>(std::atan2(m_velocity.y, m_velocity.x));
+        }
     }
 
     virtual void Draw(DirectX::SpriteBatch& spriteBatch, ID3D11ShaderResourceView* tex)
     {
-        spriteBatch.Draw(tex, m_position, DirectX::Colors::White);
+        spriteBatch.Draw(tex, m_position, nullptr, DirectX::Colors::White, m_orientation);
     }
 private:
-    DirectX::XMFLOAT2 m_position;
+    DirectX::SimpleMath::Vector2 m_position;
+    DirectX::SimpleMath::Vector2 m_velocity;
+    float m_orientation;
 };
