@@ -41,9 +41,6 @@
     <ClInclude Include="PauseState.h">
       <Filter>Inc</Filter>
     </ClInclude>
-    <ClInclude Include="Entity.h">
-      <Filter>Inc</Filter>
-    </ClInclude>
     <ClInclude Include="Component.h">
       <Filter>Inc</Filter>
     </ClInclude>
@@ -53,9 +50,6 @@
     <ClInclude Include="System.h">
       <Filter>Inc</Filter>
     </ClInclude>
-    <ClInclude Include="Manager.h">
-      <Filter>Inc</Filter>
-    </ClInclude>
     <ClInclude Include="PositionComponent.h">
       <Filter>Inc</Filter>
     </ClInclude>
@@ -63,6 +57,12 @@
       <Filter>Inc</Filter>
     </ClInclude>
     <ClInclude Include="RenderSystem.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="IGameState.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
       <Filter>Inc</Filter>
     </ClInclude>
   </ItemGroup>

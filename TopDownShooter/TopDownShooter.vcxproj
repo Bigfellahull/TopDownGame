@@ -154,13 +154,13 @@
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentStore.h" />
     <ClInclude Include="DeviceResources.h" />
+    <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="IGameState.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="IntroState.h" />
     <ClInclude Include="MoveSystem.h" />
     <ClInclude Include="PauseState.h" />
-    <ClInclude Include="PlayerShip.h" />
     <ClInclude Include="PlayState.h" />
     <ClInclude Include="PositionComponent.h" />
     <ClInclude Include="RenderSystem.h" />
@@ -170,7 +170,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp" />
-    <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="IntroState.cpp" />

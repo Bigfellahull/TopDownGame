@@ -3,8 +3,6 @@
 #include "PlayState.h"
 #include "IntroState.h"
 #include "PauseState.h"
-#include "PlayerShip.h"
-
 #include "PositionComponent.h"
 #include "MoveSystem.h"
 #include "RenderSystem.h"
