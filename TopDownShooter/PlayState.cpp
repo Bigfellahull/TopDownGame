@@ -4,8 +4,11 @@
 #include "IntroState.h"
 #include "PauseState.h"
 #include "TranslationComponent.h"
+#include "ProjectileComponent.h"
+#include "RenderComponent.h"
 #include "MoveSystem.h"
 #include "RenderSystem.h"
+#include "ProjectileSystem.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -29,13 +32,16 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 
 	m_manager->CreateComponentStore<TranslationComponent>();
 	m_manager->CreateComponentStore<RenderComponent>();
+	m_manager->CreateComponentStore<ProjectileComponent>();
 
 	m_manager->AddSystem(System::Ptr(new SystemMove(*m_manager.get())));
 	m_manager->AddSystem(System::Ptr(new SystemRender(*m_manager.get())));
+	m_manager->AddSystem(System::Ptr(new SystemProjectile(*m_manager.get())));
 
 	m_playerEntity = m_manager->CreateEntity();
 	m_manager->AddComponent(m_playerEntity, TranslationComponent(Vector2(100, 100), Vector2(0, 0), 0.0f));
 	m_manager->AddComponent(m_playerEntity, RenderComponent(*m_spriteBatch.get(), m_testTexture.Get(), m_testResource.Get()));
+	m_manager->AddComponent(m_playerEntity, ProjectileComponent(Vector2(0, 0)));
 	m_manager->RegisterEntity(m_playerEntity);
 }
 
@@ -54,10 +60,15 @@ void PlayState::Update(DX::StepTimer const& timer, Game* game)
 
 #if _DEBUG
 	swprintf_s(m_framesPerSecond, L"FPS %d\n", timer.GetFramesPerSecond());
+	swprintf_s(m_entityCount, L"Entities: %d\n", m_manager->GetNumberOfEntities());
 #endif
 
 	GamePad::State state = inputManager->GetGamePadState();
 	TranslationComponent& translation = m_manager->GetComponentStore<TranslationComponent>().Get(m_playerEntity);
+	ProjectileComponent& projectile = m_manager->GetComponentStore<ProjectileComponent>().Get(m_playerEntity);
+
+	projectile.aimDirection = Vector2{ state.thumbSticks.rightX, state.thumbSticks.rightY };
+	projectile.aimDirection.y *= -1;
 
 	Vector2 acceleration{ state.thumbSticks.leftX, state.thumbSticks.leftY };
 
@@ -154,6 +165,7 @@ void PlayState::Render(DX::DeviceResources const& deviceResources)
 #if _DEBUG
     m_spriteBatch->Begin();
     m_spriteFont->DrawString(m_spriteBatch.get(), m_framesPerSecond, XMFLOAT2(10, 10), Colors::White, 0.0f, XMFLOAT2(0, 0), 0.7f);
+	m_spriteFont->DrawString(m_spriteBatch.get(), m_entityCount, XMFLOAT2(10, 30), Colors::White, 0.0f, XMFLOAT2(0, 0), 0.7f);
     m_spriteBatch->End();
 #endif
 };

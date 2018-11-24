@@ -64,6 +64,8 @@ public:
 		return GetComponentStore<T>().Add(entity, std::move(component));
 	}
 
+	const size_t GetNumberOfEntities() const { return m_entities.size(); }
+	
 	size_t RegisterEntity(const Entity entity);
 	size_t UnregisterEntity(const Entity entity);
 	size_t UpdateEntities(DX::StepTimer const& timer);

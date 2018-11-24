@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Component.h"
+#include "SimpleMath.h"
 
 struct TranslationComponent : public Component 
 {
@@ -11,8 +12,11 @@ struct TranslationComponent : public Component
 	DirectX::SimpleMath::Vector2 velocity;
 	float orientation;
 
-	TranslationComponent(DirectX::SimpleMath::Vector2 pos, DirectX::SimpleMath::Vector2 vel, float o) :
-		acceleration(DirectX::SimpleMath::Vector2(0, 0)), position(pos), velocity(vel), orientation(o) { }
+	TranslationComponent(DirectX::SimpleMath::Vector2 aPosition, DirectX::SimpleMath::Vector2 aVelocity, float aOrientation) :
+		acceleration(DirectX::SimpleMath::Vector2(0, 0)), 
+		position(aPosition), 
+		velocity(aVelocity),
+		orientation(aOrientation) { }
 };
 
 const ComponentType TranslationComponent::Type = 1;

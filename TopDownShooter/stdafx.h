@@ -49,6 +49,8 @@
 #include "SpriteBatch.h"
 #include "SpriteFont.h"
 
+#include "MathHelper.h"
+
 namespace DX
 {
 	class com_exception : public std::exception

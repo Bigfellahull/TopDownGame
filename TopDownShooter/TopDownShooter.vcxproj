@@ -160,9 +160,12 @@
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="IntroState.h" />
     <ClInclude Include="EntityManager.h" />
+    <ClInclude Include="MathHelper.h" />
     <ClInclude Include="MoveSystem.h" />
     <ClInclude Include="PauseState.h" />
     <ClInclude Include="PlayState.h" />
+    <ClInclude Include="ProjectileComponent.h" />
+    <ClInclude Include="ProjectileSystem.h" />
     <ClInclude Include="RenderComponent.h" />
     <ClInclude Include="TranslationComponent.h" />
     <ClInclude Include="RenderSystem.h" />
@@ -176,6 +179,7 @@
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="IntroState.cpp" />
     <ClCompile Include="EntityManager.cpp" />
+    <ClCompile Include="MathHelper.cpp" />
     <ClCompile Include="PauseState.cpp" />
     <ClCompile Include="PlayState.cpp" />
     <ClCompile Include="stdafx.cpp">

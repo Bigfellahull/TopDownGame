@@ -32,4 +32,5 @@ private:
 	std::unique_ptr<EntityManager> m_manager;
 
 	wchar_t m_framesPerSecond[100];
+	wchar_t m_entityCount[100];
 };
