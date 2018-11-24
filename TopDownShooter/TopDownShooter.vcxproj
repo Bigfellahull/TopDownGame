@@ -151,18 +151,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Component.h" />
+    <ClInclude Include="ComponentStore.h" />
     <ClInclude Include="DeviceResources.h" />
-    <ClInclude Include="Entity.h" />
-    <ClInclude Include="EntityManager.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="IGameState.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="IntroState.h" />
+    <ClInclude Include="MoveSystem.h" />
     <ClInclude Include="PauseState.h" />
     <ClInclude Include="PlayerShip.h" />
     <ClInclude Include="PlayState.h" />
+    <ClInclude Include="PositionComponent.h" />
+    <ClInclude Include="RenderSystem.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="StepTimer.h" />
+    <ClInclude Include="System.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DeviceResources.cpp" />
@@ -170,6 +174,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="IntroState.cpp" />
+    <ClCompile Include="Manager.cpp" />
     <ClCompile Include="PauseState.cpp" />
     <ClCompile Include="PlayState.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -179,6 +184,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="System.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\Fonts\SegoeUI_18.spritefont" />

@@ -5,6 +5,10 @@
 #include "PauseState.h"
 #include "PlayerShip.h"
 
+#include "PositionComponent.h"
+#include "MoveSystem.h"
+#include "RenderSystem.h"
+
 using namespace DirectX;
 
 void PlayState::Initialise(DX::DeviceResources const& deviceResources)
@@ -19,11 +23,24 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_spriteFont = std::make_unique<SpriteFont>(device, L"Fonts\\SegoeUI_18.spritefont");
 
 	DX::ThrowIfFailed(
-		CreateDDSTextureFromFile(device, L"Player.dds", nullptr, m_texture.ReleaseAndGetAddressOf())
+		CreateDDSTextureFromFile(device, L"Player.dds", nullptr, m_testTexture.ReleaseAndGetAddressOf())
 	);
 
-	m_entityManager = std::make_unique<EntityManager>();
-    m_entityManager->Add<PlayerShip>(XMFLOAT2(200, 200));
+	m_manager = std::make_unique<Manager>();
+
+	m_manager->CreateComponentStore<PositionComponent>();
+	m_manager->CreateComponentStore<RenderComponent>();
+
+	m_manager->AddSystem(System::Ptr(new SystemMove(*m_manager.get())));
+	m_manager->AddSystem(System::Ptr(new SystemRender(*m_manager.get())));
+
+	for (int i = 0; i < 5; ++i)
+	{
+		Entity ball = m_manager->CreateEntity();
+		m_manager->AddComponent(ball, PositionComponent((0.0f + i) * 4, (0.0f + i) * 4));
+		m_manager->AddComponent(ball, RenderComponent(*m_spriteBatch.get(), m_testTexture.Get()));
+		m_manager->RegisterEntity(ball);
+	}
 }
 
 void PlayState::CleanUp() 
@@ -31,14 +48,19 @@ void PlayState::CleanUp()
 	m_spriteBatch.reset();
 	m_spriteFont.reset();
     m_states.reset();
-	m_entityManager.reset();
+	m_testTexture.Reset();
+	m_manager.reset();
 }
 
 void PlayState::Update(DX::StepTimer const& timer, Game* game)
 {
-	m_entityManager->Update(timer, game);
-
 	auto inputManager = game->GetInputManager();
+
+#if _DEBUG
+	swprintf_s(m_framesPerSecond, L"FPS %d\n", timer.GetFramesPerSecond());
+#endif
+
+	m_manager->UpdateEntities(timer);
 
 	auto padTracker = inputManager->GetGamePadTracker();
 	if (inputManager->GetGamePadState().IsConnected())
@@ -64,10 +86,6 @@ void PlayState::Update(DX::StepTimer const& timer, Game* game)
 	{
 		game->PushState(std::move(std::make_unique<PauseState>()));
 	}
-
-#if _DEBUG
-	swprintf_s(m_framesPerSecond, L"FPS %d\n", timer.GetFramesPerSecond());
-#endif
 }
 
 void PlayState::Pause()
@@ -92,7 +110,9 @@ void PlayState::Render(DX::DeviceResources const& deviceResources)
 
 	m_spriteBatch->Begin(SpriteSortMode_Deferred, m_states->NonPremultiplied());
 
-	m_entityManager->Draw(*m_spriteBatch.get(), m_texture.Get());
+	m_manager->RenderEntities();
+
+	m_spriteBatch->Draw(m_testTexture.Get(), XMFLOAT2(100, 100), nullptr, Colors::White);
 
 	m_spriteBatch->End();
 

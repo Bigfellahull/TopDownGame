@@ -41,16 +41,28 @@
     <ClInclude Include="PauseState.h">
       <Filter>Inc</Filter>
     </ClInclude>
-    <ClInclude Include="IGameState.h">
-      <Filter>Inc</Filter>
-    </ClInclude>
     <ClInclude Include="Entity.h">
       <Filter>Inc</Filter>
     </ClInclude>
-    <ClInclude Include="EntityManager.h">
+    <ClInclude Include="Component.h">
       <Filter>Inc</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerShip.h">
+    <ClInclude Include="ComponentStore.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="System.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="PositionComponent.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="MoveSystem.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderSystem.h">
       <Filter>Inc</Filter>
     </ClInclude>
   </ItemGroup>
@@ -79,7 +91,10 @@
     <ClCompile Include="PauseState.cpp">
       <Filter>Src</Filter>
     </ClCompile>
-    <ClCompile Include="EntityManager.cpp">
+    <ClCompile Include="System.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Manager.cpp">
       <Filter>Src</Filter>
     </ClCompile>
   </ItemGroup>

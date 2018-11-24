@@ -1,28 +1,5 @@
 #pragma once
 
-#include "Game.h"
-#include "SpriteBatch.h"
+typedef unsigned int Entity;
 
-class EntityManager;
-
-class Entity
-{
-	friend class EntityManager;
-
-public:
-	Entity():
-		m_alive(true)
-	{ }
-
-	virtual ~Entity() { }
-
-    virtual void Update(DX::StepTimer const& timer, Game* game) = 0;
-	
-    virtual void Draw(DirectX::SpriteBatch& spriteBatch, ID3D11ShaderResourceView* tex) = 0;
-
-	void Kill() { m_alive = false; }
-
-	bool IsAlive() const { return m_alive; }
-protected:
-	bool m_alive;
-};
+static const Entity InvalidEntity = 0;
