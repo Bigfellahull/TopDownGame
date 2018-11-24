@@ -54,15 +54,15 @@ void Game::Render()
 		return;
 	}
 
-	auto context = m_deviceResources->GetD3DDeviceContext();
-	auto renderTarget = m_deviceResources->GetRenderTargetView();
-	auto depthStencil = m_deviceResources->GetDepthStencilView();
+	ID3D11DeviceContext1* context = m_deviceResources->GetD3DDeviceContext();
+	ID3D11RenderTargetView* renderTarget = m_deviceResources->GetRenderTargetView();
+	ID3D11DepthStencilView* depthStencil = m_deviceResources->GetDepthStencilView();
 
 	context->ClearRenderTargetView(renderTarget, Colors::CornflowerBlue);
 	context->ClearDepthStencilView(depthStencil, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	context->OMSetRenderTargets(1, &renderTarget, depthStencil);
 
-	auto viewport = m_deviceResources->GetScreenViewport();
+	D3D11_VIEWPORT viewport = m_deviceResources->GetScreenViewport();
 	context->RSSetViewports(1, &viewport);
 
 	m_states.back()->Render(*m_deviceResources.get());

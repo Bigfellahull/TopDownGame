@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
 #include "System.h"
-#include "Manager.h"
+#include "EntityManager.h"
 
-System::System(Manager& manager, bool isRender) :
+System::System(EntityManager& manager, bool isRender) :
 	m_manager(manager), 
 	m_isRender(isRender) { }
 

@@ -17,9 +17,9 @@ void PauseState::CleanUp()
 
 void PauseState::Update(DX::StepTimer const& timer, Game* game)
 {
-	auto inputManager = game->GetInputManager();
+	InputManager* inputManager = game->GetInputManager();
 
-	auto padTracker = inputManager->GetGamePadTracker();
+	GamePad::ButtonStateTracker& padTracker = inputManager->GetGamePadTracker();
 	if (inputManager->GetGamePadState().IsConnected())
 	{
 		if (padTracker.start == GamePad::ButtonStateTracker::PRESSED)
@@ -28,7 +28,7 @@ void PauseState::Update(DX::StepTimer const& timer, Game* game)
 		}
 	}
 
-	auto keyboardTracker = inputManager->GetKeyboardTracker();
+	Keyboard::KeyboardStateTracker& keyboardTracker = inputManager->GetKeyboardTracker();
 	if (keyboardTracker.IsKeyPressed(Keyboard::Keys::P))
 	{
 		game->PopState();
@@ -52,8 +52,8 @@ void PauseState::WindowSizeChanged(D3D11_VIEWPORT viewPort)
 
 void PauseState::Render(DX::DeviceResources const& deviceResources)
 {
-	auto context = deviceResources.GetD3DDeviceContext();
-	auto renderTarget = deviceResources.GetRenderTargetView();
+	ID3D11DeviceContext1* context = deviceResources.GetD3DDeviceContext();
+	ID3D11RenderTargetView* renderTarget = deviceResources.GetRenderTargetView();
 
 	context->ClearRenderTargetView(renderTarget, DirectX::Colors::Green);
 }

@@ -197,7 +197,7 @@ LRESULT CALLBACK WndProc(HWND hWnd,
 	}
 	case WM_GETMINMAXINFO:
 	{
-		auto info = reinterpret_cast<MINMAXINFO*>(lParam);
+		MINMAXINFO* info = reinterpret_cast<MINMAXINFO*>(lParam);
 		info->ptMinTrackSize.x = 320;
 		info->ptMinTrackSize.y = 200;
 		break;

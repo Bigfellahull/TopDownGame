@@ -1,17 +1,17 @@
 #include "stdafx.h"
 
-#include "Manager.h"
+#include "EntityManager.h"
 #include <algorithm>
 
-Manager::Manager() :
+EntityManager::EntityManager() :
 	m_lastEntity(InvalidEntity),
 	m_entities(),
 	m_componentStores(),
 	m_systems() { }
 
-Manager::~Manager() { }
+EntityManager::~EntityManager() { }
 
-void Manager::AddSystem(const System::Ptr& systemPtr) 
+void EntityManager::AddSystem(const System::Ptr& systemPtr)
 {
 	if ((!systemPtr) || (systemPtr->GetRequiredComponents().empty())) 
 	{
@@ -21,7 +21,7 @@ void Manager::AddSystem(const System::Ptr& systemPtr)
 	m_systems.push_back(systemPtr);
 }
 
-size_t Manager::RegisterEntity(const Entity entity)
+size_t EntityManager::RegisterEntity(const Entity entity)
 {
 	size_t associatedSystems = 0;
 
@@ -31,13 +31,13 @@ size_t Manager::RegisterEntity(const Entity entity)
 		throw std::runtime_error("The Entity does not exist");
 	}
 
-	auto entityComponents = (*foundEntity).second;
+	ComponentTypeSet entityComponents = (*foundEntity).second;
 
 	for (auto system = m_systems.begin();
 		system != m_systems.end();
 		++system)
 	{
-		auto systemRequiredComponents = (*system)->GetRequiredComponents();
+		ComponentTypeSet systemRequiredComponents = (*system)->GetRequiredComponents();
 		// Check if all Components Required by the System are in the Entity (use sorted sets)
 		if (std::includes(entityComponents.begin(), entityComponents.end(),
 			systemRequiredComponents.begin(), systemRequiredComponents.end()))
@@ -52,7 +52,7 @@ size_t Manager::RegisterEntity(const Entity entity)
 	return associatedSystems;
 }
 
-size_t Manager::UnregisterEntity(const Entity entity) {
+size_t EntityManager::UnregisterEntity(const Entity entity) {
 	size_t associatedSystems = 0;
 
 	auto foundEntity = m_entities.find(entity);
@@ -60,8 +60,6 @@ size_t Manager::UnregisterEntity(const Entity entity) {
 	{
 		throw std::runtime_error("The Entity does not exist");
 	}
-
-	auto entityComponents = (*foundEntity).second;
 
 	for (auto system = m_systems.begin();
 		system != m_systems.end();
@@ -73,7 +71,7 @@ size_t Manager::UnregisterEntity(const Entity entity) {
 	return associatedSystems;
 }
 
-size_t Manager::UpdateEntities(DX::StepTimer const& timer) 
+size_t EntityManager::UpdateEntities(DX::StepTimer const& timer)
 {
 	size_t updatedEntities = 0;
 
@@ -92,7 +90,7 @@ size_t Manager::UpdateEntities(DX::StepTimer const& timer)
 	return updatedEntities;
 }
 
-size_t Manager::RenderEntities()
+size_t EntityManager::RenderEntities()
 {
 	size_t updatedEntities = 0;
 

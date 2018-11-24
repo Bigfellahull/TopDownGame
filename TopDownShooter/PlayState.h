@@ -1,7 +1,7 @@
 #pragma once
 
 #include "IGameState.h"
-#include "Manager.h"
+#include "EntityManager.h"
 
 class PlayState : public IGameState
 {
@@ -25,10 +25,11 @@ private:
 	std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
 	std::unique_ptr<DirectX::SpriteFont> m_spriteFont;
 	
+	Entity m_playerEntity;
+
+	Microsoft::WRL::ComPtr<ID3D11Resource> m_testResource;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_testTexture;
-	std::unique_ptr<Manager> m_manager;
+	std::unique_ptr<EntityManager> m_manager;
 
 	wchar_t m_framesPerSecond[100];
-
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_texture;
 };

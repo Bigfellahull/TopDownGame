@@ -16,9 +16,9 @@ void IntroState::CleanUp()
 
 void IntroState::Update(DX::StepTimer const& timer, Game* game)
 {
-	auto inputManager = game->GetInputManager();
+	InputManager* inputManager = game->GetInputManager();
 
-	auto padTracker = inputManager->GetGamePadTracker();
+	GamePad::ButtonStateTracker& padTracker = inputManager->GetGamePadTracker();
 	if (inputManager->GetGamePadState().IsConnected())
 	{
 		if (padTracker.start == GamePad::ButtonStateTracker::PRESSED)
@@ -26,13 +26,13 @@ void IntroState::Update(DX::StepTimer const& timer, Game* game)
 			game->ChangeState(std::move(std::make_unique<PlayState>()));
 		}
 
-		if (padTracker.menu == GamePad::ButtonStateTracker::PRESSED)
+		if (padTracker.back == GamePad::ButtonStateTracker::PRESSED)
 		{
 			game->Quit();
 		}
 	}
 
-	auto keyboardTracker = inputManager->GetKeyboardTracker();
+	Keyboard::KeyboardStateTracker& keyboardTracker = inputManager->GetKeyboardTracker();
 	if (keyboardTracker.IsKeyPressed(Keyboard::Keys::Space))
 	{
 		game->ChangeState(std::move(std::make_unique<PlayState>()));

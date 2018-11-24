@@ -6,13 +6,13 @@
 #include <set>
 #include <memory>
 
-class Manager;
+class EntityManager;
 
 class System {
 public:
 	typedef std::shared_ptr<System> Ptr;
 
-	explicit System(Manager& manager, bool isRender);
+	explicit System(EntityManager& manager, bool isRender);
 
 	virtual ~System();
 
@@ -52,7 +52,7 @@ protected:
 		m_requiredComponents = std::move(requiredComponents);
 	}
 
-	Manager& m_manager;
+	EntityManager& m_manager;
 
 private:
 	bool m_isRender;

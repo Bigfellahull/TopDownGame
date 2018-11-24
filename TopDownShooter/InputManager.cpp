@@ -15,14 +15,14 @@ InputManager::InputManager()
 
 void InputManager::Update()
 {
-	auto gamePadState = m_gamePad->GetState(0);
+	GamePad::State gamePadState = m_gamePad->GetState(0);
 
 	if (gamePadState.IsConnected())
 	{
 		m_gamePadTracker->Update(gamePadState);
 	}
 
-	auto keyboardState = m_keyboard->GetState();
+	Keyboard::State keyboardState = m_keyboard->GetState();
 	m_keyboardTracker->Update(keyboardState);
 }
 

@@ -3,16 +3,17 @@
 #include "PlayState.h"
 #include "IntroState.h"
 #include "PauseState.h"
-#include "PositionComponent.h"
+#include "TranslationComponent.h"
 #include "MoveSystem.h"
 #include "RenderSystem.h"
 
 using namespace DirectX;
+using namespace DirectX::SimpleMath;
 
 void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 {
-	auto context = deviceResources.GetD3DDeviceContext();
-	auto device = deviceResources.GetD3DDevice();
+	ID3D11DeviceContext1* context = deviceResources.GetD3DDeviceContext();
+	ID3D11Device1* device = deviceResources.GetD3DDevice();
 
 	m_spriteBatch = std::make_unique<SpriteBatch>(context);
 	m_spriteBatch->SetViewport(deviceResources.GetScreenViewport());
@@ -21,24 +22,21 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_spriteFont = std::make_unique<SpriteFont>(device, L"Fonts\\SegoeUI_18.spritefont");
 
 	DX::ThrowIfFailed(
-		CreateDDSTextureFromFile(device, L"Player.dds", nullptr, m_testTexture.ReleaseAndGetAddressOf())
+		CreateDDSTextureFromFile(device, L"Player.dds", m_testResource.ReleaseAndGetAddressOf(), m_testTexture.ReleaseAndGetAddressOf())
 	);
 
-	m_manager = std::make_unique<Manager>();
+	m_manager = std::make_unique<EntityManager>();
 
-	m_manager->CreateComponentStore<PositionComponent>();
+	m_manager->CreateComponentStore<TranslationComponent>();
 	m_manager->CreateComponentStore<RenderComponent>();
 
 	m_manager->AddSystem(System::Ptr(new SystemMove(*m_manager.get())));
 	m_manager->AddSystem(System::Ptr(new SystemRender(*m_manager.get())));
 
-	for (int i = 0; i < 5; ++i)
-	{
-		Entity ball = m_manager->CreateEntity();
-		m_manager->AddComponent(ball, PositionComponent((0.0f + i) * 4, (0.0f + i) * 4));
-		m_manager->AddComponent(ball, RenderComponent(*m_spriteBatch.get(), m_testTexture.Get()));
-		m_manager->RegisterEntity(ball);
-	}
+	m_playerEntity = m_manager->CreateEntity();
+	m_manager->AddComponent(m_playerEntity, TranslationComponent(Vector2(100, 100), Vector2(0, 0), 0.0f));
+	m_manager->AddComponent(m_playerEntity, RenderComponent(*m_spriteBatch.get(), m_testTexture.Get(), m_testResource.Get()));
+	m_manager->RegisterEntity(m_playerEntity);
 }
 
 void PlayState::CleanUp() 
@@ -52,18 +50,59 @@ void PlayState::CleanUp()
 
 void PlayState::Update(DX::StepTimer const& timer, Game* game)
 {
-	auto inputManager = game->GetInputManager();
+	InputManager* inputManager = game->GetInputManager();
 
 #if _DEBUG
 	swprintf_s(m_framesPerSecond, L"FPS %d\n", timer.GetFramesPerSecond());
 #endif
 
+	GamePad::State state = inputManager->GetGamePadState();
+	TranslationComponent& translation = m_manager->GetComponentStore<TranslationComponent>().Get(m_playerEntity);
+
+	Vector2 acceleration{ state.thumbSticks.leftX, state.thumbSticks.leftY };
+
+	if (state.IsConnected())
+	{
+		acceleration.y *= -1;
+	}
+
+	Keyboard::State kb = inputManager->GetKeyboardState();
+	if (kb.Up)
+	{
+		acceleration.y = -1.0f;
+	}
+	if (kb.Right)
+	{
+		acceleration.x = 1.0f;
+	}
+	if (kb.Down)
+	{
+		acceleration.y = 1.0f;
+	}
+	if (kb.Left)
+	{
+		acceleration.x = -1.0f;
+	}
+
+	// TODO: Work out units and why this has to be so high
+	float movementSpeed = 8000.0f;
+	float drag = 10.0f;
+
+	// Ensure moving diagonally isn't faster than usual.
+	float accLength = acceleration.LengthSquared();
+	if (accLength > 1.0f)
+	{
+		acceleration *= (1.0f / sqrt(accLength));
+	}
+
+	translation.acceleration = (acceleration * movementSpeed) + (translation.velocity * -drag);
+
 	m_manager->UpdateEntities(timer);
 
-	auto padTracker = inputManager->GetGamePadTracker();
+	GamePad::ButtonStateTracker& padTracker = inputManager->GetGamePadTracker();
 	if (inputManager->GetGamePadState().IsConnected())
 	{
-		if (padTracker.menu == GamePad::ButtonStateTracker::PRESSED)
+		if (padTracker.back == GamePad::ButtonStateTracker::PRESSED)
 		{
 			game->ChangeState(std::move(std::make_unique<IntroState>()));
 		}
@@ -74,7 +113,7 @@ void PlayState::Update(DX::StepTimer const& timer, Game* game)
 		}
 	}
 
-	auto keyboardTracker = inputManager->GetKeyboardTracker();
+	Keyboard::KeyboardStateTracker& keyboardTracker = inputManager->GetKeyboardTracker();
 	if (keyboardTracker.IsKeyPressed(Keyboard::Keys::Escape))
 	{
 		game->ChangeState(std::move(std::make_unique<IntroState>()));
@@ -101,16 +140,14 @@ void PlayState::WindowSizeChanged(D3D11_VIEWPORT viewPort)
 
 void PlayState::Render(DX::DeviceResources const& deviceResources)
 {
-	auto context = deviceResources.GetD3DDeviceContext();
-	auto renderTarget = deviceResources.GetRenderTargetView();
+	ID3D11DeviceContext1* context = deviceResources.GetD3DDeviceContext();
+	ID3D11RenderTargetView* renderTarget = deviceResources.GetRenderTargetView();
 	
 	context->ClearRenderTargetView(renderTarget, DirectX::Colors::Red);
 
 	m_spriteBatch->Begin(SpriteSortMode_Deferred, m_states->NonPremultiplied());
 
 	m_manager->RenderEntities();
-
-	m_spriteBatch->Draw(m_testTexture.Get(), XMFLOAT2(100, 100), nullptr, Colors::White);
 
 	m_spriteBatch->End();
 
