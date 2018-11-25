@@ -9,10 +9,14 @@ struct RenderComponent : public Component
 
 	DirectX::SpriteBatch& spriteBatch;
 	Texture2d* texture;
+	DirectX::SimpleMath::Vector4 colour;
+	float scale;
 
 	RenderComponent(DirectX::SpriteBatch& aSpriteBatch, Texture2d* aTexture) :
 		spriteBatch(aSpriteBatch),
-		texture(aTexture) { }
+		texture(aTexture),
+		colour(DirectX::Colors::White),
+		scale(1.0f) { }
 };
 
 const ComponentType RenderComponent::Type = 2;

@@ -10,10 +10,13 @@ struct FollowPlayerComponent : public Component
 	float movementSpeed;
 	float drag;
 
+	float timeToStart;
+
 	FollowPlayerComponent(Entity aPlayerEntity, float aMovementSpeed, float aDrag) :
 		playerEntity(aPlayerEntity),
 		movementSpeed(aMovementSpeed),
-		drag(aDrag) { }
+		drag(aDrag),
+		timeToStart(60) { }
 };
 
 const ComponentType FollowPlayerComponent::Type = 6;

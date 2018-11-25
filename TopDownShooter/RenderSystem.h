@@ -30,10 +30,10 @@ public:
 			render.texture->GetSrv(), 
 			translation.position,
 			nullptr, 
-			DirectX::Colors::White, 
+			render.colour, 
 			translation.orientation, 
 			DirectX::SimpleMath::Vector2(width / 2, height / 2), 
-			1.0f,
+			render.scale,
 			DirectX::SpriteEffects::SpriteEffects_None,
 			0);
 	}

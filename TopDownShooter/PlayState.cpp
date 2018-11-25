@@ -42,12 +42,12 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_entityManager->CreateComponentStore<RegionComponent>();
 	m_entityManager->CreateComponentStore<FollowPlayerComponent>();
 	m_entityManager->CreateComponentStore<ColliderComponent>();
-
-	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemMove(*m_entityManager.get())));
-	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemRender(*m_entityManager.get())));
+		
 	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemProjectileSource(*m_entityManager.get())));
 	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemProjectile(*m_entityManager.get())));
 	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemFollowPlayer(*m_entityManager.get())));
+	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemMove(*m_entityManager.get())));
+	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemRender(*m_entityManager.get())));
 
 	m_regionEntity = m_entityManager->CreateEntity();
 	RECT windowSize = deviceResources.GetOutputSize();
