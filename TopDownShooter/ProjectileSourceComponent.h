@@ -9,13 +9,13 @@ struct ProjectileSourceComponent : public Component
 
 	AssetManager* assetManager;
 	DirectX::SimpleMath::Vector2 aimDirection;
-	float cooldownFrames;
+	float cooldownTime;
 	float cooldownRemaining;
 
 	ProjectileSourceComponent(AssetManager* aAssetManager) :
 		assetManager(aAssetManager),
 		aimDirection(DirectX::SimpleMath::Vector2(0, 0)),
-		cooldownFrames(6),
+		cooldownTime(0.15f),
 		cooldownRemaining(0) { }
 };
 

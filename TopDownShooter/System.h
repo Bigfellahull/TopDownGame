@@ -34,9 +34,9 @@ public:
 		return (m_matchingEntities.end() != m_matchingEntities.find(entity));
 	}
 
-	size_t UpdateEntities(DX::StepTimer const& timer);
+	size_t UpdateEntities(float dt);
 
-	virtual void UpdateEntity(DX::StepTimer const& timer, Entity entity) { }
+	virtual void UpdateEntity(float dt, Entity entity) { }
 
 	size_t RenderEntities();
 

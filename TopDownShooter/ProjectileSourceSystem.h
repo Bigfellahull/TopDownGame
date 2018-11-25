@@ -20,7 +20,7 @@ public:
 		SetRequiredComponents(std::move(requiredComponents));
 	}
 
-	virtual void UpdateEntity(DX::StepTimer const& timer, Entity entity)
+	virtual void UpdateEntity(float dt, Entity entity)
 	{
 		ProjectileSourceComponent& projectile = m_manager.GetComponentStore<ProjectileSourceComponent>().Get(entity);
 		TranslationComponent& translation = m_manager.GetComponentStore<TranslationComponent>().Get(entity);
@@ -42,7 +42,7 @@ public:
 
 		if (projectile.aimDirection.LengthSquared() > 0 && projectile.cooldownRemaining <= 0)
 		{
-			projectile.cooldownRemaining = projectile.cooldownFrames;
+			projectile.cooldownRemaining = projectile.cooldownTime;
 
 			float aimAngle = static_cast<float>(std::atan2(projectile.aimDirection.y, projectile.aimDirection.x));
 			DirectX::SimpleMath::Quaternion aimQuat = DirectX::SimpleMath::Quaternion::CreateFromYawPitchRoll(0, 0, aimAngle);
@@ -73,7 +73,7 @@ public:
 
 		if (projectile.cooldownRemaining > 0)
 		{
-			projectile.cooldownRemaining--;
+			projectile.cooldownRemaining -= dt;
 		}
 	}
 };

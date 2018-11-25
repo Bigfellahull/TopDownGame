@@ -19,7 +19,7 @@ public:
 		SetRequiredComponents(std::move(requiredComponents));
 	}
 
-	virtual void UpdateEntity(DX::StepTimer const& timer, Entity entity)
+	virtual void UpdateEntity(float dt, Entity entity)
 	{
 		TranslationComponent& translation = m_manager.GetComponentStore<TranslationComponent>().Get(entity);
 

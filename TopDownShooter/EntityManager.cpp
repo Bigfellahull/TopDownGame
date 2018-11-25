@@ -69,7 +69,7 @@ size_t EntityManager::UnregisterEntity(const Entity entity) {
 	return associatedSystems;
 }
 
-size_t EntityManager::UpdateEntities(DX::StepTimer const& timer)
+size_t EntityManager::UpdateEntities(float dt)
 {
 	size_t updatedEntities = 0;
 
@@ -82,7 +82,7 @@ size_t EntityManager::UpdateEntities(DX::StepTimer const& timer)
 			continue;
 		}
 
-		updatedEntities += (*system)->UpdateEntities(timer);
+		updatedEntities += (*system)->UpdateEntities(dt);
 	}
 
 	// It's possible systems have queued entities to be removed.

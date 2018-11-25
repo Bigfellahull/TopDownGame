@@ -22,7 +22,7 @@ public:
 	void Render(DX::DeviceResources const& deviceResources);
 private:
 	void UpdateUserInput(InputManager* inputManager);
-	void SpawnEnemies();
+	void SpawnEnemies(float dt);
 
     std::unique_ptr<DirectX::CommonStates> m_states;
 	std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;

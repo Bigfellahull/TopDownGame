@@ -17,11 +17,9 @@ public:
 		SetRequiredComponents(std::move(requiredComponents));
 	}
 
-	virtual void UpdateEntity(DX::StepTimer const& timer, Entity entity) 
+	virtual void UpdateEntity(float dt, Entity entity) 
 	{
 		TranslationComponent& translation = m_manager.GetComponentStore<TranslationComponent>().Get(entity);
-		
-		float dt = static_cast<float>(timer.GetElapsedSeconds());		
 		
 		DirectX::SimpleMath::Vector2 delta = (0.5f * translation.acceleration * std::pow(dt, 2)) + (translation.velocity * dt);
 		translation.position += delta;

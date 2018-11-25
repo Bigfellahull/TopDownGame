@@ -69,7 +69,7 @@ public:
 	
 	size_t RegisterEntity(const Entity entity);
 	size_t UnregisterEntity(const Entity entity);
-	size_t UpdateEntities(DX::StepTimer const& timer);
+	size_t UpdateEntities(float dt);
 	size_t RenderEntities();
 
 	void QueueEntityForDrop(const Entity entity);

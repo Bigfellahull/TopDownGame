@@ -85,11 +85,13 @@ void PlayState::Update(DX::StepTimer const& timer, Game* game)
 	swprintf_s(m_entityCount, L"Entities: %d\n", m_entityManager->GetNumberOfEntities());
 #endif
 
-	SpawnEnemies();
+	float dt = SlowModeEnabled ? 0.001f : static_cast<float>(timer.GetElapsedSeconds());
+
+	SpawnEnemies(dt);
 
 	UpdateUserInput(game->GetInputManager());
 	
-	m_entityManager->UpdateEntities(timer);
+	m_entityManager->UpdateEntities(dt);
 }
 
 void PlayState::UpdateUserInput(InputManager* inputManager)
@@ -156,9 +158,11 @@ void PlayState::UpdateUserInput(InputManager* inputManager)
 	translation.acceleration = (acceleration * movementSpeed) + (translation.velocity * -drag);
 }
 
-void PlayState::SpawnEnemies()
+void PlayState::SpawnEnemies(float dt)
 {
 	// Can this be better? Maybe move into separate class?
+	// Incorporate dt into spawn so when running in slow mode it spawns
+	// an expected number of enemies.
 	if (MathHelper::Random(0, static_cast<int>(m_enemyInverseSpawnChance)) == 0)
 	{
 		RegionComponent& region = m_entityManager->GetComponentStore<RegionComponent>().Get(m_regionEntity);

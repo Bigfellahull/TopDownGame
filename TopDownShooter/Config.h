@@ -1,5 +1,7 @@
 #pragma once
 
+constexpr bool SlowModeEnabled = false;
+
 constexpr bool FullScreen = false;
 
 constexpr const wchar_t* PlayerAsset = L"Player.dds";
