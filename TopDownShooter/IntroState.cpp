@@ -16,6 +16,11 @@ void IntroState::CleanUp()
 
 void IntroState::Update(DX::StepTimer const& timer, Game* game)
 {
+
+}
+
+void IntroState::HandleStateChange(Game* game)
+{
 	InputManager* inputManager = game->GetInputManager();
 
 	GamePad::ButtonStateTracker& padTracker = inputManager->GetGamePadTracker();

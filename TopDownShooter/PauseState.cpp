@@ -17,6 +17,11 @@ void PauseState::CleanUp()
 
 void PauseState::Update(DX::StepTimer const& timer, Game* game)
 {
+
+}
+
+void PauseState::HandleStateChange(Game* game)
+{
 	InputManager* inputManager = game->GetInputManager();
 
 	GamePad::ButtonStateTracker& padTracker = inputManager->GetGamePadTracker();

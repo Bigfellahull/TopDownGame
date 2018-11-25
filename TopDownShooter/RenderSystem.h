@@ -22,18 +22,13 @@ public:
 	{
 		RenderComponent& render = m_manager.GetComponentStore<RenderComponent>().Get(entity);
 		TranslationComponent& translation = m_manager.GetComponentStore<TranslationComponent>().Get(entity);
-		
-		// TODO: Is this correct or should be do this on load of the texture?
-		// Maybe look at this again during asset management.
-		ID3D11Texture2D* texture = static_cast<ID3D11Texture2D*>(render.resource);
-		D3D11_TEXTURE2D_DESC description;
-		texture->GetDesc(&description);
-		float width = static_cast<float>(description.Width);
-		float height = static_cast<float>(description.Height);
+
+		float width = render.texture->GetWidth();
+		float height = render.texture->GetHeight();
 
 		render.spriteBatch.Draw(
-			render.texture, 
-			translation.position, 
+			render.texture->GetSrv(), 
+			translation.position,
 			nullptr, 
 			DirectX::Colors::White, 
 			translation.orientation, 

@@ -45,6 +45,8 @@ void Game::Update(DX::StepTimer const& timer)
 	m_inputManager->Update();
 
 	m_states.back()->Update(timer, this);
+
+	m_states.back()->HandleStateChange(this);
 }
 
 void Game::Render()

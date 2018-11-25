@@ -25,7 +25,8 @@ public:
 		ProjectileSourceComponent& projectile = m_manager.GetComponentStore<ProjectileSourceComponent>().Get(entity);
 		TranslationComponent& translation = m_manager.GetComponentStore<TranslationComponent>().Get(entity);
 		
-		// HACK FOR TEMP BULLETS
+		// For now, was assume that will we always be on a renderable entity.
+		// We could change this to put a pointer to spritebatch on the projectile source component.
 		RenderComponent& render = m_manager.GetComponentStore<RenderComponent>().Get(entity);
 
 		if (projectile.aimDirection.LengthSquared() > 1)
@@ -41,14 +42,14 @@ public:
 			DirectX::SimpleMath::Quaternion aimQuat = DirectX::SimpleMath::Quaternion::CreateFromYawPitchRoll(0, 0, aimAngle);
 
 			auto randomSpread = (MathHelper::Random(0.0f, 1.0f) * 0.02) + (MathHelper::Random(0.0f, 1.0f) * 0.02);
-			DirectX::SimpleMath::Vector2 velocity = 2000.0f * 
+			DirectX::SimpleMath::Vector2 velocity = 1000.0f * 
 				DirectX::SimpleMath::Vector2(static_cast<float>(std::cos(aimAngle + randomSpread)), static_cast<float>(std::sin(aimAngle + randomSpread)));
 
 			DirectX::SimpleMath::Vector2 offset = DirectX::SimpleMath::Vector2::Transform(DirectX::SimpleMath::Vector2(40, -8), aimQuat);
 			{
 				Entity bullet = m_manager.CreateEntity();
 				m_manager.AddComponent(bullet, TranslationComponent(translation.position + offset, velocity, aimAngle));
-				m_manager.AddComponent(bullet, RenderComponent(render.spriteBatch, render.texture, render.resource));
+				m_manager.AddComponent(bullet, RenderComponent(render.spriteBatch, projectile.assetManager->GetTexture(BulletAsset)));
 				m_manager.AddComponent(bullet, ProjectileComponent());
 				m_manager.RegisterEntity(bullet);
 			}
@@ -56,7 +57,7 @@ public:
 			{
 				Entity bullet = m_manager.CreateEntity();
 				m_manager.AddComponent(bullet, TranslationComponent(translation.position + offset, velocity, aimAngle));
-				m_manager.AddComponent(bullet, RenderComponent(render.spriteBatch, render.texture, render.resource));
+				m_manager.AddComponent(bullet, RenderComponent(render.spriteBatch, projectile.assetManager->GetTexture(BulletAsset)));
 				m_manager.AddComponent(bullet, ProjectileComponent());
 				m_manager.RegisterEntity(bullet);
 			}

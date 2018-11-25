@@ -101,6 +101,15 @@
     <ClInclude Include="ProjectileSystem.h">
       <Filter>Inc\Systems</Filter>
     </ClInclude>
+    <ClInclude Include="AssetManager.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture2d.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="Config.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -134,6 +143,12 @@
       <Filter>Src\GameStates</Filter>
     </ClCompile>
     <ClCompile Include="MathHelper.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture2d.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetManager.cpp">
       <Filter>Src</Filter>
     </ClCompile>
   </ItemGroup>

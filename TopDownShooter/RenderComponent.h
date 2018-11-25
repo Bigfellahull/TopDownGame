@@ -8,12 +8,10 @@ struct RenderComponent : public Component
 	static const ComponentType Type;
 
 	DirectX::SpriteBatch& spriteBatch;
-	ID3D11Resource* resource;
-	ID3D11ShaderResourceView* texture;
+	Texture2d* texture;
 
-	RenderComponent(DirectX::SpriteBatch& aSpriteBatch, ID3D11ShaderResourceView* aTexture, ID3D11Resource* aResource) :
+	RenderComponent(DirectX::SpriteBatch& aSpriteBatch, Texture2d* aTexture) :
 		spriteBatch(aSpriteBatch),
-		resource(aResource),
 		texture(aTexture) { }
 };
 

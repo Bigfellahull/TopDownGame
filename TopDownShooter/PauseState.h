@@ -16,5 +16,6 @@ public:
 	void WindowSizeChanged(D3D11_VIEWPORT viewPort);
 
 	void Update(DX::StepTimer const& timer, Game* game);
+	void HandleStateChange(Game* game);
 	void Render(DX::DeviceResources const& deviceResources);
 };

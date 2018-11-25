@@ -152,8 +152,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AssetManager.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentStore.h" />
+    <ClInclude Include="Config.h" />
     <ClInclude Include="DeviceResources.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />
@@ -171,6 +173,7 @@
     <ClInclude Include="ProjectileSourceSystem.h" />
     <ClInclude Include="RegionComponent.h" />
     <ClInclude Include="RenderComponent.h" />
+    <ClInclude Include="Texture2d.h" />
     <ClInclude Include="TranslationComponent.h" />
     <ClInclude Include="RenderSystem.h" />
     <ClInclude Include="stdafx.h" />
@@ -178,6 +181,7 @@
     <ClInclude Include="System.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="DeviceResources.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="InputManager.cpp" />
@@ -194,6 +198,7 @@
     </ClCompile>
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="System.cpp" />
+    <ClCompile Include="Texture2d.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\Fonts\SegoeUI_18.spritefont" />

@@ -50,6 +50,7 @@
 #include "SpriteFont.h"
 
 #include "MathHelper.h"
+#include "Config.h"
 
 namespace DX
 {

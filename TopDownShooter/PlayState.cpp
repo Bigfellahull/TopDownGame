@@ -27,34 +27,31 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 
 	m_spriteFont = std::make_unique<SpriteFont>(device, L"Fonts\\SegoeUI_18.spritefont");
 
-	DX::ThrowIfFailed(
-		CreateDDSTextureFromFile(device, L"Player.dds", m_testResource.ReleaseAndGetAddressOf(), m_testTexture.ReleaseAndGetAddressOf())
-	);
+	m_assetManager = std::make_unique<AssetManager>(device);
+	m_entityManager = std::make_unique<EntityManager>();
 
-	m_manager = std::make_unique<EntityManager>();
+	m_entityManager->CreateComponentStore<TranslationComponent>();
+	m_entityManager->CreateComponentStore<RenderComponent>();
+	m_entityManager->CreateComponentStore<ProjectileSourceComponent>();
+	m_entityManager->CreateComponentStore<ProjectileComponent>();
+	m_entityManager->CreateComponentStore<RegionComponent>();
 
-	m_manager->CreateComponentStore<TranslationComponent>();
-	m_manager->CreateComponentStore<RenderComponent>();
-	m_manager->CreateComponentStore<ProjectileSourceComponent>();
-	m_manager->CreateComponentStore<ProjectileComponent>();
-	m_manager->CreateComponentStore<RegionComponent>();
+	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemMove(*m_entityManager.get())));
+	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemRender(*m_entityManager.get())));
+	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemProjectileSource(*m_entityManager.get())));
+	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemProjectile(*m_entityManager.get())));
 
-	m_manager->AddSystem(std::shared_ptr<System>(new SystemMove(*m_manager.get())));
-	m_manager->AddSystem(std::shared_ptr<System>(new SystemRender(*m_manager.get())));
-	m_manager->AddSystem(std::shared_ptr<System>(new SystemProjectileSource(*m_manager.get())));
-	m_manager->AddSystem(std::shared_ptr<System>(new SystemProjectile(*m_manager.get())));
-
-	m_regionEntity = m_manager->CreateEntity();
+	m_regionEntity = m_entityManager->CreateEntity();
 	RECT windowSize = deviceResources.GetOutputSize();
-	m_manager->AddComponent(m_regionEntity, RegionComponent(Vector2(0, 0), 
+	m_entityManager->AddComponent(m_regionEntity, RegionComponent(Vector2(0, 0),
 		Vector2(static_cast<float>(windowSize.right - windowSize.left), static_cast<float>(windowSize.bottom - windowSize.top))));
-	m_manager->RegisterEntity(m_regionEntity);
+	m_entityManager->RegisterEntity(m_regionEntity);
 	
-	m_playerEntity = m_manager->CreateEntity();
-	m_manager->AddComponent(m_playerEntity, TranslationComponent(Vector2(100, 100), Vector2(0, 0), 0.0f));
-	m_manager->AddComponent(m_playerEntity, RenderComponent(*m_spriteBatch.get(), m_testTexture.Get(), m_testResource.Get()));
-	m_manager->AddComponent(m_playerEntity, ProjectileSourceComponent());
-	m_manager->RegisterEntity(m_playerEntity);
+	m_playerEntity = m_entityManager->CreateEntity();
+	m_entityManager->AddComponent(m_playerEntity, TranslationComponent(Vector2(100, 100), Vector2(0, 0), 0.0f));
+	m_entityManager->AddComponent(m_playerEntity, RenderComponent(*m_spriteBatch.get(), m_assetManager->GetTexture(PlayerAsset)));
+	m_entityManager->AddComponent(m_playerEntity, ProjectileSourceComponent(m_assetManager.get()));
+	m_entityManager->RegisterEntity(m_playerEntity);
 }
 
 void PlayState::CleanUp() 
@@ -62,28 +59,33 @@ void PlayState::CleanUp()
 	m_spriteBatch.reset();
 	m_spriteFont.reset();
     m_states.reset();
-	m_testTexture.Reset();
-	m_manager.reset();
+	m_assetManager.reset();
+	m_entityManager.reset();
 }
 
 void PlayState::Update(DX::StepTimer const& timer, Game* game)
 {
-	InputManager* inputManager = game->GetInputManager();
-
 #if _DEBUG
 	swprintf_s(m_framesPerSecond, L"FPS %d\n", timer.GetFramesPerSecond());
-	swprintf_s(m_entityCount, L"Entities: %d\n", m_manager->GetNumberOfEntities());
+	swprintf_s(m_entityCount, L"Entities: %d\n", m_entityManager->GetNumberOfEntities());
 #endif
 
+	UpdateUserInput(game->GetInputManager());
+	
+	m_entityManager->UpdateEntities(timer);
+}
+
+void PlayState::UpdateUserInput(InputManager* inputManager)
+{
+	TranslationComponent& translation = m_entityManager->GetComponentStore<TranslationComponent>().Get(m_playerEntity);
+	ProjectileSourceComponent& projectile = m_entityManager->GetComponentStore<ProjectileSourceComponent>().Get(m_playerEntity);
+
 	GamePad::State state = inputManager->GetGamePadState();
-	TranslationComponent& translation = m_manager->GetComponentStore<TranslationComponent>().Get(m_playerEntity);
-	ProjectileSourceComponent& projectile = m_manager->GetComponentStore<ProjectileSourceComponent>().Get(m_playerEntity);
 
 	projectile.aimDirection = Vector2{ state.thumbSticks.rightX, state.thumbSticks.rightY };
 	projectile.aimDirection.y *= -1;
 
 	Vector2 acceleration{ state.thumbSticks.leftX, state.thumbSticks.leftY };
-
 	if (state.IsConnected())
 	{
 		acceleration.y *= -1;
@@ -92,17 +94,33 @@ void PlayState::Update(DX::StepTimer const& timer, Game* game)
 	Keyboard::State kb = inputManager->GetKeyboardState();
 	if (kb.Up)
 	{
-		acceleration.y = -1.0f;
+		projectile.aimDirection.y = -1.0f;
 	}
 	if (kb.Right)
 	{
-		acceleration.x = 1.0f;
+		projectile.aimDirection.x = 1.0f;
 	}
 	if (kb.Down)
 	{
-		acceleration.y = 1.0f;
+		projectile.aimDirection.y = 1.0f;
 	}
 	if (kb.Left)
+	{
+		projectile.aimDirection.x = -1.0f;
+	}
+	if (kb.W)
+	{
+		acceleration.y = -1.0f;
+	}
+	if (kb.D)
+	{
+		acceleration.x = 1.0f;
+	}
+	if (kb.S)
+	{
+		acceleration.y = 1.0f;
+	}
+	if (kb.A)
 	{
 		acceleration.x = -1.0f;
 	}
@@ -119,8 +137,11 @@ void PlayState::Update(DX::StepTimer const& timer, Game* game)
 	}
 
 	translation.acceleration = (acceleration * movementSpeed) + (translation.velocity * -drag);
+}
 
-	m_manager->UpdateEntities(timer);
+void PlayState::HandleStateChange(Game* game)
+{
+	InputManager* inputManager = game->GetInputManager();
 
 	GamePad::ButtonStateTracker& padTracker = inputManager->GetGamePadTracker();
 	if (inputManager->GetGamePadState().IsConnected())
@@ -150,10 +171,12 @@ void PlayState::Update(DX::StepTimer const& timer, Game* game)
 
 void PlayState::Pause()
 {
+
 }
 
 void PlayState::Resume()
 {
+
 }
 
 void PlayState::WindowSizeChanged(D3D11_VIEWPORT viewPort)
@@ -166,11 +189,11 @@ void PlayState::Render(DX::DeviceResources const& deviceResources)
 	ID3D11DeviceContext1* context = deviceResources.GetD3DDeviceContext();
 	ID3D11RenderTargetView* renderTarget = deviceResources.GetRenderTargetView();
 	
-	context->ClearRenderTargetView(renderTarget, DirectX::Colors::Red);
+	context->ClearRenderTargetView(renderTarget, DirectX::Colors::Black);
 
 	m_spriteBatch->Begin(SpriteSortMode_Deferred, m_states->NonPremultiplied());
 
-	m_manager->RenderEntities();
+	m_entityManager->RenderEntities();
 
 	m_spriteBatch->End();
 
