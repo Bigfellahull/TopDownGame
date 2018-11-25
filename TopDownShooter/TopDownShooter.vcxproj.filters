@@ -119,6 +119,9 @@
     <ClInclude Include="ColliderComponent.h">
       <Filter>Inc\Components</Filter>
     </ClInclude>
+    <ClInclude Include="ColliderSystem.h">
+      <Filter>Inc\Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

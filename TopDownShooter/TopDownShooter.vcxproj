@@ -154,6 +154,7 @@
   <ItemGroup>
     <ClInclude Include="AssetManager.h" />
     <ClInclude Include="ColliderComponent.h" />
+    <ClInclude Include="ColliderSystem.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentStore.h" />
     <ClInclude Include="Config.h" />

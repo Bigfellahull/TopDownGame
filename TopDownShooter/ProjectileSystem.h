@@ -32,21 +32,5 @@ public:
 			m_manager.QueueEntityForDrop(entity);
 			return;
 		}
-
-		// Can this be improved?
-		ColliderComponent& collider = m_manager.GetComponentStore<ColliderComponent>().Get(entity);
-		const std::unordered_map<Entity, FollowPlayerComponent>& enemies = m_manager.GetComponentStore<FollowPlayerComponent>().GetComponents();
-		for (auto e : enemies)
-		{
-			TranslationComponent& enemyTranslation = m_manager.GetComponentStore<TranslationComponent>().Get(e.first);
-			ColliderComponent& enemyCollider = m_manager.GetComponentStore<ColliderComponent>().Get(e.first);
-			
-			float radius = collider.radius + enemyCollider.radius;
-			if (DirectX::SimpleMath::Vector2::DistanceSquared(enemyTranslation.position, translation.position) < radius * radius)
-			{
-				m_manager.QueueEntityForDrop(entity);
-				m_manager.QueueEntityForDrop(e.first);
-			}
-		}
 	}
 };

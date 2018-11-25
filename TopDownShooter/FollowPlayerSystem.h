@@ -32,7 +32,7 @@ public:
 			ComponentStore<RenderComponent>& renderComponents = m_manager.GetComponentStore<RenderComponent>();
 			if (renderComponents.Has(entity))
 			{
-				RenderComponent& render = m_manager.GetComponentStore<RenderComponent>().Get(entity);
+				RenderComponent& render = renderComponents.Get(entity);
 				render.colour = DirectX::Colors::White * (1.0f - static_cast<float>(follow.timeToStart) / 60.0f);
 				render.scale = 1.6f - (follow.timeToStart / 60.f);
 			}
@@ -44,7 +44,7 @@ public:
 				ComponentStore<RenderComponent>& renderComponents = m_manager.GetComponentStore<RenderComponent>();
 				if (renderComponents.Has(entity))
 				{
-					RenderComponent& render = m_manager.GetComponentStore<RenderComponent>().Get(entity);
+					RenderComponent& render = renderComponents.Get(entity);
 					render.colour = DirectX::Colors::White;
 					render.scale = 1.0f;
 				}
