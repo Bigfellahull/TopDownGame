@@ -60,10 +60,10 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
 	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 
 	HWND hWnd = CreateWindowEx(
-		0,
+		FullScreen ? WS_EX_TOPMOST : 0,
 		L"TopDownShooter",
 		L"TopDownShooter",
-		WS_OVERLAPPEDWINDOW,
+		FullScreen ? WS_POPUP : WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,
 		rc.right - rc.left,
@@ -78,7 +78,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
 		return 1;
 	}
 
-	ShowWindow(hWnd, nCmdShow);
+	ShowWindow(hWnd, FullScreen ? SW_SHOWMAXIMIZED : nCmdShow);
 
 	SetWindowLongPtr(hWnd, GWLP_USERDATA, 
 		reinterpret_cast<LONG_PTR>(g_game.get()));
@@ -121,7 +121,7 @@ LRESULT CALLBACK WndProc(HWND hWnd,
 	static bool s_inSizeMove = false;
 	static bool s_inSuspend = false;
 	static bool s_minimised = false;
-	static bool s_fullscreen = false;
+	static bool s_fullscreen = FullScreen;
 
 	Game* game = reinterpret_cast<Game*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
 
@@ -265,6 +265,45 @@ LRESULT CALLBACK WndProc(HWND hWnd,
 	{
 		Keyboard::ProcessMessage(message, wParam, lParam);
 		break;
+	}
+	case WM_SYSKEYDOWN:
+	{
+		if (wParam == VK_RETURN && (lParam & 0x60000000) == 0x20000000)
+		{
+			// Implements the classic ALT+ENTER fullscreen toggle
+			if (s_fullscreen)
+			{
+				SetWindowLongPtr(hWnd, GWL_STYLE, WS_OVERLAPPEDWINDOW);
+				SetWindowLongPtr(hWnd, GWL_EXSTYLE, 0);
+
+				int width = 800;
+				int height = 600;
+				if (game)
+					game->GetDefaultSize(width, height);
+
+				ShowWindow(hWnd, SW_SHOWNORMAL);
+
+				SetWindowPos(hWnd, HWND_TOP, 0, 0, width, height, SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED);
+			}
+			else
+			{
+				SetWindowLongPtr(hWnd, GWL_STYLE, 0);
+				SetWindowLongPtr(hWnd, GWL_EXSTYLE, WS_EX_TOPMOST);
+
+				SetWindowPos(hWnd, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
+
+				ShowWindow(hWnd, SW_SHOWMAXIMIZED);
+			}
+
+			s_fullscreen = !s_fullscreen;
+		}
+		Keyboard::ProcessMessage(message, wParam, lParam);
+		break;
+	}
+	case WM_MENUCHAR:
+	{
+		// Prevent beep on menu
+		return MAKELRESULT(0, MNC_CLOSE);
 	}
 	default:
 	{
