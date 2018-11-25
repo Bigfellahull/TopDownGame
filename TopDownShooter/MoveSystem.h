@@ -27,7 +27,7 @@ public:
 		translation.position += delta;
 		translation.velocity += translation.acceleration * dt;
 
-		// Is there a better way?
+		// Is there a better way? Store pointer on component?
 		const RegionComponent& region = m_manager.GetComponentStore<RegionComponent>().GetComponents().begin()->second;
 		translation.position.Clamp(region.min, region.max);
 

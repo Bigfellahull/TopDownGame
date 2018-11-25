@@ -15,7 +15,7 @@ struct ProjectileSourceComponent : public Component
 	ProjectileSourceComponent(AssetManager* aAssetManager) :
 		assetManager(aAssetManager),
 		aimDirection(DirectX::SimpleMath::Vector2(0, 0)),
-		cooldownFrames(5),
+		cooldownFrames(6),
 		cooldownRemaining(0) { }
 };
 

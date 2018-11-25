@@ -111,9 +111,14 @@ size_t EntityManager::RenderEntities()
 	return updatedEntities;
 }
 
+// TODO: This seems to be adding multiple entries for the same entity.
+// I am fixing now by changing to a map, but we need to investigate why this is happening.
 void EntityManager::QueueEntityForDrop(const Entity entity)
 {
-	m_tempEntitiesToDrop.emplace_back(entity);
+	if (m_tempEntitiesToDrop.end() == m_tempEntitiesToDrop.find(entity))
+	{
+		m_tempEntitiesToDrop.insert(entity);
+	}
 }
 
 void EntityManager::DropEntities()

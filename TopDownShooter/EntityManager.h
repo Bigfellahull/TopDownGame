@@ -5,6 +5,7 @@
 #include "ComponentStore.h"
 #include "System.h"
 #include <map>
+#include <unordered_set>
 
 class EntityManager 
 {
@@ -78,7 +79,7 @@ private:
 	std::unordered_map<Entity, std::set<ComponentType>> m_entities;
 	std::map<ComponentType, std::unique_ptr<IComponentStore>> m_componentStores;
 	std::vector<std::shared_ptr<System>> m_systems;
-	std::vector<Entity> m_tempEntitiesToDrop;
+	std::unordered_set<Entity> m_tempEntitiesToDrop;
 
 	void DropEntities();
 };

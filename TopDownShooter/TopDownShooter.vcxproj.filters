@@ -110,6 +110,15 @@
     <ClInclude Include="Config.h">
       <Filter>Inc</Filter>
     </ClInclude>
+    <ClInclude Include="FollowPlayerComponent.h">
+      <Filter>Inc\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="FollowPlayerSystem.h">
+      <Filter>Inc\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="ColliderComponent.h">
+      <Filter>Inc\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

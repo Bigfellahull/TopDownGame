@@ -153,11 +153,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AssetManager.h" />
+    <ClInclude Include="ColliderComponent.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentStore.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="DeviceResources.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="FollowPlayerComponent.h" />
+    <ClInclude Include="FollowPlayerSystem.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="IGameState.h" />
     <ClInclude Include="InputManager.h" />

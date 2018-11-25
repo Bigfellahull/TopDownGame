@@ -34,6 +34,12 @@ public:
 			projectile.aimDirection.Normalize();
 		}
 
+		float aimLength = projectile.aimDirection.LengthSquared();
+		if (aimLength > 1.0f)
+		{
+			projectile.aimDirection *= (1.0f / sqrt(aimLength));
+		}
+
 		if (projectile.aimDirection.LengthSquared() > 0 && projectile.cooldownRemaining <= 0)
 		{
 			projectile.cooldownRemaining = projectile.cooldownFrames;
@@ -51,6 +57,7 @@ public:
 				m_manager.AddComponent(bullet, TranslationComponent(translation.position + offset, velocity, aimAngle));
 				m_manager.AddComponent(bullet, RenderComponent(render.spriteBatch, projectile.assetManager->GetTexture(BulletAsset)));
 				m_manager.AddComponent(bullet, ProjectileComponent());
+				m_manager.AddComponent(bullet, ColliderComponent(10.0f));
 				m_manager.RegisterEntity(bullet);
 			}
 			offset = DirectX::SimpleMath::Vector2::Transform(DirectX::SimpleMath::Vector2(40, 8), aimQuat);
@@ -59,6 +66,7 @@ public:
 				m_manager.AddComponent(bullet, TranslationComponent(translation.position + offset, velocity, aimAngle));
 				m_manager.AddComponent(bullet, RenderComponent(render.spriteBatch, projectile.assetManager->GetTexture(BulletAsset)));
 				m_manager.AddComponent(bullet, ProjectileComponent());
+				m_manager.AddComponent(bullet, ColliderComponent(10.0f));
 				m_manager.RegisterEntity(bullet);
 			}
 		}

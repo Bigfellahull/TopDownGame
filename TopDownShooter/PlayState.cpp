@@ -3,15 +3,20 @@
 #include "PlayState.h"
 #include "IntroState.h"
 #include "PauseState.h"
+
 #include "TranslationComponent.h"
 #include "ProjectileSourceComponent.h"
 #include "ProjectileComponent.h"
 #include "RegionComponent.h"
 #include "RenderComponent.h"
+#include "FollowPlayerComponent.h"
+#include "ColliderComponent.h"
+
 #include "MoveSystem.h"
 #include "RenderSystem.h"
 #include "ProjectileSourceSystem.h"
 #include "ProjectileSystem.h"
+#include "FollowPlayerSystem.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -35,11 +40,14 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_entityManager->CreateComponentStore<ProjectileSourceComponent>();
 	m_entityManager->CreateComponentStore<ProjectileComponent>();
 	m_entityManager->CreateComponentStore<RegionComponent>();
+	m_entityManager->CreateComponentStore<FollowPlayerComponent>();
+	m_entityManager->CreateComponentStore<ColliderComponent>();
 
 	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemMove(*m_entityManager.get())));
 	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemRender(*m_entityManager.get())));
 	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemProjectileSource(*m_entityManager.get())));
 	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemProjectile(*m_entityManager.get())));
+	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemFollowPlayer(*m_entityManager.get())));
 
 	m_regionEntity = m_entityManager->CreateEntity();
 	RECT windowSize = deviceResources.GetOutputSize();
@@ -51,7 +59,15 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_entityManager->AddComponent(m_playerEntity, TranslationComponent(Vector2(100, 100), Vector2(0, 0), 0.0f));
 	m_entityManager->AddComponent(m_playerEntity, RenderComponent(*m_spriteBatch.get(), m_assetManager->GetTexture(PlayerAsset)));
 	m_entityManager->AddComponent(m_playerEntity, ProjectileSourceComponent(m_assetManager.get()));
+	m_entityManager->AddComponent(m_playerEntity, ColliderComponent(44.0f));
 	m_entityManager->RegisterEntity(m_playerEntity);
+
+	auto enemy = m_entityManager->CreateEntity();
+	m_entityManager->AddComponent(enemy, TranslationComponent(Vector2(600, 600), Vector2(0, 0), 0.0f));
+	m_entityManager->AddComponent(enemy, RenderComponent(*m_spriteBatch.get(), m_assetManager->GetTexture(SeekerEnemyAsset)));
+	m_entityManager->AddComponent(enemy, FollowPlayerComponent(m_playerEntity, 7000.0f, 15.0f));
+	m_entityManager->AddComponent(enemy, ColliderComponent(44.0f));
+	m_entityManager->RegisterEntity(enemy);
 }
 
 void PlayState::CleanUp() 
