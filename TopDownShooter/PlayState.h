@@ -22,6 +22,7 @@ public:
 	void Render(DX::DeviceResources const& deviceResources);
 private:
 	void UpdateUserInput(InputManager* inputManager);
+	void SpawnEnemies();
 
     std::unique_ptr<DirectX::CommonStates> m_states;
 	std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
@@ -32,6 +33,8 @@ private:
 	
 	std::unique_ptr<AssetManager> m_assetManager;
 	std::unique_ptr<EntityManager> m_entityManager;
+
+	float m_enemyInverseSpawnChance;
 
 	wchar_t m_framesPerSecond[100];
 	wchar_t m_entityCount[100];

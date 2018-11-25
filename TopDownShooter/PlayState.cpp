@@ -62,12 +62,7 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_entityManager->AddComponent(m_playerEntity, ColliderComponent(44.0f));
 	m_entityManager->RegisterEntity(m_playerEntity);
 
-	auto enemy = m_entityManager->CreateEntity();
-	m_entityManager->AddComponent(enemy, TranslationComponent(Vector2(600, 600), Vector2(0, 0), 0.0f));
-	m_entityManager->AddComponent(enemy, RenderComponent(*m_spriteBatch.get(), m_assetManager->GetTexture(SeekerEnemyAsset)));
-	m_entityManager->AddComponent(enemy, FollowPlayerComponent(m_playerEntity, 7000.0f, 15.0f));
-	m_entityManager->AddComponent(enemy, ColliderComponent(44.0f));
-	m_entityManager->RegisterEntity(enemy);
+	m_enemyInverseSpawnChance = 60;
 }
 
 void PlayState::CleanUp() 
@@ -85,6 +80,8 @@ void PlayState::Update(DX::StepTimer const& timer, Game* game)
 	swprintf_s(m_framesPerSecond, L"FPS %d\n", timer.GetFramesPerSecond());
 	swprintf_s(m_entityCount, L"Entities: %d\n", m_entityManager->GetNumberOfEntities());
 #endif
+
+	SpawnEnemies();
 
 	UpdateUserInput(game->GetInputManager());
 	
@@ -153,6 +150,39 @@ void PlayState::UpdateUserInput(InputManager* inputManager)
 	}
 
 	translation.acceleration = (acceleration * movementSpeed) + (translation.velocity * -drag);
+}
+
+void PlayState::SpawnEnemies()
+{
+	// Can this be better? Maybe move into separate class?
+	if (MathHelper::Random(0, static_cast<int>(m_enemyInverseSpawnChance)) == 0)
+	{
+		RegionComponent& region = m_entityManager->GetComponentStore<RegionComponent>().Get(m_regionEntity);
+		TranslationComponent& playerTranslation = m_entityManager->GetComponentStore<TranslationComponent>().Get(m_playerEntity);
+
+		float xBounds = static_cast<float>(region.max.x) - 20.0f;
+		float yBounds = static_cast<float>(region.max.y) - 20.0f;
+
+		Vector2 spawnPosition = Vector2::Zero;
+		int positionChecks = 0;
+		do
+		{
+			spawnPosition = Vector2(MathHelper::Random(0.0f, xBounds), MathHelper::Random(0.0f, yBounds));
+			positionChecks++;
+		} while ((Vector2::DistanceSquared(spawnPosition, playerTranslation.position) < 200.0f * 200.0f) || positionChecks < 10);
+
+		auto enemy = m_entityManager->CreateEntity();
+		m_entityManager->AddComponent(enemy, TranslationComponent(spawnPosition, Vector2(0, 0), MathHelper::Random(0.0f, 6.2f)));
+		m_entityManager->AddComponent(enemy, RenderComponent(*m_spriteBatch.get(), m_assetManager->GetTexture(SeekerEnemyAsset)));
+		m_entityManager->AddComponent(enemy, FollowPlayerComponent(m_playerEntity, 7000.0f, 15.0f));
+		m_entityManager->AddComponent(enemy, ColliderComponent(44.0f));
+		m_entityManager->RegisterEntity(enemy);
+	}
+
+	if (m_enemyInverseSpawnChance > 5)
+	{
+		m_enemyInverseSpawnChance -= 0.005f;
+	}
 }
 
 void PlayState::HandleStateChange(Game* game)
