@@ -83,14 +83,23 @@
     <ClInclude Include="Component.h">
       <Filter>Inc</Filter>
     </ClInclude>
+    <ClInclude Include="MathHelper.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="RegionComponent.h">
+      <Filter>Inc\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectileSourceComponent.h">
+      <Filter>Inc\Components</Filter>
+    </ClInclude>
     <ClInclude Include="ProjectileComponent.h">
       <Filter>Inc\Components</Filter>
     </ClInclude>
-    <ClInclude Include="ProjectileSystem.h">
+    <ClInclude Include="ProjectileSourceSystem.h">
       <Filter>Inc\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="MathHelper.h">
-      <Filter>Inc</Filter>
+    <ClInclude Include="ProjectileSystem.h">
+      <Filter>Inc\Systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

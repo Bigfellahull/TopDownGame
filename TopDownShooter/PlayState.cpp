@@ -4,10 +4,13 @@
 #include "IntroState.h"
 #include "PauseState.h"
 #include "TranslationComponent.h"
+#include "ProjectileSourceComponent.h"
 #include "ProjectileComponent.h"
+#include "RegionComponent.h"
 #include "RenderComponent.h"
 #include "MoveSystem.h"
 #include "RenderSystem.h"
+#include "ProjectileSourceSystem.h"
 #include "ProjectileSystem.h"
 
 using namespace DirectX;
@@ -32,16 +35,25 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 
 	m_manager->CreateComponentStore<TranslationComponent>();
 	m_manager->CreateComponentStore<RenderComponent>();
+	m_manager->CreateComponentStore<ProjectileSourceComponent>();
 	m_manager->CreateComponentStore<ProjectileComponent>();
+	m_manager->CreateComponentStore<RegionComponent>();
 
-	m_manager->AddSystem(System::Ptr(new SystemMove(*m_manager.get())));
-	m_manager->AddSystem(System::Ptr(new SystemRender(*m_manager.get())));
-	m_manager->AddSystem(System::Ptr(new SystemProjectile(*m_manager.get())));
+	m_manager->AddSystem(std::shared_ptr<System>(new SystemMove(*m_manager.get())));
+	m_manager->AddSystem(std::shared_ptr<System>(new SystemRender(*m_manager.get())));
+	m_manager->AddSystem(std::shared_ptr<System>(new SystemProjectileSource(*m_manager.get())));
+	m_manager->AddSystem(std::shared_ptr<System>(new SystemProjectile(*m_manager.get())));
 
+	m_regionEntity = m_manager->CreateEntity();
+	RECT windowSize = deviceResources.GetOutputSize();
+	m_manager->AddComponent(m_regionEntity, RegionComponent(Vector2(0, 0), 
+		Vector2(static_cast<float>(windowSize.right - windowSize.left), static_cast<float>(windowSize.bottom - windowSize.top))));
+	m_manager->RegisterEntity(m_regionEntity);
+	
 	m_playerEntity = m_manager->CreateEntity();
 	m_manager->AddComponent(m_playerEntity, TranslationComponent(Vector2(100, 100), Vector2(0, 0), 0.0f));
 	m_manager->AddComponent(m_playerEntity, RenderComponent(*m_spriteBatch.get(), m_testTexture.Get(), m_testResource.Get()));
-	m_manager->AddComponent(m_playerEntity, ProjectileComponent(Vector2(0, 0)));
+	m_manager->AddComponent(m_playerEntity, ProjectileSourceComponent());
 	m_manager->RegisterEntity(m_playerEntity);
 }
 
@@ -65,7 +77,7 @@ void PlayState::Update(DX::StepTimer const& timer, Game* game)
 
 	GamePad::State state = inputManager->GetGamePadState();
 	TranslationComponent& translation = m_manager->GetComponentStore<TranslationComponent>().Get(m_playerEntity);
-	ProjectileComponent& projectile = m_manager->GetComponentStore<ProjectileComponent>().Get(m_playerEntity);
+	ProjectileSourceComponent& projectile = m_manager->GetComponentStore<ProjectileSourceComponent>().Get(m_playerEntity);
 
 	projectile.aimDirection = Vector2{ state.thumbSticks.rightX, state.thumbSticks.rightY };
 	projectile.aimDirection.y *= -1;

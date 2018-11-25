@@ -11,7 +11,7 @@ EntityManager::EntityManager() :
 
 EntityManager::~EntityManager() { }
 
-void EntityManager::AddSystem(const System::Ptr& systemPtr)
+void EntityManager::AddSystem(const std::shared_ptr<System>& systemPtr)
 {
 	if ((!systemPtr) || (systemPtr->GetRequiredComponents().empty())) 
 	{
@@ -31,19 +31,17 @@ size_t EntityManager::RegisterEntity(const Entity entity)
 		throw std::runtime_error("The Entity does not exist");
 	}
 
-	ComponentTypeSet entityComponents = (*foundEntity).second;
+	std::set<ComponentType> entityComponents = (*foundEntity).second;
 
 	for (auto system = m_systems.begin();
 		system != m_systems.end();
 		++system)
 	{
-		ComponentTypeSet systemRequiredComponents = (*system)->GetRequiredComponents();
+		std::set<ComponentType> systemRequiredComponents = (*system)->GetRequiredComponents();
 		// Check if all Components Required by the System are in the Entity (use sorted sets)
 		if (std::includes(entityComponents.begin(), entityComponents.end(),
 			systemRequiredComponents.begin(), systemRequiredComponents.end()))
 		{
-			// Register the matching Entity
-			// TODO shall throw in case of failure!
 			(*system)->RegisterEntity(entity);
 			++associatedSystems;
 		}
@@ -87,6 +85,10 @@ size_t EntityManager::UpdateEntities(DX::StepTimer const& timer)
 		updatedEntities += (*system)->UpdateEntities(timer);
 	}
 
+	// It's possible systems have queued entities to be removed.
+	// So now remove them.
+	DropEntities();
+
 	return updatedEntities;
 }
 
@@ -107,4 +109,26 @@ size_t EntityManager::RenderEntities()
 	}
 
 	return updatedEntities;
+}
+
+void EntityManager::QueueEntityForDrop(const Entity entity)
+{
+	m_tempEntitiesToDrop.emplace_back(entity);
+}
+
+void EntityManager::DropEntities()
+{
+	for (auto e : m_tempEntitiesToDrop)
+	{
+		UnregisterEntity(e);
+
+		for (auto const& c : m_componentStores)
+		{
+			c.second->Remove(e);
+		}
+
+		m_entities.erase(e);
+	}
+
+	m_tempEntitiesToDrop.clear();
 }

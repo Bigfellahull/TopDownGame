@@ -19,7 +19,7 @@ public:
 		static_assert(std::is_base_of<Component, T>::value, "T must derived from Component");
 		static_assert(T::Type != InvalidComponentType, "T must define a valid type");
 
-		return m_componentStores.insert(std::make_pair(T::Type, IComponentStore::Ptr(new ComponentStore<T>()))).second;
+		return m_componentStores.insert(std::make_pair(T::Type, std::unique_ptr<IComponentStore>(new ComponentStore<T>()))).second;
 	}
 
 	template<typename T>
@@ -38,12 +38,12 @@ public:
 		return reinterpret_cast<ComponentStore<T>&>(*(componentStore->second));
 	}
 
-	void AddSystem(const System::Ptr& systemPtr);
+	void AddSystem(const std::shared_ptr<System>& systemPtr);
 
 	inline Entity CreateEntity() 
 	{
 		assert(m_lastEntity < std::numeric_limits<Entity>::max());
-		m_entities.insert(std::make_pair((m_lastEntity + 1), ComponentTypeSet()));
+		m_entities.insert(std::make_pair((m_lastEntity + 1), std::set<ComponentType>()));
 		return (++m_lastEntity);
 	}
 
@@ -71,9 +71,14 @@ public:
 	size_t UpdateEntities(DX::StepTimer const& timer);
 	size_t RenderEntities();
 
+	void QueueEntityForDrop(const Entity entity);
+
 private:
 	Entity m_lastEntity;
-	std::unordered_map<Entity, ComponentTypeSet> m_entities;
-	std::map<ComponentType, IComponentStore::Ptr> m_componentStores;
-	std::vector<System::Ptr> m_systems;
+	std::unordered_map<Entity, std::set<ComponentType>> m_entities;
+	std::map<ComponentType, std::unique_ptr<IComponentStore>> m_componentStores;
+	std::vector<std::shared_ptr<System>> m_systems;
+	std::vector<Entity> m_tempEntitiesToDrop;
+
+	void DropEntities();
 };

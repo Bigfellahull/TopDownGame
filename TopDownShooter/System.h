@@ -10,13 +10,11 @@ class EntityManager;
 
 class System {
 public:
-	typedef std::shared_ptr<System> Ptr;
-
 	explicit System(EntityManager& manager, bool isRender);
 
 	virtual ~System();
 
-	inline const ComponentTypeSet& GetRequiredComponents() const 
+	inline const std::set<ComponentType>& GetRequiredComponents() const
 	{
 		return m_requiredComponents;
 	}
@@ -47,7 +45,7 @@ public:
 	bool IsRender() { return m_isRender; }
 
 protected:
-	inline void SetRequiredComponents(ComponentTypeSet&& requiredComponents) 
+	inline void SetRequiredComponents(std::set<ComponentType>&& requiredComponents)
 	{
 		m_requiredComponents = std::move(requiredComponents);
 	}
@@ -56,6 +54,6 @@ protected:
 
 private:
 	bool m_isRender;
-	ComponentTypeSet m_requiredComponents;
+	std::set<ComponentType> m_requiredComponents;
 	std::set<Entity> m_matchingEntities;
 };

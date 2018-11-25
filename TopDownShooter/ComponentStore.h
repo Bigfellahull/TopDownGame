@@ -8,7 +8,7 @@
 class IComponentStore 
 {
 public:
-	typedef std::unique_ptr<IComponentStore> Ptr;
+	virtual bool Remove(Entity entity) = 0;
 };
 
 template<typename T>

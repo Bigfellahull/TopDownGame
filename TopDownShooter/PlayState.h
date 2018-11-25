@@ -6,9 +6,7 @@
 class PlayState : public IGameState
 {
 public:
-	PlayState() :
-		m_framesPerSecond()
-	{ }
+	PlayState() { }
 
 	void Initialise(DX::DeviceResources const& deviceResources);
 	void CleanUp();
@@ -26,6 +24,7 @@ private:
 	std::unique_ptr<DirectX::SpriteFont> m_spriteFont;
 	
 	Entity m_playerEntity;
+	Entity m_regionEntity;
 
 	Microsoft::WRL::ComPtr<ID3D11Resource> m_testResource;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_testTexture;

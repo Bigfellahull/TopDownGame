@@ -11,7 +11,7 @@ public:
 	SystemRender(EntityManager& manager) :
 		System(manager, true)
 	{
-		ComponentTypeSet requiredComponents;
+		std::set<ComponentType> requiredComponents;
 		requiredComponents.insert(RenderComponent::Type);
 		requiredComponents.insert(TranslationComponent::Type);
 
