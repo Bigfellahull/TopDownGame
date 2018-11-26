@@ -4,9 +4,7 @@
 
 struct ProjectileComponent : public Component
 {
-	static const ComponentType Type;
+	static const ComponentType Type = 3;
 
 	ProjectileComponent() { }
 };
-
-const ComponentType ProjectileComponent::Type = 5;

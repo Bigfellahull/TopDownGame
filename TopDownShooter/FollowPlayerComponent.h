@@ -4,7 +4,7 @@
 
 struct FollowPlayerComponent : public Component
 {
-	static const ComponentType Type;
+	static const ComponentType Type = 2;
 
 	Entity playerEntity;
 	float movementSpeed;
@@ -18,5 +18,3 @@ struct FollowPlayerComponent : public Component
 		drag(aDrag),
 		timeToStart(60) { }
 };
-
-const ComponentType FollowPlayerComponent::Type = 6;

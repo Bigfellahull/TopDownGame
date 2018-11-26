@@ -2,10 +2,11 @@
 
 #include "Component.h"
 #include "SimpleMath.h"
+#include "AssetManager.h"
 
 struct ProjectileSourceComponent : public Component
 {
-	static const ComponentType Type;
+	static const ComponentType Type = 4;
 
 	AssetManager* assetManager;
 	DirectX::SimpleMath::Vector2 aimDirection;
@@ -18,5 +19,3 @@ struct ProjectileSourceComponent : public Component
 		cooldownTime(0.15f),
 		cooldownRemaining(0) { }
 };
-
-const ComponentType ProjectileSourceComponent::Type = 3;

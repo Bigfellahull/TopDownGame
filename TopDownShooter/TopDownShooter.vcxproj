@@ -186,14 +186,20 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetManager.cpp" />
+    <ClCompile Include="ColliderSystem.cpp" />
     <ClCompile Include="DeviceResources.cpp" />
+    <ClCompile Include="FollowPlayerSystem.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="IntroState.cpp" />
     <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="MathHelper.cpp" />
+    <ClCompile Include="MoveSystem.cpp" />
     <ClCompile Include="PauseState.cpp" />
     <ClCompile Include="PlayState.cpp" />
+    <ClCompile Include="ProjectileSourceSystem.cpp" />
+    <ClCompile Include="ProjectileSystem.cpp" />
+    <ClCompile Include="RenderSystem.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

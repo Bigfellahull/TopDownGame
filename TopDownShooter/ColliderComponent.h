@@ -4,12 +4,10 @@
 
 struct ColliderComponent : public Component
 {
-	static const ComponentType Type;
+	static const ComponentType Type = 1;
 
 	float radius;
 
 	ColliderComponent(float aRadius) :
 		radius(aRadius) { }
 };
-
-const ComponentType ColliderComponent::Type = 7;

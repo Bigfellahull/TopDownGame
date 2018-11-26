@@ -5,7 +5,7 @@
 
 struct TranslationComponent : public Component 
 {
-	static const ComponentType Type;
+	static const ComponentType Type = 7;
 
 	DirectX::SimpleMath::Vector2 acceleration;
 	DirectX::SimpleMath::Vector2 position;
@@ -18,5 +18,3 @@ struct TranslationComponent : public Component
 		velocity(aVelocity),
 		orientation(aOrientation) { }
 };
-
-const ComponentType TranslationComponent::Type = 1;

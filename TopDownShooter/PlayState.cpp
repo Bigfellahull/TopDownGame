@@ -82,7 +82,7 @@ void PlayState::Update(DX::StepTimer const& timer, Game* game)
 {
 #if _DEBUG
 	swprintf_s(m_framesPerSecond, L"FPS %d\n", timer.GetFramesPerSecond());
-	swprintf_s(m_entityCount, L"Entities: %d\n", m_entityManager->GetNumberOfEntities());
+	swprintf_s(m_entityCount, L"Entities: %zd\n", m_entityManager->GetNumberOfEntities());
 #endif
 
 	float dt = SlowModeEnabled ? 0.001f : static_cast<float>(timer.GetElapsedSeconds());

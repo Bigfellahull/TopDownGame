@@ -15,9 +15,6 @@
     <Filter Include="Content\Fonts">
       <UniqueIdentifier>{3af70e07-bf9c-4a95-84d3-6e66881bcf41}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Inc\Systems">
-      <UniqueIdentifier>{7cc3b8a3-a91b-44f2-87ec-344d06e64352}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\GameStates">
       <UniqueIdentifier>{9b78e192-e2d3-496d-98a3-8848525a9c22}</UniqueIdentifier>
     </Filter>
@@ -26,6 +23,15 @@
     </Filter>
     <Filter Include="Inc\Components">
       <UniqueIdentifier>{c8e8f134-216c-455c-af70-a291c3ac5e6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Systems">
+      <UniqueIdentifier>{b530759e-01fc-406f-a10b-196b0133600b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Inc\Systems">
+      <UniqueIdentifier>{7cc3b8a3-a91b-44f2-87ec-344d06e64352}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Components">
+      <UniqueIdentifier>{c48bfd7a-29c1-4727-b14e-e0fc925ef51f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -162,6 +168,24 @@
     </ClCompile>
     <ClCompile Include="AssetManager.cpp">
       <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="ColliderSystem.cpp">
+      <Filter>Src\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="FollowPlayerSystem.cpp">
+      <Filter>Src\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="MoveSystem.cpp">
+      <Filter>Src\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectileSourceSystem.cpp">
+      <Filter>Src\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectileSystem.cpp">
+      <Filter>Src\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderSystem.cpp">
+      <Filter>Src\Systems</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

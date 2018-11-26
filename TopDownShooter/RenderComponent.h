@@ -2,10 +2,11 @@
 
 #include "Component.h"
 #include "SpriteBatch.h"
+#include "Texture2d.h"
 
 struct RenderComponent : public Component
 {
-	static const ComponentType Type;
+	static const ComponentType Type = 6;
 
 	DirectX::SpriteBatch& spriteBatch;
 	Texture2d* texture;
@@ -18,5 +19,3 @@ struct RenderComponent : public Component
 		colour(DirectX::Colors::White),
 		scale(1.0f) { }
 };
-
-const ComponentType RenderComponent::Type = 2;

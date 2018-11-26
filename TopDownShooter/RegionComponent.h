@@ -5,7 +5,7 @@
 
 struct RegionComponent : public Component
 {
-	static const ComponentType Type;
+	static const ComponentType Type = 5;
 
 	DirectX::SimpleMath::Vector2 min;
 	DirectX::SimpleMath::Vector2 max;
@@ -14,5 +14,3 @@ struct RegionComponent : public Component
 		min(aMin),
 		max(aMax) { }
 };
-
-const ComponentType RegionComponent::Type = 4;
