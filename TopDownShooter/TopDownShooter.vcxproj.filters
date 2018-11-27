@@ -30,9 +30,6 @@
     <Filter Include="Inc\Systems">
       <UniqueIdentifier>{7cc3b8a3-a91b-44f2-87ec-344d06e64352}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Components">
-      <UniqueIdentifier>{c48bfd7a-29c1-4727-b14e-e0fc925ef51f}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -127,6 +124,12 @@
     </ClInclude>
     <ClInclude Include="ColliderSystem.h">
       <Filter>Inc\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerStatus.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerComponent.h">
+      <Filter>Inc\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

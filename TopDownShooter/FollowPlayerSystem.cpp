@@ -18,7 +18,15 @@ SystemFollowPlayer::SystemFollowPlayer(EntityManager& manager) :
 void SystemFollowPlayer::UpdateEntity(float dt, Entity entity)
 {
     FollowPlayerComponent& follow = m_manager.GetComponentStore<FollowPlayerComponent>().Get(entity);
-    TranslationComponent& translation = m_manager.GetComponentStore<TranslationComponent>().Get(entity);
+
+    ComponentStore<TranslationComponent>& translationComponents = m_manager.GetComponentStore<TranslationComponent>();
+    if (!translationComponents.Has(follow.playerStatus->currentEntityId))
+    {
+        m_manager.QueueEntityForDrop(entity);
+        return;
+    }
+
+    TranslationComponent& translation = translationComponents.Get(entity);
 
     // This might be a hack job. Look to improve?
     // Will need to fix when additional enemies are added.
@@ -47,11 +55,10 @@ void SystemFollowPlayer::UpdateEntity(float dt, Entity entity)
             }
             follow.timeToStart = -20.0f;
         }
-
-        TranslationComponent& playerTranslation = m_manager.GetComponentStore<TranslationComponent>().Get(follow.playerEntity);
-
+        
+        TranslationComponent& playerTranslation = translationComponents.Get(follow.playerStatus->currentEntityId);
         DirectX::SimpleMath::Vector2 delta = playerTranslation.position - translation.position;
-
+               
         if (delta.Length() > 50.0f)
         {
             delta.Normalize();

@@ -167,6 +167,8 @@
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="IntroState.h" />
     <ClInclude Include="EntityManager.h" />
+    <ClInclude Include="PlayerComponent.h" />
+    <ClInclude Include="PlayerStatus.h" />
     <ClInclude Include="ProjectileSystem.h" />
     <ClInclude Include="MathHelper.h" />
     <ClInclude Include="MoveSystem.h" />

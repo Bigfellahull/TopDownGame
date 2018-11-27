@@ -11,6 +11,7 @@
 #include "RenderComponent.h"
 #include "FollowPlayerComponent.h"
 #include "ColliderComponent.h"
+#include "PlayerComponent.h"
 
 #include "MoveSystem.h"
 #include "RenderSystem.h"
@@ -43,6 +44,7 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_entityManager->CreateComponentStore<RegionComponent>();
 	m_entityManager->CreateComponentStore<FollowPlayerComponent>();
 	m_entityManager->CreateComponentStore<ColliderComponent>();
+    m_entityManager->CreateComponentStore<PlayerComponent>();
 		
 	// The order systems are added in is important.
 	// They are executed in order from first added to last.
@@ -58,15 +60,22 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_entityManager->AddComponent(m_regionEntity, RegionComponent(Vector2(0, 0),
 		Vector2(static_cast<float>(windowSize.right - windowSize.left), static_cast<float>(windowSize.bottom - windowSize.top))));
 	m_entityManager->RegisterEntity(m_regionEntity);
-	
-	m_playerEntity = m_entityManager->CreateEntity();
-	m_entityManager->AddComponent(m_playerEntity, TranslationComponent(Vector2(100, 100), Vector2(0, 0), 0.0f));
-	m_entityManager->AddComponent(m_playerEntity, RenderComponent(*m_spriteBatch.get(), m_assetManager->GetTexture(PlayerAsset)));
-	m_entityManager->AddComponent(m_playerEntity, ProjectileSourceComponent(m_assetManager.get()));
-	m_entityManager->AddComponent(m_playerEntity, ColliderComponent(20.0f));
-	m_entityManager->RegisterEntity(m_playerEntity);
+
+    SpawnPlayer();
 
 	m_enemyInverseSpawnChance = 60;
+}
+
+void PlayState::SpawnPlayer()
+{
+    m_playerStatus.currentEntityId = m_entityManager->CreateEntity();
+    m_entityManager->AddComponent(m_playerStatus.currentEntityId, TranslationComponent(Vector2(100, 100), Vector2(0, 0), 0.0f));
+    m_entityManager->AddComponent(m_playerStatus.currentEntityId, RenderComponent(*m_spriteBatch.get(), m_assetManager->GetTexture(PlayerAsset)));
+    m_entityManager->AddComponent(m_playerStatus.currentEntityId, ProjectileSourceComponent(m_assetManager.get()));
+    m_entityManager->AddComponent(m_playerStatus.currentEntityId, ColliderComponent(20.0f));
+    m_entityManager->AddComponent(m_playerStatus.currentEntityId, PlayerComponent(&m_playerStatus));
+    m_entityManager->RegisterEntity(m_playerStatus.currentEntityId);
+    m_playerStatus.isAlive = true;
 }
 
 void PlayState::CleanUp() 
@@ -87,75 +96,85 @@ void PlayState::Update(DX::StepTimer const& timer, Game* game)
 
 	float dt = SlowModeEnabled ? 0.001f : static_cast<float>(timer.GetElapsedSeconds());
 
-	SpawnEnemies(dt);
+    if (m_playerStatus.isAlive) 
+    {
+        SpawnEnemies(dt);
+    }
 
-	UpdateUserInput(game->GetInputManager());
-	
-	m_entityManager->UpdateEntities(dt);
+    UpdateUserInput(game->GetInputManager());
+
+    m_entityManager->UpdateEntities(dt);
 }
 
 void PlayState::UpdateUserInput(InputManager* inputManager)
-{	
-	TranslationComponent& translation = m_entityManager->GetComponentStore<TranslationComponent>().Get(m_playerEntity);
-	ProjectileSourceComponent& projectile = m_entityManager->GetComponentStore<ProjectileSourceComponent>().Get(m_playerEntity);
+{
+    GamePad::State state = inputManager->GetGamePadState();
+    Keyboard::State kb = inputManager->GetKeyboardState();
 
-	GamePad::State state = inputManager->GetGamePadState();
+    if (m_playerStatus.isAlive) 
+    {
+        TranslationComponent& translation = m_entityManager->GetComponentStore<TranslationComponent>().Get(m_playerStatus.currentEntityId);
+        ProjectileSourceComponent& projectile = m_entityManager->GetComponentStore<ProjectileSourceComponent>().Get(m_playerStatus.currentEntityId);
 
-	projectile.aimDirection = Vector2{ state.thumbSticks.rightX, state.thumbSticks.rightY };
-	projectile.aimDirection.y *= -1;
+        projectile.aimDirection = Vector2{ state.thumbSticks.rightX, state.thumbSticks.rightY };
+        projectile.aimDirection.y *= -1;
 
-	Vector2 acceleration{ state.thumbSticks.leftX, state.thumbSticks.leftY };
-	if (state.IsConnected())
-	{
-		acceleration.y *= -1;
-	}
+        Vector2 acceleration{ state.thumbSticks.leftX, state.thumbSticks.leftY };
+        if (state.IsConnected())
+        {
+            acceleration.y *= -1;
+        }
 
-	Keyboard::State kb = inputManager->GetKeyboardState();
-	if (kb.Up)
-	{
-		projectile.aimDirection.y = -1.0f;
-	}
-	if (kb.Right)
-	{
-		projectile.aimDirection.x = 1.0f;
-	}
-	if (kb.Down)
-	{
-		projectile.aimDirection.y = 1.0f;
-	}
-	if (kb.Left)
-	{
-		projectile.aimDirection.x = -1.0f;
-	}
-	if (kb.W)
-	{
-		acceleration.y = -1.0f;
-	}
-	if (kb.D)
-	{
-		acceleration.x = 1.0f;
-	}
-	if (kb.S)
-	{
-		acceleration.y = 1.0f;
-	}
-	if (kb.A)
-	{
-		acceleration.x = -1.0f;
-	}
+        if (kb.Up)
+        {
+            projectile.aimDirection.y = -1.0f;
+        }
+        if (kb.Right)
+        {
+            projectile.aimDirection.x = 1.0f;
+        }
+        if (kb.Down)
+        {
+            projectile.aimDirection.y = 1.0f;
+        }
+        if (kb.Left)
+        {
+            projectile.aimDirection.x = -1.0f;
+        }
+        if (kb.W)
+        {
+            acceleration.y = -1.0f;
+        }
+        if (kb.D)
+        {
+            acceleration.x = 1.0f;
+        }
+        if (kb.S)
+        {
+            acceleration.y = 1.0f;
+        }
+        if (kb.A)
+        {
+            acceleration.x = -1.0f;
+        }
 
-	// TODO: Work out units and why this has to be so high
-	float movementSpeed = 8000.0f;
-	float drag = 10.0f;
+        // TODO: Work out units and why this has to be so high
+        float movementSpeed = 8000.0f;
+        float drag = 10.0f;
 
-	// Ensure moving diagonally isn't faster than usual.
-	float accLength = acceleration.LengthSquared();
-	if (accLength > 1.0f)
-	{
-		acceleration *= (1.0f / sqrt(accLength));
-	}
+        // Ensure moving diagonally isn't faster than usual.
+        float accLength = acceleration.LengthSquared();
+        if (accLength > 1.0f)
+        {
+            acceleration *= (1.0f / sqrt(accLength));
+        }
 
-	translation.acceleration = (acceleration * movementSpeed) + (translation.velocity * -drag);
+        translation.acceleration = (acceleration * movementSpeed) + (translation.velocity * -drag);
+    }
+    else if (kb.Q || state.IsBPressed())
+    {
+        SpawnPlayer();
+    }
 }
 
 void PlayState::SpawnEnemies(float dt)
@@ -166,7 +185,7 @@ void PlayState::SpawnEnemies(float dt)
 	if (MathHelper::Random(0, static_cast<int>(m_enemyInverseSpawnChance)) == 0)
 	{
 		RegionComponent& region = m_entityManager->GetComponentStore<RegionComponent>().Get(m_regionEntity);
-		TranslationComponent& playerTranslation = m_entityManager->GetComponentStore<TranslationComponent>().Get(m_playerEntity);
+		TranslationComponent& playerTranslation = m_entityManager->GetComponentStore<TranslationComponent>().Get(m_playerStatus.currentEntityId);
 
 		float xBounds = static_cast<float>(region.max.x) - 20.0f;
 		float yBounds = static_cast<float>(region.max.y) - 20.0f;
@@ -182,7 +201,7 @@ void PlayState::SpawnEnemies(float dt)
 		auto enemy = m_entityManager->CreateEntity();
 		m_entityManager->AddComponent(enemy, TranslationComponent(spawnPosition, Vector2(0, 0), MathHelper::Random(0.0f, 6.2f)));
 		m_entityManager->AddComponent(enemy, RenderComponent(*m_spriteBatch.get(), m_assetManager->GetTexture(SeekerEnemyAsset)));
-		m_entityManager->AddComponent(enemy, FollowPlayerComponent(m_playerEntity, 7000.0f, 15.0f));
+		m_entityManager->AddComponent(enemy, FollowPlayerComponent(&m_playerStatus, 7000.0f, 15.0f));
 		m_entityManager->AddComponent(enemy, ColliderComponent(20.0f));
 		m_entityManager->RegisterEntity(enemy);
 	}

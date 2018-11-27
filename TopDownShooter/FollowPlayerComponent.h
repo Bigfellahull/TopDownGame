@@ -1,19 +1,20 @@
 #pragma once
 
 #include "Component.h"
+#include "PlayerStatus.h"
 
 struct FollowPlayerComponent : public Component
 {
 	static const ComponentType Type = 2;
 
-	Entity playerEntity;
+	PlayerStatus* playerStatus;
 	float movementSpeed;
 	float drag;
 
 	float timeToStart;
 
-	FollowPlayerComponent(Entity aPlayerEntity, float aMovementSpeed, float aDrag) :
-		playerEntity(aPlayerEntity),
+	FollowPlayerComponent(PlayerStatus* aPlayerStatus, float aMovementSpeed, float aDrag) :
+        playerStatus(aPlayerStatus),
 		movementSpeed(aMovementSpeed),
 		drag(aDrag),
 		timeToStart(60) { }

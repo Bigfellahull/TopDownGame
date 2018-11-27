@@ -3,6 +3,7 @@
 #include "ColliderSystem.h"
 #include "ColliderComponent.h"
 #include "TranslationComponent.h"
+#include "PlayerComponent.h"
 
 SystemCollider::SystemCollider(EntityManager& manager) :
     System(manager, false)
@@ -34,6 +35,20 @@ void SystemCollider::UpdateEntity(float dt, Entity entity)
         float radius = collider.radius + e.second.radius;
         if (DirectX::SimpleMath::Vector2::DistanceSquared(translation.position, otherTranslation.position) < radius * radius)
         {
+            ComponentStore<PlayerComponent>& playerComponents = m_manager.GetComponentStore<PlayerComponent>();
+
+            if (playerComponents.Has(entity))
+            {
+                PlayerComponent& player = playerComponents.Get(entity);
+                player.status->isAlive = false;
+            }
+
+            if (playerComponents.Has(e.first))
+            {
+                PlayerComponent& player = playerComponents.Get(e.first);
+                player.status->isAlive = false;
+            }
+
             m_manager.QueueEntityForDrop(entity);
             m_manager.QueueEntityForDrop(e.first);
         }

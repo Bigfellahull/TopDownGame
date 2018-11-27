@@ -4,6 +4,8 @@
 #include "EntityManager.h"
 #include "AssetManager.h"
 
+#include "PlayerStatus.h"
+
 class PlayState : public IGameState
 {
 public:
@@ -23,12 +25,13 @@ public:
 private:
 	void UpdateUserInput(InputManager* inputManager);
 	void SpawnEnemies(float dt);
-
+    void SpawnPlayer();
+    
     std::unique_ptr<DirectX::CommonStates> m_states;
 	std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
 	std::unique_ptr<DirectX::SpriteFont> m_spriteFont;
 	
-	Entity m_playerEntity;
+    PlayerStatus m_playerStatus;
 	Entity m_regionEntity;
 	
 	std::unique_ptr<AssetManager> m_assetManager;
