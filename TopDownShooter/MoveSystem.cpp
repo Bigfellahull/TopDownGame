@@ -4,6 +4,8 @@
 #include "TranslationComponent.h"
 #include "RegionComponent.h"
 
+using namespace DirectX::SimpleMath;
+
 SystemMove::SystemMove(EntityManager& manager) :
     System(manager, false)
 {
@@ -17,20 +19,13 @@ void SystemMove::UpdateEntity(float dt, Entity entity)
 {
     TranslationComponent& translation = m_manager.GetComponentStore<TranslationComponent>().Get(entity);
 
-    DirectX::SimpleMath::Vector2 delta = (0.5f * translation.acceleration * std::pow(dt, 2)) + (translation.velocity * dt);
+    Vector2 delta = (0.5f * translation.acceleration * std::pow(dt, 2)) + (translation.velocity * dt);
     translation.position += delta;
     translation.velocity += translation.acceleration * dt;
 
     // Is there a better way? Store pointer on component?
     const RegionComponent& region = m_manager.GetComponentStore<RegionComponent>().GetComponents().begin()->second;
     translation.position.Clamp(region.min, region.max);
-
-    /*if (translation.acceleration.LengthSquared() > 1)
-    {
-        translation.acceleration.Normalize();
-    }
-    translation.velocity = 8.0f * translation.acceleration;
-    translation.position += translation.velocity;*/
 
     if (translation.velocity.LengthSquared() > 0)
     {

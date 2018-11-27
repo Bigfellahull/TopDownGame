@@ -131,6 +131,12 @@
     <ClInclude Include="PlayerComponent.h">
       <Filter>Inc\Components</Filter>
     </ClInclude>
+    <ClInclude Include="AvoidanceComponent.h">
+      <Filter>Inc\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="AvoidanceSystem.h">
+      <Filter>Inc\Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -188,6 +194,9 @@
       <Filter>Src\Systems</Filter>
     </ClCompile>
     <ClCompile Include="RenderSystem.cpp">
+      <Filter>Src\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="AvoidanceSystem.cpp">
       <Filter>Src\Systems</Filter>
     </ClCompile>
   </ItemGroup>

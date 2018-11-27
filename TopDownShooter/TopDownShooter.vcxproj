@@ -153,6 +153,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AssetManager.h" />
+    <ClInclude Include="AvoidanceComponent.h" />
+    <ClInclude Include="AvoidanceSystem.h" />
     <ClInclude Include="ColliderComponent.h" />
     <ClInclude Include="ColliderSystem.h" />
     <ClInclude Include="Component.h" />
@@ -188,6 +190,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetManager.cpp" />
+    <ClCompile Include="AvoidanceSystem.cpp" />
     <ClCompile Include="ColliderSystem.cpp" />
     <ClCompile Include="DeviceResources.cpp" />
     <ClCompile Include="FollowPlayerSystem.cpp" />

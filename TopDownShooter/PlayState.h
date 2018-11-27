@@ -25,6 +25,7 @@ public:
 private:
 	void UpdateUserInput(InputManager* inputManager);
 	void SpawnEnemies(float dt);
+	DirectX::SimpleMath::Vector2 GenerateRandomPosition();
     void SpawnPlayer();
     
     std::unique_ptr<DirectX::CommonStates> m_states;
