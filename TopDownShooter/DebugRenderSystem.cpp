@@ -48,10 +48,10 @@ void SystemDebugRender::RenderEntity(Entity entity)
         DirectX::SpriteEffects_None,
         0);
 
-#if 0
+#if 1
     // Attempt to draw collision radius
     float max = 2.0f * 3.142f;
-    float step = max /10.0f;
+    float step = max / 10.0f;
 
     std::vector<Vector2> vec;
     for (float theta = 0.0f; theta < max; theta += step)
@@ -64,16 +64,17 @@ void SystemDebugRender::RenderEntity(Entity entity)
     {
         auto point1 = vec[i - 1] + translation.position;
         auto point2 = vec[i] + translation.position;
-
+       
         float distance = Vector2::Distance(point1, point2);
         float angle = (float)std::atan2(point2.y - point1.y, point2.x - point1.x);
-
+                
         render.spriteBatch.Draw(m_debugTexture->GetSrv(),
-            Rectangle(point1.x, point1.y, distance, 1.0f),
+            point1,
             0,
             DirectX::Colors::Blue,
             angle,
             Vector2(0, 0),
+            Vector2(distance, 1.0f),
             DirectX::SpriteEffects_None,
             0);
     }
