@@ -12,6 +12,7 @@
 #include "FollowPlayerComponent.h"
 #include "ColliderComponent.h"
 #include "PlayerComponent.h"
+#include "AvoidanceComponent.h"
 
 #include "MoveSystem.h"
 #include "RenderSystem.h"
@@ -19,6 +20,8 @@
 #include "ProjectileSystem.h"
 #include "FollowPlayerSystem.h"
 #include "ColliderSystem.h"
+#include "AvoidanceSystem.h"
+#include "DebugRenderSystem.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -45,15 +48,18 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_entityManager->CreateComponentStore<FollowPlayerComponent>();
 	m_entityManager->CreateComponentStore<ColliderComponent>();
     m_entityManager->CreateComponentStore<PlayerComponent>();
+	m_entityManager->CreateComponentStore<AvoidanceComponent>();
 		
 	// The order systems are added in is important.
 	// They are executed in order from first added to last.
 	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemProjectileSource(*m_entityManager.get())));
 	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemProjectile(*m_entityManager.get())));
 	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemFollowPlayer(*m_entityManager.get())));
+	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemAvoidance(*m_entityManager.get())));
 	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemMove(*m_entityManager.get())));
 	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemCollider(*m_entityManager.get())));
 	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemRender(*m_entityManager.get())));
+    m_entityManager->AddSystem(std::shared_ptr<System>(new SystemDebugRender(*m_entityManager.get(), m_assetManager->GetTexture(DebugAsset))));
 
 	m_regionEntity = m_entityManager->CreateEntity();
 	RECT windowSize = deviceResources.GetOutputSize();
@@ -69,7 +75,7 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 void PlayState::SpawnPlayer()
 {
     m_playerStatus.currentEntityId = m_entityManager->CreateEntity();
-    m_entityManager->AddComponent(m_playerStatus.currentEntityId, TranslationComponent(Vector2(100, 100), Vector2(0, 0), 0.0f));
+    m_entityManager->AddComponent(m_playerStatus.currentEntityId, TranslationComponent(GenerateRandomPosition(), Vector2(0, 0), 0.0f));
     m_entityManager->AddComponent(m_playerStatus.currentEntityId, RenderComponent(*m_spriteBatch.get(), m_assetManager->GetTexture(PlayerAsset)));
     m_entityManager->AddComponent(m_playerStatus.currentEntityId, ProjectileSourceComponent(m_assetManager.get()));
     m_entityManager->AddComponent(m_playerStatus.currentEntityId, ColliderComponent(20.0f));
@@ -177,6 +183,16 @@ void PlayState::UpdateUserInput(InputManager* inputManager)
     }
 }
 
+Vector2 PlayState::GenerateRandomPosition()
+{
+	RegionComponent& region = m_entityManager->GetComponentStore<RegionComponent>().Get(m_regionEntity);
+
+	float xBounds = static_cast<float>(region.max.x) - 20.0f;
+	float yBounds = static_cast<float>(region.max.y) - 20.0f;
+
+	return Vector2(MathHelper::Random(0.0f, xBounds), MathHelper::Random(0.0f, yBounds));
+}
+
 void PlayState::SpawnEnemies(float dt)
 {
 	// Can this be better? Maybe move into separate class?
@@ -184,25 +200,22 @@ void PlayState::SpawnEnemies(float dt)
 	// an expected number of enemies.
 	if (MathHelper::Random(0, static_cast<int>(m_enemyInverseSpawnChance)) == 0)
 	{
-		RegionComponent& region = m_entityManager->GetComponentStore<RegionComponent>().Get(m_regionEntity);
 		TranslationComponent& playerTranslation = m_entityManager->GetComponentStore<TranslationComponent>().Get(m_playerStatus.currentEntityId);
-
-		float xBounds = static_cast<float>(region.max.x) - 20.0f;
-		float yBounds = static_cast<float>(region.max.y) - 20.0f;
 
 		Vector2 spawnPosition = Vector2::Zero;
 		int positionChecks = 0;
 		do
 		{
-			spawnPosition = Vector2(MathHelper::Random(0.0f, xBounds), MathHelper::Random(0.0f, yBounds));
+			spawnPosition = GenerateRandomPosition();
 			positionChecks++;
 		} while ((Vector2::DistanceSquared(spawnPosition, playerTranslation.position) < 200.0f * 200.0f) || positionChecks < 10);
 
 		auto enemy = m_entityManager->CreateEntity();
 		m_entityManager->AddComponent(enemy, TranslationComponent(spawnPosition, Vector2(0, 0), MathHelper::Random(0.0f, 6.2f)));
 		m_entityManager->AddComponent(enemy, RenderComponent(*m_spriteBatch.get(), m_assetManager->GetTexture(SeekerEnemyAsset)));
-		m_entityManager->AddComponent(enemy, FollowPlayerComponent(&m_playerStatus, 7000.0f, 15.0f));
-		m_entityManager->AddComponent(enemy, ColliderComponent(20.0f));
+		m_entityManager->AddComponent(enemy, FollowPlayerComponent(&m_playerStatus, 6500.0f, 15.0f));
+		m_entityManager->AddComponent(enemy, AvoidanceComponent());
+		m_entityManager->AddComponent(enemy, ColliderComponent(15.0f));
 		m_entityManager->RegisterEntity(enemy);
 	}
 

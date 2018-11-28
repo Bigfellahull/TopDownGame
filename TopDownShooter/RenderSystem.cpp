@@ -4,6 +4,9 @@
 #include "TranslationComponent.h"
 #include "RenderComponent.h"
 
+using namespace DirectX;
+using namespace DirectX::SimpleMath;
+
 SystemRender::SystemRender(EntityManager& manager) :
     System(manager, true)
 {
@@ -28,8 +31,8 @@ void SystemRender::RenderEntity(Entity entity)
         nullptr,
         render.colour,
         translation.orientation,
-        DirectX::SimpleMath::Vector2(width / 2, height / 2),
+        Vector2(width / 2, height / 2),
         render.scale,
-        DirectX::SpriteEffects::SpriteEffects_None,
+        SpriteEffects::SpriteEffects_None,
         0);
 }

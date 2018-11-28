@@ -8,6 +8,8 @@
 #include "ColliderComponent.h"
 #include "MathHelper.h"
 
+using namespace DirectX::SimpleMath;
+
 SystemProjectileSource::SystemProjectileSource(EntityManager& manager) :
     System(manager, false)
 {
@@ -43,13 +45,13 @@ void SystemProjectileSource::UpdateEntity(float dt, Entity entity)
         projectile.cooldownRemaining = projectile.cooldownTime;
 
         float aimAngle = static_cast<float>(std::atan2(projectile.aimDirection.y, projectile.aimDirection.x));
-        DirectX::SimpleMath::Quaternion aimQuat = DirectX::SimpleMath::Quaternion::CreateFromYawPitchRoll(0, 0, aimAngle);
+        Quaternion aimQuat = Quaternion::CreateFromYawPitchRoll(0, 0, aimAngle);
 
         auto randomSpread = (MathHelper::Random(0.0f, 1.0f) * 0.02) + (MathHelper::Random(0.0f, 1.0f) * 0.02);
-        DirectX::SimpleMath::Vector2 velocity = 1000.0f *
-            DirectX::SimpleMath::Vector2(static_cast<float>(std::cos(aimAngle + randomSpread)), static_cast<float>(std::sin(aimAngle + randomSpread)));
+        Vector2 velocity = 1000.0f *
+            Vector2(static_cast<float>(std::cos(aimAngle + randomSpread)), static_cast<float>(std::sin(aimAngle + randomSpread)));
 
-        DirectX::SimpleMath::Vector2 offset = DirectX::SimpleMath::Vector2::Transform(DirectX::SimpleMath::Vector2(40, -8), aimQuat);
+        Vector2 offset = Vector2::Transform(Vector2(40, -8), aimQuat);
         {
             Entity bullet = m_manager.CreateEntity();
             m_manager.AddComponent(bullet, TranslationComponent(translation.position + offset, velocity, aimAngle));
@@ -58,7 +60,7 @@ void SystemProjectileSource::UpdateEntity(float dt, Entity entity)
             m_manager.AddComponent(bullet, ColliderComponent(2.0f));
             m_manager.RegisterEntity(bullet);
         }
-        offset = DirectX::SimpleMath::Vector2::Transform(DirectX::SimpleMath::Vector2(40, 8), aimQuat);
+        offset = Vector2::Transform(Vector2(40, 8), aimQuat);
         {
             Entity bullet = m_manager.CreateEntity();
             m_manager.AddComponent(bullet, TranslationComponent(translation.position + offset, velocity, aimAngle));

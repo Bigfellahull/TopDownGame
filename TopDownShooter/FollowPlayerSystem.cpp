@@ -5,6 +5,9 @@
 #include "FollowPlayerComponent.h"
 #include "RenderComponent.h"
 
+using namespace DirectX;
+using namespace DirectX::SimpleMath;
+
 SystemFollowPlayer::SystemFollowPlayer(EntityManager& manager) :
     System(manager, false)
 {
@@ -18,15 +21,15 @@ SystemFollowPlayer::SystemFollowPlayer(EntityManager& manager) :
 void SystemFollowPlayer::UpdateEntity(float dt, Entity entity)
 {
     FollowPlayerComponent& follow = m_manager.GetComponentStore<FollowPlayerComponent>().Get(entity);
+	if (!follow.playerStatus->isAlive)
+	{
+		m_manager.QueueEntityForDrop(entity);
+		return;
+	}
 
     ComponentStore<TranslationComponent>& translationComponents = m_manager.GetComponentStore<TranslationComponent>();
-    if (!translationComponents.Has(follow.playerStatus->currentEntityId))
-    {
-        m_manager.QueueEntityForDrop(entity);
-        return;
-    }
-
-    TranslationComponent& translation = translationComponents.Get(entity);
+    
+	TranslationComponent& translation = translationComponents.Get(entity);
 
     // This might be a hack job. Look to improve?
     // Will need to fix when additional enemies are added.
@@ -38,7 +41,7 @@ void SystemFollowPlayer::UpdateEntity(float dt, Entity entity)
         if (renderComponents.Has(entity))
         {
             RenderComponent& render = renderComponents.Get(entity);
-            render.colour = DirectX::Colors::White * (1.0f - static_cast<float>(follow.timeToStart) / 60.0f);
+            render.colour = Colors::White * (1.0f - static_cast<float>(follow.timeToStart) / 60.0f);
             render.scale = 1.6f - (follow.timeToStart / 60.f);
         }
     }
@@ -50,14 +53,14 @@ void SystemFollowPlayer::UpdateEntity(float dt, Entity entity)
             if (renderComponents.Has(entity))
             {
                 RenderComponent& render = renderComponents.Get(entity);
-                render.colour = DirectX::Colors::White;
+                render.colour = Colors::White;
                 render.scale = 1.0f;
             }
             follow.timeToStart = -20.0f;
         }
         
         TranslationComponent& playerTranslation = translationComponents.Get(follow.playerStatus->currentEntityId);
-        DirectX::SimpleMath::Vector2 delta = playerTranslation.position - translation.position;
+        Vector2 delta = playerTranslation.position - translation.position;
                
         if (delta.Length() > 50.0f)
         {

@@ -5,6 +5,8 @@
 #include "TranslationComponent.h"
 #include "PlayerComponent.h"
 
+using namespace DirectX::SimpleMath;
+
 SystemCollider::SystemCollider(EntityManager& manager) :
     System(manager, false)
 {
@@ -33,19 +35,13 @@ void SystemCollider::UpdateEntity(float dt, Entity entity)
 
         TranslationComponent& otherTranslation = translationComponents.Get(e.first);
         float radius = collider.radius + e.second.radius;
-        if (DirectX::SimpleMath::Vector2::DistanceSquared(translation.position, otherTranslation.position) < radius * radius)
+        if (Vector2::DistanceSquared(translation.position, otherTranslation.position) < radius * radius)
         {
             ComponentStore<PlayerComponent>& playerComponents = m_manager.GetComponentStore<PlayerComponent>();
 
             if (playerComponents.Has(entity))
             {
                 PlayerComponent& player = playerComponents.Get(entity);
-                player.status->isAlive = false;
-            }
-
-            if (playerComponents.Has(e.first))
-            {
-                PlayerComponent& player = playerComponents.Get(e.first);
                 player.status->isAlive = false;
             }
 
