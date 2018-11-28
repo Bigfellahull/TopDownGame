@@ -21,6 +21,7 @@
 #include "FollowPlayerSystem.h"
 #include "ColliderSystem.h"
 #include "AvoidanceSystem.h"
+#include "DebugRenderSystem.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -58,6 +59,7 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemMove(*m_entityManager.get())));
 	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemCollider(*m_entityManager.get())));
 	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemRender(*m_entityManager.get())));
+    m_entityManager->AddSystem(std::shared_ptr<System>(new SystemDebugRender(*m_entityManager.get(), m_assetManager->GetTexture(DebugAsset))));
 
 	m_regionEntity = m_entityManager->CreateEntity();
 	RECT windowSize = deviceResources.GetOutputSize();
@@ -211,7 +213,7 @@ void PlayState::SpawnEnemies(float dt)
 		auto enemy = m_entityManager->CreateEntity();
 		m_entityManager->AddComponent(enemy, TranslationComponent(spawnPosition, Vector2(0, 0), MathHelper::Random(0.0f, 6.2f)));
 		m_entityManager->AddComponent(enemy, RenderComponent(*m_spriteBatch.get(), m_assetManager->GetTexture(SeekerEnemyAsset)));
-		m_entityManager->AddComponent(enemy, FollowPlayerComponent(&m_playerStatus, 7000.0f, 15.0f));
+		m_entityManager->AddComponent(enemy, FollowPlayerComponent(&m_playerStatus, 6500.0f, 15.0f));
 		m_entityManager->AddComponent(enemy, AvoidanceComponent());
 		m_entityManager->AddComponent(enemy, ColliderComponent(15.0f));
 		m_entityManager->RegisterEntity(enemy);

@@ -137,6 +137,9 @@
     <ClInclude Include="AvoidanceSystem.h">
       <Filter>Inc\Systems</Filter>
     </ClInclude>
+    <ClInclude Include="DebugRenderSystem.h">
+      <Filter>Inc\Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -197,6 +200,9 @@
       <Filter>Src\Systems</Filter>
     </ClCompile>
     <ClCompile Include="AvoidanceSystem.cpp">
+      <Filter>Src\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugRenderSystem.cpp">
       <Filter>Src\Systems</Filter>
     </ClCompile>
   </ItemGroup>
