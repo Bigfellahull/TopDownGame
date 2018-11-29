@@ -20,6 +20,51 @@ SystemDebugRender::SystemDebugRender(EntityManager& manager, Texture2d* debugTex
     m_debugTexture = debugTexture;
 }
 
+void SystemDebugRender::DrawLine(DirectX::SpriteBatch& spriteBatch, DirectX::SimpleMath::Vector2 p1, DirectX::SimpleMath::Vector2 p2, DirectX::XMVECTORF32 colour, int lineWidth)
+{
+    float length = Vector2::Distance(p1, p2);
+    float angle = static_cast<float>(std::atan2(p2.y - p1.y, p2.x - p1.x));
+
+    spriteBatch.Draw(m_debugTexture->GetSrv(),
+        p1,
+        nullptr,
+        colour,
+        angle,
+        Vector2::Zero,
+        Vector2(length, static_cast<float>(lineWidth)),
+        DirectX::SpriteEffects_None,
+        0.0f);
+}
+
+void SystemDebugRender::DrawPolygon(DirectX::SpriteBatch& spriteBatch, std::vector<DirectX::SimpleMath::Vector2> verts, int count, DirectX::XMVECTORF32 colour, int lineWidth)
+{
+    if (count > 0)
+    {
+        for (int i = 0; i < count - i; i++)
+        {
+            DrawLine(spriteBatch, verts[i], verts[i + 1], colour, lineWidth);
+        }
+
+        DrawLine(spriteBatch, verts[count - 1], verts[0], colour, lineWidth);
+    }
+}
+
+void SystemDebugRender::DrawCircle(DirectX::SpriteBatch& spriteBatch, DirectX::SimpleMath::Vector2 centre, float radius, DirectX::XMVECTORF32 colour, int lineWidth, int segments)
+{
+    std::vector<Vector2> verts = std::vector<Vector2>(segments);
+
+    float increment = 3.142f * 4.0f / segments;
+    float theta = 0.0f;
+
+    for (int i = 0; i < segments; i++)
+    {
+        verts[i] = centre + radius * Vector2(static_cast<float>(std::cosf(theta)), static_cast<float>(std::sinf(theta)));
+        theta += increment;
+    }
+
+    DrawPolygon(spriteBatch, verts, segments, colour, lineWidth);
+}
+
 void SystemDebugRender::RenderEntity(Entity entity)
 {
     RenderComponent& render = m_manager.GetComponentStore<RenderComponent>().Get(entity);
@@ -40,7 +85,7 @@ void SystemDebugRender::RenderEntity(Entity entity)
     // Draw ahead vector
     render.spriteBatch.Draw(
         m_debugTexture->GetSrv(),
-        Rectangle(translation.position.x, translation.position.y, edge.Length(), 1.0f),
+        Rectangle(static_cast<long>(translation.position.x), static_cast<long>(translation.position.y), static_cast<long>(edge.Length()), 1),
         0,
         DirectX::Colors::Red,
         angle,
@@ -48,35 +93,6 @@ void SystemDebugRender::RenderEntity(Entity entity)
         DirectX::SpriteEffects_None,
         0);
 
-#if 1
-    // Attempt to draw collision radius
-    float max = 2.0f * 3.142f;
-    float step = max / 10.0f;
-
-    std::vector<Vector2> vec;
-    for (float theta = 0.0f; theta < max; theta += step)
-    {
-        vec.push_back(Vector2((float)(collider.radius * std::cosf(theta), (float)(collider.radius * std::sinf(theta)))));
-    }
-    vec.push_back(Vector2((float)(collider.radius * std::cosf(0), (float)(collider.radius * std::sinf(0)))));
-
-    for (int i = 1; i < vec.size(); i++)
-    {
-        auto point1 = vec[i - 1] + translation.position;
-        auto point2 = vec[i] + translation.position;
-       
-        float distance = Vector2::Distance(point1, point2);
-        float angle = (float)std::atan2(point2.y - point1.y, point2.x - point1.x);
-                
-        render.spriteBatch.Draw(m_debugTexture->GetSrv(),
-            point1,
-            0,
-            DirectX::Colors::Blue,
-            angle,
-            Vector2(0, 0),
-            Vector2(distance, 1.0f),
-            DirectX::SpriteEffects_None,
-            0);
-    }
-#endif
+    // Draw collider
+    DrawCircle(render.spriteBatch, translation.position, collider.radius, DirectX::Colors::LightGreen, 2);
 }
