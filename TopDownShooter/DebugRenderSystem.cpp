@@ -71,27 +71,14 @@ void SystemDebugRender::RenderEntity(Entity entity)
     TranslationComponent& translation = m_manager.GetComponentStore<TranslationComponent>().Get(entity);
     ColliderComponent& collider = m_manager.GetComponentStore<ColliderComponent>().Get(entity);
 
-    float width = render.texture->GetWidth();
-    float height = render.texture->GetHeight();
-
     Vector2 normalisedVelocity = translation.velocity;
     normalisedVelocity.Normalize();
+
     Vector2 ahead = translation.position + (normalisedVelocity * 150.0f);
     Vector2 ahead2 = translation.position + (normalisedVelocity * (150.0f * 0.5f));
-
-    Vector2 edge = ahead - translation.position;
-    float angle = (float)std::atan2(edge.y, edge.x);
     
-    // Draw ahead vector
-    render.spriteBatch.Draw(
-        m_debugTexture->GetSrv(),
-        Rectangle(static_cast<long>(translation.position.x), static_cast<long>(translation.position.y), static_cast<long>(edge.Length()), 1),
-        0,
-        DirectX::Colors::Red,
-        angle,
-        Vector2(0, 0),
-        DirectX::SpriteEffects_None,
-        0);
+    // Draw ahead vectors
+    DrawLine(render.spriteBatch, translation.position, ahead, DirectX::Colors::Red, 1);
     DrawCircle(render.spriteBatch, ahead, 4.0f, DirectX::Colors::Red, 2);
     DrawCircle(render.spriteBatch, ahead2, 4.0f, DirectX::Colors::Red, 2);
 
