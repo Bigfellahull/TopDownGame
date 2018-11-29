@@ -29,7 +29,7 @@ void SystemAvoidance::UpdateEntity(float dt, Entity entity)
 	Vector2 normalisedVelocity = translation.velocity;
 	normalisedVelocity.Normalize();
     Vector2 ahead = translation.position + (normalisedVelocity * 150.0f);
-	Vector2 ahead2 = ahead * 0.5f;
+    Vector2 ahead2 = translation.position + (normalisedVelocity * (150.0f * 0.5f));
 
 	TranslationComponent* mostThreateningObstancle = nullptr;
 

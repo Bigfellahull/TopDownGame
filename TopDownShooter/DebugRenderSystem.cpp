@@ -77,7 +77,7 @@ void SystemDebugRender::RenderEntity(Entity entity)
     Vector2 normalisedVelocity = translation.velocity;
     normalisedVelocity.Normalize();
     Vector2 ahead = translation.position + (normalisedVelocity * 150.0f);
-    Vector2 ahead2 = ahead * 0.5f;
+    Vector2 ahead2 = translation.position + (normalisedVelocity * (150.0f * 0.5f));
 
     Vector2 edge = ahead - translation.position;
     float angle = (float)std::atan2(edge.y, edge.x);
@@ -92,6 +92,8 @@ void SystemDebugRender::RenderEntity(Entity entity)
         Vector2(0, 0),
         DirectX::SpriteEffects_None,
         0);
+    DrawCircle(render.spriteBatch, ahead, 4.0f, DirectX::Colors::Red, 2);
+    DrawCircle(render.spriteBatch, ahead2, 4.0f, DirectX::Colors::Red, 2);
 
     // Draw collider
     DrawCircle(render.spriteBatch, translation.position, collider.radius, DirectX::Colors::LightGreen, 2);
