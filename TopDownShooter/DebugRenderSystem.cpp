@@ -4,6 +4,7 @@
 #include "ColliderComponent.h"
 #include "TranslationComponent.h"
 #include "RenderComponent.h"
+#include "AvoidanceComponent.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -70,17 +71,27 @@ void SystemDebugRender::RenderEntity(Entity entity)
     RenderComponent& render = m_manager.GetComponentStore<RenderComponent>().Get(entity);
     TranslationComponent& translation = m_manager.GetComponentStore<TranslationComponent>().Get(entity);
     ColliderComponent& collider = m_manager.GetComponentStore<ColliderComponent>().Get(entity);
-
+            
+    // Draw velocity and accerlation
     Vector2 normalisedVelocity = translation.velocity;
     normalisedVelocity.Normalize();
-
-    Vector2 ahead = translation.position + (normalisedVelocity * 150.0f);
-    Vector2 ahead2 = translation.position + (normalisedVelocity * (150.0f * 0.5f));
+    Vector2 normalisedAcceleration = translation.acceleration;
+    normalisedAcceleration.Normalize();
+    Vector2 velocity = translation.position + (normalisedVelocity * 150.0f);
+    Vector2 acceleration = translation.position + (normalisedAcceleration * 150.0f);
     
+    DrawLine(render.spriteBatch, translation.position, velocity, DirectX::Colors::Red, 1);
+    DrawLine(render.spriteBatch, translation.position, acceleration, DirectX::Colors::Orange, 1);
+
     // Draw ahead vectors
-    DrawLine(render.spriteBatch, translation.position, ahead, DirectX::Colors::Red, 1);
-    DrawCircle(render.spriteBatch, ahead, 4.0f, DirectX::Colors::Red, 2);
-    DrawCircle(render.spriteBatch, ahead2, 4.0f, DirectX::Colors::Red, 2);
+    ComponentStore<AvoidanceComponent>& avoidanceComponents = m_manager.GetComponentStore<AvoidanceComponent>();
+    if (avoidanceComponents.Has(entity))
+    {
+        AvoidanceComponent& avoidance = avoidanceComponents.Get(entity);
+
+        DrawCircle(render.spriteBatch, avoidance.ahead, 4.0f, avoidance.avoiding ? DirectX::Colors::Purple : DirectX::Colors::Red, 2);
+        DrawCircle(render.spriteBatch, avoidance.ahead2, 4.0f, avoidance.avoiding ? DirectX::Colors::Purple : DirectX::Colors::Red, 2);
+    }
 
     // Draw collider
     DrawCircle(render.spriteBatch, translation.position, collider.radius, DirectX::Colors::LightGreen, 2);
