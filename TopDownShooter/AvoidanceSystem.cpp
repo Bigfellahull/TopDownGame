@@ -23,13 +23,15 @@ SystemAvoidance::SystemAvoidance(EntityManager& manager) :
 
 void SystemAvoidance::UpdateEntity(float dt, Entity entity)
 {
+    AvoidanceComponent& avoidance = m_manager.GetComponentStore<AvoidanceComponent>().Get(entity);
 	TranslationComponent& translation = m_manager.GetComponentStore<TranslationComponent>().Get(entity);
     ColliderComponent& collider = m_manager.GetComponentStore<ColliderComponent>().Get(entity);
 
+    // Recalculate ahead vectors
 	Vector2 normalisedVelocity = translation.velocity;
 	normalisedVelocity.Normalize();
-    Vector2 ahead = translation.position + (normalisedVelocity * 150.0f);
-    Vector2 ahead2 = translation.position + (normalisedVelocity * (150.0f * 0.5f));
+    avoidance.ahead = translation.position + (normalisedVelocity * 200.0f);
+    avoidance.ahead2 = translation.position + (normalisedVelocity * (200.0f * 0.5f));
 
 	TranslationComponent* mostThreateningObstancle = nullptr;
 
@@ -43,8 +45,8 @@ void SystemAvoidance::UpdateEntity(float dt, Entity entity)
 
         float radius = collider.radius + e.second.radius;
 		TranslationComponent& otherTranslation = m_manager.GetComponentStore<TranslationComponent>().Get(e.first);
-		if ((Vector2::DistanceSquared(otherTranslation.position, ahead) <= radius * radius) ||
-			(Vector2::DistanceSquared(otherTranslation.position, ahead2) <= radius * radius) ||
+		if ((Vector2::DistanceSquared(otherTranslation.position, avoidance.ahead) <= radius * radius) ||
+			(Vector2::DistanceSquared(otherTranslation.position, avoidance.ahead2) <= radius * radius) ||
             (Vector2::DistanceSquared(otherTranslation.position, translation.position) <= radius * radius))
 		{
 			if (!mostThreateningObstancle || 
@@ -57,9 +59,15 @@ void SystemAvoidance::UpdateEntity(float dt, Entity entity)
 
 	if (mostThreateningObstancle)
 	{
-		Vector2 avoidanceForce = ahead - mostThreateningObstancle->position;
+        avoidance.avoiding = true;
+
+		Vector2 avoidanceForce = avoidance.ahead - mostThreateningObstancle->position;
 		avoidanceForce.Normalize();
 
-		translation.acceleration = (avoidanceForce * 10000.0f) + (translation.velocity);
+		translation.acceleration += (avoidanceForce * 10000.0f);
 	}
+    else
+    {
+        avoidance.avoiding = false;
+    }
 }
