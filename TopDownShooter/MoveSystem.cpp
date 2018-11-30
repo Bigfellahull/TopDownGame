@@ -29,7 +29,7 @@ void SystemMove::UpdateEntity(float dt, Entity entity)
         translation.velocity = Vector2::Zero;
     }
 
-    // Is there a better way? Store pointer on component?
+    // TODO: Fix this assumption of one region always existing.
     const RegionComponent& region = m_manager.GetComponentStore<RegionComponent>().GetComponents().begin()->second;
     translation.position.Clamp(region.min, region.max);
 

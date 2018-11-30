@@ -6,7 +6,7 @@
 class SystemCollider : public System
 {
 public:
-    SystemCollider(EntityManager& manager);
+	SystemCollider(EntityManager& manager);
 
-    virtual void UpdateEntity(float dt, Entity entity);
+	virtual void UpdateEntity(float dt, Entity entity);
 };

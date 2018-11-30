@@ -29,30 +29,31 @@ void SystemFollowPlayer::UpdateEntity(float dt, Entity entity)
 	}
 
 	EnemyComponent& enemy = m_manager.GetComponentStore<EnemyComponent>().Get(entity);
+	if (!enemy.alive)
+	{
+		return;
+	}
 
     ComponentStore<TranslationComponent>& translationComponents = m_manager.GetComponentStore<TranslationComponent>();
-	
-    if(enemy.alive)
-    {
-		TranslationComponent& translation = translationComponents.Get(entity);
-        TranslationComponent& playerTranslation = translationComponents.Get(follow.playerStatus->currentEntityId);
-        Vector2 delta = playerTranslation.position - translation.position;
+    
+	TranslationComponent& translation = translationComponents.Get(entity);
+    TranslationComponent& playerTranslation = translationComponents.Get(follow.playerStatus->currentEntityId);
+    Vector2 delta = playerTranslation.position - translation.position;
                
-        if (delta.Length() > 50.0f)
-        {
-            delta.Normalize();
+    if (delta.Length() > 50.0f)
+    {
+        delta.Normalize();
 
-            float accLength = delta.LengthSquared();
-            if (accLength > 1.0f)
-            {
-                delta *= (1.0f / sqrt(accLength));
-            }
-
-            translation.acceleration = (delta * follow.movementSpeed) + (translation.velocity * -follow.drag);
-        }
-        else
+        float accLength = delta.LengthSquared();
+        if (accLength > 1.0f)
         {
-            translation.acceleration = translation.velocity * -follow.drag;
+            delta *= (1.0f / sqrt(accLength));
         }
+
+        translation.acceleration = (delta * follow.movementSpeed) + (translation.velocity * -follow.drag);
+    }
+    else
+    {
+        translation.acceleration = translation.velocity * -follow.drag;
     }
 }

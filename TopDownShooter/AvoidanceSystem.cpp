@@ -54,11 +54,6 @@ void SystemAvoidance::UpdateEntity(float dt, Entity entity)
 	const std::unordered_map<Entity, ProjectileComponent>& projectiles = m_manager.GetComponentStore<ProjectileComponent>().GetComponents();
 	for (auto e : projectiles)
 	{
-		if (e.first == entity)
-		{
-			continue;
-		}
-
 		ColliderComponent& otherCollider = m_manager.GetComponentStore<ColliderComponent>().Get(e.first);
 		TranslationComponent& otherTranslation = m_manager.GetComponentStore<TranslationComponent>().Get(e.first);
 				
