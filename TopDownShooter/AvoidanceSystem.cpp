@@ -4,9 +4,8 @@
 #include "AvoidanceComponent.h"
 #include "ColliderComponent.h"
 #include "TranslationComponent.h"
-#include "PlayerComponent.h"
-
-#include "RenderComponent.h"
+#include "ProjectileComponent.h"
+#include "EnemyComponent.h"
 
 using namespace DirectX::SimpleMath;
 
@@ -17,16 +16,24 @@ SystemAvoidance::SystemAvoidance(EntityManager& manager) :
 	requiredComponents.insert(AvoidanceComponent::Type);
 	requiredComponents.insert(ColliderComponent::Type);
 	requiredComponents.insert(TranslationComponent::Type);
+	requiredComponents.insert(EnemyComponent::Type);
 
 	SetRequiredComponents(std::move(requiredComponents));
 }
 
 void SystemAvoidance::UpdateEntity(float dt, Entity entity)
 {
+	EnemyComponent& enemy = m_manager.GetComponentStore<EnemyComponent>().Get(entity);
+
+	if (!enemy.alive)
+	{
+		return;
+	}
+
 	AvoidanceComponent& avoidance = m_manager.GetComponentStore<AvoidanceComponent>().Get(entity);
 	TranslationComponent& translation = m_manager.GetComponentStore<TranslationComponent>().Get(entity);
 	
-	const float maxLookAhead = 300.0f;
+	const float maxLookAhead = 350.0f;
 
 	// Recalculate ahead vectors
 	Vector2 normalisedVelocity = translation.velocity;
@@ -43,14 +50,16 @@ void SystemAvoidance::UpdateEntity(float dt, Entity entity)
 	avoidance.debugProjectedVector.clear();
 #endif
 
-	const std::unordered_map<Entity, ColliderComponent>& otherColliders = m_manager.GetComponentStore<ColliderComponent>().GetComponents();
-	for (auto e : otherColliders)
+	// We only avoid projectiles for now...
+	const std::unordered_map<Entity, ProjectileComponent>& projectiles = m_manager.GetComponentStore<ProjectileComponent>().GetComponents();
+	for (auto e : projectiles)
 	{
-		if (e.first == entity || m_manager.GetComponentStore<PlayerComponent>().Has(e.first))
+		if (e.first == entity)
 		{
 			continue;
 		}
 
+		ColliderComponent& otherCollider = m_manager.GetComponentStore<ColliderComponent>().Get(e.first);
 		TranslationComponent& otherTranslation = m_manager.GetComponentStore<TranslationComponent>().Get(e.first);
 				
 		Vector2 projectVector = otherTranslation.position - translation.position;
@@ -64,8 +73,8 @@ void SystemAvoidance::UpdateEntity(float dt, Entity entity)
 			continue;
 		}
 
-		if (Vector2::DistanceSquared(otherTranslation.position, translation.position + projectedVector) <= std::pow(e.second.avoidanceRadius, 2) ||
-			Vector2::DistanceSquared(otherTranslation.position, translation.position) <= std::pow(e.second.avoidanceRadius, 2))
+		if (Vector2::DistanceSquared(otherTranslation.position, translation.position + projectedVector) <= std::pow(otherCollider.avoidanceRadius, 2) ||
+			Vector2::DistanceSquared(otherTranslation.position, translation.position) <= std::pow(otherCollider.avoidanceRadius, 2))
 		{
 			if (!mostThreateningObstancle ||
 				(Vector2::DistanceSquared(translation.position, otherTranslation.position) < Vector2::DistanceSquared(translation.position, mostThreateningObstancle->position)))
@@ -82,15 +91,9 @@ void SystemAvoidance::UpdateEntity(float dt, Entity entity)
 
 	if (mostThreateningObstancle)
 	{
-		avoidance.avoiding = true;
-
 		Vector2 avoidanceForce = avoidance.ahead - mostThreateningObstancle->position;
 		avoidanceForce.Normalize();
 
-		translation.acceleration += (avoidanceForce * 8000.0f);
-	}
-	else
-	{
-		avoidance.avoiding = false;
+		translation.acceleration += (avoidanceForce * 1000.0f);
 	}
 }

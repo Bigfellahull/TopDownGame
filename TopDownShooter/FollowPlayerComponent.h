@@ -11,11 +11,8 @@ struct FollowPlayerComponent : public Component
 	float movementSpeed;
 	float drag;
 
-	float timeToStart;
-
 	FollowPlayerComponent(PlayerStatus* aPlayerStatus, float aMovementSpeed, float aDrag) :
         playerStatus(aPlayerStatus),
 		movementSpeed(aMovementSpeed),
-		drag(aDrag),
-		timeToStart(60) { }
+		drag(aDrag) { }
 };

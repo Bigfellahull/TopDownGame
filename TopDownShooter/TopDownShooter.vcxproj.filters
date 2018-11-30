@@ -140,6 +140,18 @@
     <ClInclude Include="DebugRenderSystem.h">
       <Filter>Inc\Systems</Filter>
     </ClInclude>
+    <ClInclude Include="SeparationComponent.h">
+      <Filter>Inc\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SeparationSystem.h">
+      <Filter>Inc\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyComponent.h">
+      <Filter>Inc\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyActivatorSystem.h">
+      <Filter>Inc\Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -203,6 +215,12 @@
       <Filter>Src\Systems</Filter>
     </ClCompile>
     <ClCompile Include="DebugRenderSystem.cpp">
+      <Filter>Src\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="SeparationSystem.cpp">
+      <Filter>Src\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyActivatorSystem.cpp">
       <Filter>Src\Systems</Filter>
     </ClCompile>
   </ItemGroup>

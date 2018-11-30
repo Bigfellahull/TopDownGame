@@ -13,6 +13,8 @@
 #include "ColliderComponent.h"
 #include "PlayerComponent.h"
 #include "AvoidanceComponent.h"
+#include "SeparationComponent.h"
+#include "EnemyComponent.h"
 
 #include "MoveSystem.h"
 #include "RenderSystem.h"
@@ -22,6 +24,8 @@
 #include "ColliderSystem.h"
 #include "AvoidanceSystem.h"
 #include "DebugRenderSystem.h"
+#include "SeparationSystem.h"
+#include "EnemyActivatorSystem.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -49,13 +53,17 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_entityManager->CreateComponentStore<ColliderComponent>();
     m_entityManager->CreateComponentStore<PlayerComponent>();
 	m_entityManager->CreateComponentStore<AvoidanceComponent>();
+	m_entityManager->CreateComponentStore<SeparationComponent>();
+	m_entityManager->CreateComponentStore<EnemyComponent>();
 		
 	// The order systems are added in is important.
 	// They are executed in order from first added to last.
+	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemEnemyActivator(*m_entityManager.get())));
 	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemProjectileSource(*m_entityManager.get())));
 	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemProjectile(*m_entityManager.get())));
 	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemFollowPlayer(*m_entityManager.get())));
 	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemAvoidance(*m_entityManager.get())));
+	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemSeparation(*m_entityManager.get())));
 	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemMove(*m_entityManager.get())));
 	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemCollider(*m_entityManager.get())));
 	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemRender(*m_entityManager.get())));
@@ -210,13 +218,15 @@ void PlayState::SpawnEnemies(float dt)
 		{
 			spawnPosition = GenerateRandomPosition();
 			positionChecks++;
-		} while ((Vector2::DistanceSquared(spawnPosition, playerTranslation.position) < 200.0f * 200.0f) || positionChecks < 10);
+		} while ((Vector2::DistanceSquared(spawnPosition, playerTranslation.position) < std::pow(200.0f, 2)) || positionChecks < 10);
 
 		auto enemy = m_entityManager->CreateEntity();
 		m_entityManager->AddComponent(enemy, TranslationComponent(spawnPosition, Vector2(0, 0), MathHelper::Random(0.0f, 6.2f)));
 		m_entityManager->AddComponent(enemy, RenderComponent(*m_spriteBatch.get(), m_assetManager->GetTexture(SeekerEnemyAsset)));
+		m_entityManager->AddComponent(enemy, EnemyComponent(1.0f));
 		m_entityManager->AddComponent(enemy, FollowPlayerComponent(&m_playerStatus, 6500.0f, 15.0f));
 		m_entityManager->AddComponent(enemy, AvoidanceComponent());
+		m_entityManager->AddComponent(enemy, SeparationComponent());
 		m_entityManager->AddComponent(enemy, ColliderComponent(15.0f, 35.0f));
 		m_entityManager->RegisterEntity(enemy);
 	}

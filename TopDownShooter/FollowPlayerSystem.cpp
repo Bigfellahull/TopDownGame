@@ -3,7 +3,7 @@
 #include "FollowPlayerSystem.h"
 #include "TranslationComponent.h"
 #include "FollowPlayerComponent.h"
-#include "RenderComponent.h"
+#include "EnemyComponent.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -14,6 +14,7 @@ SystemFollowPlayer::SystemFollowPlayer(EntityManager& manager) :
     std::set<ComponentType> requiredComponents;
     requiredComponents.insert(FollowPlayerComponent::Type);
     requiredComponents.insert(TranslationComponent::Type);
+	requiredComponents.insert(EnemyComponent::Type);
 
     SetRequiredComponents(std::move(requiredComponents));
 }
@@ -27,38 +28,13 @@ void SystemFollowPlayer::UpdateEntity(float dt, Entity entity)
 		return;
 	}
 
+	EnemyComponent& enemy = m_manager.GetComponentStore<EnemyComponent>().Get(entity);
+
     ComponentStore<TranslationComponent>& translationComponents = m_manager.GetComponentStore<TranslationComponent>();
-    
-	TranslationComponent& translation = translationComponents.Get(entity);
-
-    // This might be a hack job. Look to improve?
-    // Will need to fix when additional enemies are added.
-    if (follow.timeToStart > 0.0f)
+	
+    if(enemy.alive)
     {
-        follow.timeToStart--;
-
-        ComponentStore<RenderComponent>& renderComponents = m_manager.GetComponentStore<RenderComponent>();
-        if (renderComponents.Has(entity))
-        {
-            RenderComponent& render = renderComponents.Get(entity);
-            render.colour = Colors::White * (1.0f - static_cast<float>(follow.timeToStart) / 60.0f);
-            render.scale = 1.6f - (follow.timeToStart / 60.f);
-        }
-    }
-    else
-    {
-        if (follow.timeToStart > -10.0f)
-        {
-            ComponentStore<RenderComponent>& renderComponents = m_manager.GetComponentStore<RenderComponent>();
-            if (renderComponents.Has(entity))
-            {
-                RenderComponent& render = renderComponents.Get(entity);
-                render.colour = Colors::White;
-                render.scale = 1.0f;
-            }
-            follow.timeToStart = -20.0f;
-        }
-        
+		TranslationComponent& translation = translationComponents.Get(entity);
         TranslationComponent& playerTranslation = translationComponents.Get(follow.playerStatus->currentEntityId);
         Vector2 delta = playerTranslation.position - translation.position;
                

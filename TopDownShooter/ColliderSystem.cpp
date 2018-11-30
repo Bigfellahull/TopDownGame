@@ -4,6 +4,7 @@
 #include "ColliderComponent.h"
 #include "TranslationComponent.h"
 #include "PlayerComponent.h"
+#include "EnemyComponent.h"
 
 using namespace DirectX::SimpleMath;
 
@@ -19,6 +20,27 @@ SystemCollider::SystemCollider(EntityManager& manager) :
 
 void SystemCollider::UpdateEntity(float dt, Entity entity)
 {
+	ComponentStore<EnemyComponent>& enemies = m_manager.GetComponentStore<EnemyComponent>();
+	ComponentStore<PlayerComponent>& players = m_manager.GetComponentStore<PlayerComponent>();
+
+	if (enemies.Has(entity))
+	{
+		EnemyComponent& enemy = enemies.Get(entity);
+		if (!enemy.alive)
+		{
+			return;
+		}
+	}
+
+	if (players.Has(entity))
+	{
+		PlayerComponent& player = players.Get(entity);
+		if (!player.status->isAlive)
+		{
+			return;
+		}
+	}
+
     ColliderComponent& collider = m_manager.GetComponentStore<ColliderComponent>().Get(entity);
     TranslationComponent& translation = m_manager.GetComponentStore<TranslationComponent>().Get(entity);
 
@@ -33,15 +55,32 @@ void SystemCollider::UpdateEntity(float dt, Entity entity)
             continue;
         }
 
-        TranslationComponent& otherTranslation = translationComponents.Get(e.first);
-        float radius = collider.radius + e.second.radius;
-        if (Vector2::DistanceSquared(translation.position, otherTranslation.position) < radius * radius)
-        {
-            ComponentStore<PlayerComponent>& playerComponents = m_manager.GetComponentStore<PlayerComponent>();
+		if (enemies.Has(e.first))
+		{
+			EnemyComponent& enemy = enemies.Get(e.first);
+			if (!enemy.alive)
+			{
+				continue;
+			}
+		}
 
-            if (playerComponents.Has(entity))
+		if (players.Has(e.first))
+		{
+			PlayerComponent& player = players.Get(e.first);
+			if (!player.status->isAlive)
+			{
+				continue;
+			}
+		}
+
+        TranslationComponent& otherTranslation = translationComponents.Get(e.first);
+
+        float radius = collider.radius + e.second.radius;
+        if (Vector2::DistanceSquared(translation.position, otherTranslation.position) < std::pow(radius, 2))
+        {
+            if (players.Has(entity))
             {
-                PlayerComponent& player = playerComponents.Get(entity);
+                PlayerComponent& player = players.Get(entity);
                 player.status->isAlive = false;
             }
 
