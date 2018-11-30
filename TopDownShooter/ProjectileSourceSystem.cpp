@@ -57,7 +57,7 @@ void SystemProjectileSource::UpdateEntity(float dt, Entity entity)
             m_manager.AddComponent(bullet, TranslationComponent(translation.position + offset, velocity, aimAngle));
             m_manager.AddComponent(bullet, RenderComponent(render.spriteBatch, projectile.assetManager->GetTexture(BulletAsset)));
             m_manager.AddComponent(bullet, ProjectileComponent());
-            m_manager.AddComponent(bullet, ColliderComponent(4.0f));
+            m_manager.AddComponent(bullet, ColliderComponent(4.0f, 40.0f));
             m_manager.RegisterEntity(bullet);
         }
         offset = Vector2::Transform(Vector2(40, 8), aimQuat);
@@ -66,7 +66,7 @@ void SystemProjectileSource::UpdateEntity(float dt, Entity entity)
             m_manager.AddComponent(bullet, TranslationComponent(translation.position + offset, velocity, aimAngle));
             m_manager.AddComponent(bullet, RenderComponent(render.spriteBatch, projectile.assetManager->GetTexture(BulletAsset)));
             m_manager.AddComponent(bullet, ProjectileComponent());
-            m_manager.AddComponent(bullet, ColliderComponent(4.0f));
+            m_manager.AddComponent(bullet, ColliderComponent(4.0f, 40.0f));
             m_manager.RegisterEntity(bullet);
         }
     }

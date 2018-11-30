@@ -33,7 +33,7 @@ void SystemCollider::UpdateEntity(float dt, Entity entity)
             continue;
         }
 
-        /*TranslationComponent& otherTranslation = translationComponents.Get(e.first);
+        TranslationComponent& otherTranslation = translationComponents.Get(e.first);
         float radius = collider.radius + e.second.radius;
         if (Vector2::DistanceSquared(translation.position, otherTranslation.position) < radius * radius)
         {
@@ -47,6 +47,6 @@ void SystemCollider::UpdateEntity(float dt, Entity entity)
 
             m_manager.QueueEntityForDrop(entity);
             m_manager.QueueEntityForDrop(e.first);
-        }*/
+        }
     }
 }

@@ -59,7 +59,9 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemMove(*m_entityManager.get())));
 	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemCollider(*m_entityManager.get())));
 	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemRender(*m_entityManager.get())));
+#if _DEBUG
     m_entityManager->AddSystem(std::shared_ptr<System>(new SystemDebugRender(*m_entityManager.get(), m_assetManager->GetTexture(DebugAsset))));
+#endif
 
 	m_regionEntity = m_entityManager->CreateEntity();
 	RECT windowSize = deviceResources.GetOutputSize();
@@ -78,7 +80,7 @@ void PlayState::SpawnPlayer()
     m_entityManager->AddComponent(m_playerStatus.currentEntityId, TranslationComponent(GenerateRandomPosition(), Vector2(0, 0), 0.0f));
     m_entityManager->AddComponent(m_playerStatus.currentEntityId, RenderComponent(*m_spriteBatch.get(), m_assetManager->GetTexture(PlayerAsset)));
     m_entityManager->AddComponent(m_playerStatus.currentEntityId, ProjectileSourceComponent(m_assetManager.get()));
-    m_entityManager->AddComponent(m_playerStatus.currentEntityId, ColliderComponent(20.0f));
+    m_entityManager->AddComponent(m_playerStatus.currentEntityId, ColliderComponent(20.0f, 40.0f));
     m_entityManager->AddComponent(m_playerStatus.currentEntityId, PlayerComponent(&m_playerStatus));
     m_entityManager->RegisterEntity(m_playerStatus.currentEntityId);
     m_playerStatus.isAlive = true;
@@ -215,7 +217,7 @@ void PlayState::SpawnEnemies(float dt)
 		m_entityManager->AddComponent(enemy, RenderComponent(*m_spriteBatch.get(), m_assetManager->GetTexture(SeekerEnemyAsset)));
 		m_entityManager->AddComponent(enemy, FollowPlayerComponent(&m_playerStatus, 6500.0f, 15.0f));
 		m_entityManager->AddComponent(enemy, AvoidanceComponent());
-		m_entityManager->AddComponent(enemy, ColliderComponent(15.0f));
+		m_entityManager->AddComponent(enemy, ColliderComponent(15.0f, 35.0f));
 		m_entityManager->RegisterEntity(enemy);
 	}
 

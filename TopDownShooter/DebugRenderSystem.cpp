@@ -77,22 +77,27 @@ void SystemDebugRender::RenderEntity(Entity entity)
     normalisedVelocity.Normalize();
     Vector2 normalisedAcceleration = translation.acceleration;
     normalisedAcceleration.Normalize();
-    Vector2 velocity = translation.position + (normalisedVelocity * 150.0f);
-    Vector2 acceleration = translation.position + (normalisedAcceleration * 150.0f);
+    Vector2 scaledVelocity = normalisedVelocity * 150.0f;
+	Vector2 scaledAcceleration = normalisedAcceleration * 150.0f;
     
-    DrawLine(render.spriteBatch, translation.position, velocity, DirectX::Colors::Red, 1);
-    DrawLine(render.spriteBatch, translation.position, acceleration, DirectX::Colors::Orange, 1);
+	DrawLine(render.spriteBatch, translation.position, translation.position + scaledVelocity, DirectX::Colors::Red, 1);
+    DrawLine(render.spriteBatch, translation.position, translation.position + scaledAcceleration, DirectX::Colors::Orange, 1);
 
-    // Draw ahead vectors
     ComponentStore<AvoidanceComponent>& avoidanceComponents = m_manager.GetComponentStore<AvoidanceComponent>();
     if (avoidanceComponents.Has(entity))
     {
         AvoidanceComponent& avoidance = avoidanceComponents.Get(entity);
 
-        DrawCircle(render.spriteBatch, avoidance.ahead, 4.0f, avoidance.avoiding ? DirectX::Colors::Purple : DirectX::Colors::Red, 2);
-        DrawCircle(render.spriteBatch, avoidance.ahead2, 4.0f, avoidance.avoiding ? DirectX::Colors::Purple : DirectX::Colors::Red, 2);
-    }
+		DrawLine(render.spriteBatch, translation.position, translation.position + avoidance.ahead, DirectX::Colors::Purple, 1);
 
-    // Draw collider
-    DrawCircle(render.spriteBatch, translation.position, collider.radius, DirectX::Colors::LightGreen, 2);
+		for (size_t i = 0; i < avoidance.debugProjectVector.size(); ++i)
+		{
+			DrawLine(render.spriteBatch, translation.position, translation.position + avoidance.debugProjectVector[i], DirectX::Colors::DarkGreen, 1);
+			DrawLine(render.spriteBatch, translation.position, translation.position + avoidance.debugProjectedVector[i], DirectX::Colors::Blue, 1);
+		}
+    }
+	
+    // Draw colliders
+    DrawCircle(render.spriteBatch, translation.position, collider.radius, DirectX::Colors::LightGreen, 1);
+	DrawCircle(render.spriteBatch, translation.position, collider.avoidanceRadius, DirectX::Colors::LightPink, 1);
 }

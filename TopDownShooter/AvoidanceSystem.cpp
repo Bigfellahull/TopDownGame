@@ -25,15 +25,23 @@ void SystemAvoidance::UpdateEntity(float dt, Entity entity)
 {
 	AvoidanceComponent& avoidance = m_manager.GetComponentStore<AvoidanceComponent>().Get(entity);
 	TranslationComponent& translation = m_manager.GetComponentStore<TranslationComponent>().Get(entity);
-	ColliderComponent& collider = m_manager.GetComponentStore<ColliderComponent>().Get(entity);
+	
+	const float maxLookAhead = 300.0f;
 
 	// Recalculate ahead vectors
 	Vector2 normalisedVelocity = translation.velocity;
 	normalisedVelocity.Normalize();
-	avoidance.ahead = translation.position + (normalisedVelocity * 200.0f);
-	avoidance.ahead2 = translation.position + (normalisedVelocity * (200.0f * 0.5f));
+	avoidance.ahead = normalisedVelocity * maxLookAhead;
+
+	Vector2 normalisedAhead = avoidance.ahead;
+	normalisedAhead.Normalize();
 
 	TranslationComponent* mostThreateningObstancle = nullptr;
+
+#if _DEBUG
+	avoidance.debugProjectVector.clear();
+	avoidance.debugProjectedVector.clear();
+#endif
 
 	const std::unordered_map<Entity, ColliderComponent>& otherColliders = m_manager.GetComponentStore<ColliderComponent>().GetComponents();
 	for (auto e : otherColliders)
@@ -43,11 +51,21 @@ void SystemAvoidance::UpdateEntity(float dt, Entity entity)
 			continue;
 		}
 
-		float radius = collider.radius + e.second.radius;
 		TranslationComponent& otherTranslation = m_manager.GetComponentStore<TranslationComponent>().Get(e.first);
-		if ((Vector2::DistanceSquared(otherTranslation.position, avoidance.ahead) <= radius * radius) ||
-			(Vector2::DistanceSquared(otherTranslation.position, avoidance.ahead2) <= radius * radius) ||
-			(Vector2::DistanceSquared(otherTranslation.position, translation.position) <= radius * radius))
+				
+		Vector2 projectVector = otherTranslation.position - translation.position;
+		Vector2 projectedVector = normalisedAhead * (avoidance.ahead.Dot(projectVector) / avoidance.ahead.Length());
+
+		if (projectedVector.Length() > maxLookAhead)
+		{
+#if _DEBUG
+			projectedVector *= (maxLookAhead / projectedVector.Length());
+#endif
+			continue;
+		}
+
+		if (Vector2::DistanceSquared(otherTranslation.position, translation.position + projectedVector) <= std::pow(e.second.avoidanceRadius, 2) ||
+			Vector2::DistanceSquared(otherTranslation.position, translation.position) <= std::pow(e.second.avoidanceRadius, 2))
 		{
 			if (!mostThreateningObstancle ||
 				(Vector2::DistanceSquared(translation.position, otherTranslation.position) < Vector2::DistanceSquared(translation.position, mostThreateningObstancle->position)))
@@ -55,6 +73,11 @@ void SystemAvoidance::UpdateEntity(float dt, Entity entity)
 				mostThreateningObstancle = &otherTranslation;
 			}
 		}
+
+#if _DEBUG
+		avoidance.debugProjectVector.push_back(projectVector);
+		avoidance.debugProjectedVector.push_back(projectedVector);
+#endif
 	}
 
 	if (mostThreateningObstancle)
@@ -64,7 +87,7 @@ void SystemAvoidance::UpdateEntity(float dt, Entity entity)
 		Vector2 avoidanceForce = avoidance.ahead - mostThreateningObstancle->position;
 		avoidanceForce.Normalize();
 
-		translation.acceleration += (avoidanceForce * 10000.0f);
+		translation.acceleration += (avoidanceForce * 8000.0f);
 	}
 	else
 	{

@@ -8,11 +8,13 @@ struct AvoidanceComponent : public Component
 	static const ComponentType Type = 9;
 
     DirectX::SimpleMath::Vector2 ahead;
-    DirectX::SimpleMath::Vector2 ahead2;
     bool avoiding;
+	std::vector<DirectX::SimpleMath::Vector2> debugProjectVector;
+	std::vector<DirectX::SimpleMath::Vector2> debugProjectedVector;
 
 	AvoidanceComponent() :
         ahead(DirectX::SimpleMath::Vector2::Zero),
-        ahead2(DirectX::SimpleMath::Vector2::Zero),
-        avoiding(false) { }
+        avoiding(false),
+		debugProjectVector(),
+		debugProjectedVector() { }
 };
