@@ -32,25 +32,31 @@ void SystemCollider::UpdateEntity(float dt, Entity entity)
     ColliderComponent& collider = m_manager.GetComponentStore<ColliderComponent>().Get(entity);
     TranslationComponent& translation = m_manager.GetComponentStore<TranslationComponent>().Get(entity);
 
-    const std::unordered_map<Entity, ColliderComponent>& otherColliders = m_manager.GetComponentStore<ColliderComponent>().GetComponents();
-    for (auto e : otherColliders)
+	std::vector<Entity> nearTranslationEntities = m_manager.GetQuadTree()->Retrieve(translation.position);
+    for (auto e : nearTranslationEntities)
     {
-        ComponentStore<TranslationComponent>& translationComponents = m_manager.GetComponentStore<TranslationComponent>();
-		
-		if (e.first == entity || !translationComponents.Has(e.first))
-        {
-            continue;
-        }
-
-		if ((enemies.Has(e.first) && !enemies.Get(e.first).alive) ||
-			(players.Has(e.first) && !players.Get(e.first).status->isAlive))
+		ComponentStore<ColliderComponent>& colliderComponents = m_manager.GetComponentStore<ColliderComponent>();
+		if (!colliderComponents.Has(e))
 		{
 			continue;
 		}
 
-        TranslationComponent& otherTranslation = translationComponents.Get(e.first);
+        ComponentStore<TranslationComponent>& translationComponents = m_manager.GetComponentStore<TranslationComponent>();
+		if (e == entity || !translationComponents.Has(e))
+        {
+            continue;
+        }
 
-        float radius = collider.radius + e.second.radius;
+		if ((enemies.Has(e) && !enemies.Get(e).alive) ||
+			(players.Has(e) && !players.Get(e).status->isAlive))
+		{
+			continue;
+		}
+
+		ColliderComponent& otherCollider = colliderComponents.Get(e);
+        TranslationComponent& otherTranslation = translationComponents.Get(e);
+
+        float radius = collider.radius + otherCollider.radius;
         if (Vector2::DistanceSquared(translation.position, otherTranslation.position) < std::pow(radius, 2))
         {
             if (players.Has(entity))

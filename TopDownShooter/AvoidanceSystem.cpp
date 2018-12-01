@@ -32,7 +32,7 @@ void SystemAvoidance::UpdateEntity(float dt, Entity entity)
 	AvoidanceComponent& avoidance = m_manager.GetComponentStore<AvoidanceComponent>().Get(entity);
 	TranslationComponent& translation = m_manager.GetComponentStore<TranslationComponent>().Get(entity);
 	
-	const float maxLookAhead = 350.0f;
+	const float maxLookAhead = 250.0f;
 
 	// Recalculate ahead vectors
 	Vector2 normalisedVelocity = translation.velocity;
@@ -49,12 +49,17 @@ void SystemAvoidance::UpdateEntity(float dt, Entity entity)
 	avoidance.debugProjectedVector.clear();
 #endif
 
-	// We only avoid projectiles for now...
-	const std::unordered_map<Entity, AvoidableComponent>& avoidables = m_manager.GetComponentStore<AvoidableComponent>().GetComponents();
-	for (auto e : avoidables)
+	std::vector<Entity> nearTranslationEntities = m_manager.GetQuadTree()->Retrieve(translation.position);
+	for (auto e : nearTranslationEntities)
 	{
-		ColliderComponent& otherCollider = m_manager.GetComponentStore<ColliderComponent>().Get(e.first);
-		TranslationComponent& otherTranslation = m_manager.GetComponentStore<TranslationComponent>().Get(e.first);
+		ComponentStore<AvoidableComponent>& advoidables = m_manager.GetComponentStore<AvoidableComponent>();
+		if (!advoidables.Has(e))
+		{
+			continue;
+		}
+
+		ColliderComponent& otherCollider = m_manager.GetComponentStore<ColliderComponent>().Get(e);
+		TranslationComponent& otherTranslation = m_manager.GetComponentStore<TranslationComponent>().Get(e);
 				
 		Vector2 projectVector = otherTranslation.position - translation.position;
 		Vector2 projectedVector = normalisedAhead * (avoidance.ahead.Dot(projectVector) / avoidance.ahead.Length());

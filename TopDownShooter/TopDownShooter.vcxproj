@@ -183,6 +183,7 @@
     <ClInclude Include="ProjectileComponent.h" />
     <ClInclude Include="ProjectileSourceComponent.h" />
     <ClInclude Include="ProjectileSourceSystem.h" />
+    <ClInclude Include="QuadTree.h" />
     <ClInclude Include="RegionComponent.h" />
     <ClInclude Include="RenderComponent.h" />
     <ClInclude Include="SeparationComponent.h" />
@@ -212,6 +213,7 @@
     <ClCompile Include="PlayState.cpp" />
     <ClCompile Include="ProjectileSourceSystem.cpp" />
     <ClCompile Include="ProjectileSystem.cpp" />
+    <ClCompile Include="QuadTree.cpp" />
     <ClCompile Include="RenderSystem.cpp" />
     <ClCompile Include="SeparationSystem.cpp" />
     <ClCompile Include="stdafx.cpp">

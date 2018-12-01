@@ -2,12 +2,21 @@
 
 #include "EntityManager.h"
 #include <algorithm>
+#include "TranslationComponent.h"
+#include "SimpleMath.h"
+#include <memory>
 
-EntityManager::EntityManager() :
+using namespace DirectX::SimpleMath;
+
+EntityManager::EntityManager(DirectX::SimpleMath::Rectangle screenBounds) :
 	m_lastEntity(InvalidEntity),
 	m_entities(),
 	m_componentStores(),
-	m_systems() { }
+	m_systems(),
+	m_quadtree() 
+{ 
+	m_quadtree = std::make_unique<QuadTree>(0, screenBounds);
+}
 
 EntityManager::~EntityManager() { }
 
@@ -67,6 +76,16 @@ size_t EntityManager::UnregisterEntity(const Entity entity) {
 	}
 
 	return associatedSystems;
+}
+
+void EntityManager::RebuildQuadTree()
+{
+	m_quadtree->Clear();
+	const std::unordered_map<Entity, TranslationComponent>& translationComponents = GetComponentStore<TranslationComponent>().GetComponents();
+	for (auto& e : translationComponents)
+	{
+		m_quadtree->Insert(QuadTreeEntry(e.first, e.second.position));
+	}
 }
 
 size_t EntityManager::UpdateEntities(float dt)

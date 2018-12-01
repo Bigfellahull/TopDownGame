@@ -6,7 +6,10 @@
 class Texture2d
 {
 public:
-	Texture2d() { };
+	Texture2d() :
+		m_srv(),
+		m_width(0.0f),
+		m_height(0.0f) { };
 
 	void Load(ID3D11Device* device, const wchar_t* filename);
 

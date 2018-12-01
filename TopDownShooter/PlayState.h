@@ -9,7 +9,9 @@
 class PlayState : public IGameState
 {
 public:
-	PlayState() { }
+	PlayState() :
+		m_playerStatus(),
+		m_regionEntity() { }
 
 	void Initialise(DX::DeviceResources const& deviceResources);
 	void CleanUp();

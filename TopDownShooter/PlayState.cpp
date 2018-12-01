@@ -36,14 +36,14 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	ID3D11DeviceContext1* context = deviceResources.GetD3DDeviceContext();
 	ID3D11Device1* device = deviceResources.GetD3DDevice();
 
+	RECT windowSize = deviceResources.GetOutputSize();
+
 	m_spriteBatch = std::make_unique<SpriteBatch>(context);
 	m_spriteBatch->SetViewport(deviceResources.GetScreenViewport());
     m_states = std::make_unique<CommonStates>(device);
-
 	m_spriteFont = std::make_unique<SpriteFont>(device, L"Fonts\\SegoeUI_18.spritefont");
-
 	m_assetManager = std::make_unique<AssetManager>(device);
-	m_entityManager = std::make_unique<EntityManager>();
+	m_entityManager = std::make_unique<EntityManager>(Rectangle(0, 0, windowSize.right - windowSize.left, windowSize.bottom - windowSize.top));
 
 	m_entityManager->CreateComponentStore<TranslationComponent>();
 	m_entityManager->CreateComponentStore<RenderComponent>();
@@ -74,7 +74,6 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 #endif
 
 	m_regionEntity = m_entityManager->CreateEntity();
-	RECT windowSize = deviceResources.GetOutputSize();
 	m_entityManager->AddComponent(m_regionEntity, RegionComponent(Vector2(0, 0),
 		Vector2(static_cast<float>(windowSize.right - windowSize.left), static_cast<float>(windowSize.bottom - windowSize.top))));
 	m_entityManager->RegisterEntity(m_regionEntity);
@@ -121,6 +120,7 @@ void PlayState::Update(DX::StepTimer const& timer, Game* game)
 
     UpdateUserInput(game->GetInputManager());
 
+	m_entityManager->RebuildQuadTree();
     m_entityManager->UpdateEntities(dt);
 }
 

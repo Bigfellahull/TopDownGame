@@ -6,11 +6,12 @@
 #include "System.h"
 #include <map>
 #include <unordered_set>
+#include "QuadTree.h"
 
 class EntityManager 
 {
 public:
-	EntityManager();
+	EntityManager(DirectX::SimpleMath::Rectangle screenBounds);
 	
 	virtual ~EntityManager();
 
@@ -66,6 +67,8 @@ public:
 	}
 
 	const size_t GetNumberOfEntities() const { return m_entities.size(); }
+
+	void RebuildQuadTree();
 	
 	size_t RegisterEntity(const Entity entity);
 	size_t UnregisterEntity(const Entity entity);
@@ -74,12 +77,14 @@ public:
 
 	void QueueEntityForDrop(const Entity entity);
 
+	QuadTree* GetQuadTree() { return m_quadtree.get(); }
 private:
 	Entity m_lastEntity;
 	std::unordered_map<Entity, std::set<ComponentType>> m_entities;
 	std::map<ComponentType, std::unique_ptr<IComponentStore>> m_componentStores;
 	std::vector<std::shared_ptr<System>> m_systems;
 	std::unordered_set<Entity> m_tempEntitiesToDrop;
+	std::unique_ptr<QuadTree> m_quadtree;
 
 	void DropEntities();
 };
