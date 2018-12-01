@@ -6,6 +6,7 @@
 
 #include "PlayerStatus.h"
 #include "Camera.h"
+#include "BackgroundLayer.h"
 
 class PlayState : public IGameState
 {
@@ -41,6 +42,9 @@ private:
 	std::unique_ptr<Camera> m_camera;
 	std::unique_ptr<AssetManager> m_assetManager;
 	std::unique_ptr<EntityManager> m_entityManager;
+
+	Texture2d* m_fixedBackground;
+	std::vector<std::unique_ptr<BackgroundLayer>> m_backgroundLayers;
 
 	float m_enemyInverseSpawnChance;
 

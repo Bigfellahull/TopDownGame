@@ -161,6 +161,9 @@
     <ClInclude Include="Camera.h">
       <Filter>Inc</Filter>
     </ClInclude>
+    <ClInclude Include="BackgroundLayer.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -238,6 +241,9 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Src</Filter>
     </ClCompile>
+    <ClCompile Include="BackgroundLayer.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -263,5 +269,13 @@
     <CopyFileToFolders Include="Content\Fonts\SegoeUI_18.spritefont">
       <Filter>Content\Fonts</Filter>
     </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <ImageContentTask Include="Content\BackgroundLayer1.png">
+      <Filter>Content</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="Content\BackgroundLayer2.png">
+      <Filter>Content</Filter>
+    </ImageContentTask>
   </ItemGroup>
 </Project>

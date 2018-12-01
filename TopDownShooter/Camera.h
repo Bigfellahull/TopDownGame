@@ -25,9 +25,7 @@ private:
 	float m_rotation;
 
 	bool m_limitSet;
-	bool m_viewMatrixDirty;
-	DirectX::SimpleMath::Matrix m_cachedViewMatrix;
-	
+		
 	void SetPosition(DirectX::SimpleMath::Vector2 position);
 	void ValidatePosition();
 	void ValidateZoom();

@@ -169,6 +169,7 @@
     <ClInclude Include="AvoidableComponent.h" />
     <ClInclude Include="AvoidanceComponent.h" />
     <ClInclude Include="AvoidanceSystem.h" />
+    <ClInclude Include="BackgroundLayer.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ColliderComponent.h" />
     <ClInclude Include="ColliderSystem.h" />
@@ -212,6 +213,7 @@
   <ItemGroup>
     <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="AvoidanceSystem.cpp" />
+    <ClCompile Include="BackgroundLayer.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ColliderSystem.cpp" />
     <ClCompile Include="DebugRenderSystem.cpp" />
@@ -248,6 +250,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ImageContentTask Include="Content\BackgroundLayer2.png" />
+    <ImageContentTask Include="Content\BackgroundLayer1.png" />
     <ImageContentTask Include="Content\1x1.png" />
     <ImageContentTask Include="Content\Bullet.png" />
     <ImageContentTask Include="Content\Player.png" />

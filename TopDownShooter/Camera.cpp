@@ -15,26 +15,17 @@ Camera::Camera(Rectangle screenBounds) :
 	m_origin(Vector2(screenBounds.width / 2.0f, screenBounds.height / 2.0f)),
 	m_zoom(1.0f),
 	m_rotation(0.0f),
-	m_limitSet(false),
-	m_viewMatrixDirty(true),
-	m_cachedViewMatrix()
+	m_limitSet(false)
 {
 }
 
 Matrix Camera::GetViewMatrix(Vector2 parallax)
 {
-	if (m_viewMatrixDirty)
-	{
-		m_cachedViewMatrix = Matrix::CreateTranslation(Vector3(-m_position.x * parallax.x, -m_position.y * parallax.y, 0.0f)) *
-			Matrix::CreateTranslation(Vector3(-m_origin.x, -m_origin.y, 0.0f)) *
-			Matrix::CreateRotationZ(m_rotation) *
-			Matrix::CreateScale(m_zoom, m_zoom, 1.0f) *
-			Matrix::CreateTranslation(Vector3(m_origin.x, m_origin.y, 0.0f));
-
-		m_viewMatrixDirty = false;
-	}
-
-	return m_cachedViewMatrix;
+	return Matrix::CreateTranslation(Vector3(-m_position.x * parallax.x, -m_position.y * parallax.y, 0.0f)) *
+		Matrix::CreateTranslation(Vector3(-m_origin.x, -m_origin.y, 0.0f)) *
+		Matrix::CreateRotationZ(m_rotation) *
+		Matrix::CreateScale(m_zoom, m_zoom, 1.0f) *
+		Matrix::CreateTranslation(Vector3(m_origin.x, m_origin.y, 0.0f));
 }
 
 void Camera::SetLimits(Rectangle limits)
@@ -72,8 +63,6 @@ void Camera::SetZoom(float zoom)
 
 	ValidateZoom();
 	ValidatePosition();
-
-	m_viewMatrixDirty = true;
 }
 
 void Camera::Zoom(float delta)
@@ -82,8 +71,6 @@ void Camera::Zoom(float delta)
 
 	ValidateZoom();
 	ValidatePosition();	
-
-	m_viewMatrixDirty = true;
 }
 
 void Camera::SetPosition(Vector2 position)
@@ -91,8 +78,6 @@ void Camera::SetPosition(Vector2 position)
 	m_position = position;
 
 	ValidatePosition();
-
-	m_viewMatrixDirty = true;
 }
 
 void Camera::ValidatePosition()
@@ -101,8 +86,6 @@ void Camera::ValidatePosition()
 	{
 		return;
 	}
-
-	m_viewMatrixDirty = true;
 
 	auto cameraWorldMin = Vector2::Transform(Vector2::Zero, GetViewMatrix().Invert());
 	auto cameraSize = Vector2(static_cast<float>(m_screenBounds.width), static_cast<float>(m_screenBounds.height / m_zoom));
@@ -121,8 +104,6 @@ void Camera::ValidateZoom()
 	{
 		return;
 	}
-
-	m_viewMatrixDirty = true;
 
 	auto minZoomX = static_cast<float>(m_screenBounds.width / m_limits.width);
 	auto minZoomY = static_cast<float>(m_screenBounds.height / m_limits.height);

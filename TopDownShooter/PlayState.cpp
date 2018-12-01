@@ -87,6 +87,12 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
     SpawnPlayer();
 
 	m_enemyInverseSpawnChance = 60.0f;
+
+	m_fixedBackground = m_assetManager->GetTexture(BackgroundLayer1);
+
+	m_backgroundLayers.push_back(std::make_unique<BackgroundLayer>(m_camera.get(), Vector2(0.5f, 0.5f)));
+		
+	m_backgroundLayers[0]->AddBackgroundSprite(BackgroundSprite(Vector2(1400.0f, 1400.0f), m_assetManager->GetTexture(BackgroundLayer2)));
 }
 
 void PlayState::SpawnPlayer()
@@ -108,6 +114,9 @@ void PlayState::CleanUp()
     m_states.reset();
 	m_assetManager.reset();
 	m_entityManager.reset();
+	m_camera.reset();
+
+	m_backgroundLayers.clear();
 }
 
 void PlayState::Update(DX::StepTimer const& timer, Game* game)
@@ -299,10 +308,18 @@ void PlayState::Render(DX::DeviceResources const& deviceResources)
 	
 	context->ClearRenderTargetView(renderTarget, DirectX::Colors::Black);
 
-	m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Texture, nullptr, nullptr, nullptr, nullptr, nullptr, m_camera->GetViewMatrix());
+	RECT outputSize = deviceResources.GetOutputSize();
+	m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Deferred, nullptr, m_states->LinearWrap(), nullptr, nullptr, nullptr, Matrix::Identity);
+	m_spriteBatch->Draw(m_fixedBackground->GetSrv(), outputSize, &outputSize, Colors::White, 0.0f, Vector2::Zero, SpriteEffects::SpriteEffects_None, 0.0f);
+	m_spriteBatch->End();
 
+	for (auto& l : m_backgroundLayers)
+	{
+		l->Draw(*m_spriteBatch.get());
+	}
+
+	m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Deferred, nullptr, nullptr, nullptr, nullptr, nullptr, m_camera->GetViewMatrix());
 	m_entityManager->RenderEntities();
-
 	m_spriteBatch->End();
 
 #if _DEBUG
