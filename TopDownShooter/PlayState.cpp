@@ -45,7 +45,7 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_spriteBatch = std::make_unique<SpriteBatch>(context);
 	m_spriteBatch->SetViewport(deviceResources.GetScreenViewport());
     m_states = std::make_unique<CommonStates>(device);
-	m_spriteFont = std::make_unique<SpriteFont>(device, L"Fonts\\SegoeUI_18.spritefont");
+	m_spriteFont = std::make_unique<SpriteFont>(device, L"SegoeUI_18.spritefont");
 	m_assetManager = std::make_unique<AssetManager>(device);
 	m_entityManager = std::make_unique<EntityManager>(worldBounds);
 
@@ -299,7 +299,7 @@ void PlayState::Render(DX::DeviceResources const& deviceResources)
 	
 	context->ClearRenderTargetView(renderTarget, DirectX::Colors::Black);
 
-	m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Texture, m_states->NonPremultiplied(), nullptr, nullptr, nullptr, nullptr, m_camera->GetViewMatrix());
+	m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Texture, nullptr, nullptr, nullptr, nullptr, nullptr, m_camera->GetViewMatrix());
 
 	m_entityManager->RenderEntities();
 
