@@ -16,6 +16,7 @@
 #include "SeparationComponent.h"
 #include "EnemyComponent.h"
 #include "AvoidableComponent.h"
+#include "WanderComponent.h"
 
 #include "MoveSystem.h"
 #include "RenderSystem.h"
@@ -27,6 +28,7 @@
 #include "DebugRenderSystem.h"
 #include "SeparationSystem.h"
 #include "EnemyActivatorSystem.h"
+#include "WanderSystem.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -61,6 +63,7 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_entityManager->CreateComponentStore<SeparationComponent>();
 	m_entityManager->CreateComponentStore<EnemyComponent>();
 	m_entityManager->CreateComponentStore<AvoidableComponent>();
+	m_entityManager->CreateComponentStore<WanderComponent>();
 		
 	// The order systems are added in is important.
 	// They are executed in order from first added to last.
@@ -68,6 +71,7 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemProjectileSource(*m_entityManager.get())));
 	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemProjectile(*m_entityManager.get())));
 	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemFollowPlayer(*m_entityManager.get())));
+	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemWander(*m_entityManager.get())));
 	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemAvoidance(*m_entityManager.get())));
 	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemSeparation(*m_entityManager.get())));
 	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemMove(*m_entityManager.get())));
@@ -128,7 +132,7 @@ void PlayState::Update(DX::StepTimer const& timer, Game* game)
 
 	float dt = SlowModeEnabled ? 0.001f : static_cast<float>(timer.GetElapsedSeconds());
 
-    if (m_playerStatus.isAlive) 
+    if (m_playerStatus.isAlive && m_entityManager->GetNumberOfEntities() < 100) 
     {
         SpawnEnemies(dt);
     }
@@ -244,6 +248,18 @@ void PlayState::SpawnEnemies(float dt)
 		m_entityManager->AddComponent(enemy, EnemyComponent(1.0f));
 		m_entityManager->AddComponent(enemy, FollowPlayerComponent(&m_playerStatus, 6500.0f, 15.0f));
 		m_entityManager->AddComponent(enemy, AvoidanceComponent());
+		m_entityManager->AddComponent(enemy, SeparationComponent());
+		m_entityManager->AddComponent(enemy, ColliderComponent(15.0f, 35.0f));
+		m_entityManager->RegisterEntity(enemy);
+	}
+
+	if (MathHelper::Random(0, static_cast<int>(m_enemyInverseSpawnChance)) == 0)
+	{
+		auto enemy = m_entityManager->CreateEntity();
+		m_entityManager->AddComponent(enemy, TranslationComponent(GenerateRandomPosition(), Vector2(0, 0), MathHelper::Random(0.0f, 6.2f)));
+		m_entityManager->AddComponent(enemy, RenderComponent(*m_spriteBatch.get(), m_assetManager->GetTexture(WanderEnemyAsset)));
+		m_entityManager->AddComponent(enemy, EnemyComponent(1.2f));
+		m_entityManager->AddComponent(enemy, WanderComponent(4500.0f, 10.0f));
 		m_entityManager->AddComponent(enemy, SeparationComponent());
 		m_entityManager->AddComponent(enemy, ColliderComponent(15.0f, 35.0f));
 		m_entityManager->RegisterEntity(enemy);

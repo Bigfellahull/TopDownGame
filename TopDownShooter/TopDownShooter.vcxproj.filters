@@ -164,6 +164,12 @@
     <ClInclude Include="BackgroundLayer.h">
       <Filter>Inc</Filter>
     </ClInclude>
+    <ClInclude Include="WanderComponent.h">
+      <Filter>Inc\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="WanderSystem.h">
+      <Filter>Inc\Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -244,6 +250,9 @@
     <ClCompile Include="BackgroundLayer.cpp">
       <Filter>Src</Filter>
     </ClCompile>
+    <ClCompile Include="WanderSystem.cpp">
+      <Filter>Src\Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -261,9 +270,6 @@
     <Image Include="Content\Seeker.png">
       <Filter>Content</Filter>
     </Image>
-    <Image Include="Content\Wanderer.png">
-      <Filter>Content</Filter>
-    </Image>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="Content\Fonts\SegoeUI_18.spritefont">
@@ -275,6 +281,9 @@
       <Filter>Content</Filter>
     </ImageContentTask>
     <ImageContentTask Include="Content\BackgroundLayer2.png">
+      <Filter>Content</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="Content\Wanderer.png">
       <Filter>Content</Filter>
     </ImageContentTask>
   </ItemGroup>

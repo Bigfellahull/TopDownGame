@@ -209,6 +209,8 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="StepTimer.h" />
     <ClInclude Include="System.h" />
+    <ClInclude Include="WanderComponent.h" />
+    <ClInclude Include="WanderSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetManager.cpp" />
@@ -242,6 +244,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="Texture2d.cpp" />
+    <ClCompile Include="WanderSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="Content\Fonts\SegoeUI_18.spritefont">
@@ -256,7 +259,7 @@
     <ImageContentTask Include="Content\Bullet.png" />
     <ImageContentTask Include="Content\Player.png" />
     <ImageContentTask Include="Content\Seeker.png" />
-    <Image Include="Content\Wanderer.png" />
+    <ImageContentTask Include="Content\Wanderer.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
