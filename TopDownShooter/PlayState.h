@@ -5,6 +5,7 @@
 #include "AssetManager.h"
 
 #include "PlayerStatus.h"
+#include "Camera.h"
 
 class PlayState : public IGameState
 {
@@ -37,6 +38,7 @@ private:
     PlayerStatus m_playerStatus;
 	Entity m_regionEntity;
 	
+	std::unique_ptr<Camera> m_camera;
 	std::unique_ptr<AssetManager> m_assetManager;
 	std::unique_ptr<EntityManager> m_entityManager;
 

@@ -156,6 +156,7 @@
     <ClInclude Include="AvoidableComponent.h" />
     <ClInclude Include="AvoidanceComponent.h" />
     <ClInclude Include="AvoidanceSystem.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="ColliderComponent.h" />
     <ClInclude Include="ColliderSystem.h" />
     <ClInclude Include="Component.h" />
@@ -198,6 +199,7 @@
   <ItemGroup>
     <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="AvoidanceSystem.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ColliderSystem.cpp" />
     <ClCompile Include="DebugRenderSystem.cpp" />
     <ClCompile Include="DeviceResources.cpp" />

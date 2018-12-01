@@ -29,7 +29,7 @@ private:
 	void Split();
 
 	const size_t m_maxObjects = 10;
-	const int m_maxLevels = 2;
+	const int m_maxLevels = 3;
 
 	int m_level;
 	std::vector<QuadTreeEntry> m_entities;

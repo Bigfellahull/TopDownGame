@@ -37,13 +37,17 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	ID3D11Device1* device = deviceResources.GetD3DDevice();
 
 	RECT windowSize = deviceResources.GetOutputSize();
+	Rectangle screenBounds = Rectangle(0, 0, windowSize.right - windowSize.left, windowSize.bottom - windowSize.top);
+
+	// TODO: Improve this
+	Rectangle worldBounds = Rectangle(0, 0, 4000, 4000);
 
 	m_spriteBatch = std::make_unique<SpriteBatch>(context);
 	m_spriteBatch->SetViewport(deviceResources.GetScreenViewport());
     m_states = std::make_unique<CommonStates>(device);
 	m_spriteFont = std::make_unique<SpriteFont>(device, L"Fonts\\SegoeUI_18.spritefont");
 	m_assetManager = std::make_unique<AssetManager>(device);
-	m_entityManager = std::make_unique<EntityManager>(Rectangle(0, 0, windowSize.right - windowSize.left, windowSize.bottom - windowSize.top));
+	m_entityManager = std::make_unique<EntityManager>(worldBounds);
 
 	m_entityManager->CreateComponentStore<TranslationComponent>();
 	m_entityManager->CreateComponentStore<RenderComponent>();
@@ -73,14 +77,16 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
     m_entityManager->AddSystem(std::shared_ptr<System>(new SystemDebugRender(*m_entityManager.get(), m_assetManager->GetTexture(DebugAsset))));
 #endif
 
+	m_camera = std::make_unique<Camera>(screenBounds);
+	m_camera->SetLimits(worldBounds);
+	
 	m_regionEntity = m_entityManager->CreateEntity();
-	m_entityManager->AddComponent(m_regionEntity, RegionComponent(Vector2(0, 0),
-		Vector2(static_cast<float>(windowSize.right - windowSize.left), static_cast<float>(windowSize.bottom - windowSize.top))));
+	m_entityManager->AddComponent(m_regionEntity, RegionComponent(Vector2(0, 0), Vector2(static_cast<float>(worldBounds.width), static_cast<float>(worldBounds.height))));
 	m_entityManager->RegisterEntity(m_regionEntity);
 
     SpawnPlayer();
 
-	m_enemyInverseSpawnChance = 60;
+	m_enemyInverseSpawnChance = 60.0f;
 }
 
 void PlayState::SpawnPlayer()
@@ -122,6 +128,12 @@ void PlayState::Update(DX::StepTimer const& timer, Game* game)
 
 	m_entityManager->RebuildQuadTree();
     m_entityManager->UpdateEntities(dt);
+
+	if (m_playerStatus.isAlive)
+	{
+		TranslationComponent& translation = m_entityManager->GetComponentStore<TranslationComponent>().Get(m_playerStatus.currentEntityId);
+		m_camera->LookAt(translation.position);
+	}
 }
 
 void PlayState::UpdateUserInput(InputManager* inputManager)
@@ -176,15 +188,13 @@ void PlayState::UpdateUserInput(InputManager* inputManager)
             acceleration.x = -1.0f;
         }
 
-        // TODO: Work out units and why this has to be so high
         float movementSpeed = 8000.0f;
         float drag = 10.0f;
 
-        // Ensure moving diagonally isn't faster than usual.
-        float accLength = acceleration.LengthSquared();
-        if (accLength > 1.0f)
+        float accelerationLength = acceleration.LengthSquared();
+        if (accelerationLength > 1.0f)
         {
-            acceleration *= (1.0f / sqrt(accLength));
+            acceleration *= (1.0f / sqrt(accelerationLength));
         }
 
         translation.acceleration = (acceleration * movementSpeed) + (translation.velocity * -drag);
@@ -207,9 +217,6 @@ Vector2 PlayState::GenerateRandomPosition()
 
 void PlayState::SpawnEnemies(float dt)
 {
-	// Can this be better? Maybe move into separate class?
-	// Incorporate dt into spawn so when running in slow mode it spawns
-	// an expected number of enemies.
 	if (MathHelper::Random(0, static_cast<int>(m_enemyInverseSpawnChance)) == 0)
 	{
 		TranslationComponent& playerTranslation = m_entityManager->GetComponentStore<TranslationComponent>().Get(m_playerStatus.currentEntityId);
@@ -220,7 +227,7 @@ void PlayState::SpawnEnemies(float dt)
 		{
 			spawnPosition = GenerateRandomPosition();
 			positionChecks++;
-		} while ((Vector2::DistanceSquared(spawnPosition, playerTranslation.position) < std::pow(200.0f, 2)) || positionChecks < 10);
+		} while ((Vector2::DistanceSquared(spawnPosition, playerTranslation.position) < std::pow(100.0f, 2)) || positionChecks < 10);
 
 		auto enemy = m_entityManager->CreateEntity();
 		m_entityManager->AddComponent(enemy, TranslationComponent(spawnPosition, Vector2(0, 0), MathHelper::Random(0.0f, 6.2f)));
@@ -233,9 +240,10 @@ void PlayState::SpawnEnemies(float dt)
 		m_entityManager->RegisterEntity(enemy);
 	}
 
-	if (m_enemyInverseSpawnChance > 5)
+	if (m_enemyInverseSpawnChance > 1.0f)
 	{
-		m_enemyInverseSpawnChance -= 0.005f;
+		m_enemyInverseSpawnChance -= dt;
+		m_enemyInverseSpawnChance = std::max(1.0f, m_enemyInverseSpawnChance);
 	}
 }
 
@@ -291,7 +299,7 @@ void PlayState::Render(DX::DeviceResources const& deviceResources)
 	
 	context->ClearRenderTargetView(renderTarget, DirectX::Colors::Black);
 
-	m_spriteBatch->Begin(SpriteSortMode_Deferred, m_states->NonPremultiplied());
+	m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Texture, m_states->NonPremultiplied(), nullptr, nullptr, nullptr, nullptr, m_camera->GetViewMatrix());
 
 	m_entityManager->RenderEntities();
 

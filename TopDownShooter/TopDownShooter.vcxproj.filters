@@ -158,6 +158,9 @@
     <ClInclude Include="QuadTree.h">
       <Filter>Inc</Filter>
     </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -230,6 +233,9 @@
       <Filter>Src\Systems</Filter>
     </ClCompile>
     <ClCompile Include="QuadTree.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
       <Filter>Src</Filter>
     </ClCompile>
   </ItemGroup>
