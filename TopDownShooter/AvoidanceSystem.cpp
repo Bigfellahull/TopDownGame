@@ -2,6 +2,7 @@
 
 #include "AvoidanceSystem.h"
 #include "AvoidanceComponent.h"
+#include "AvoidableComponent.h"
 #include "ColliderComponent.h"
 #include "TranslationComponent.h"
 #include "ProjectileComponent.h"
@@ -23,9 +24,7 @@ SystemAvoidance::SystemAvoidance(EntityManager& manager) :
 
 void SystemAvoidance::UpdateEntity(float dt, Entity entity)
 {
-	EnemyComponent& enemy = m_manager.GetComponentStore<EnemyComponent>().Get(entity);
-
-	if (!enemy.alive)
+	if (!m_manager.GetComponentStore<EnemyComponent>().Get(entity).alive)
 	{
 		return;
 	}
@@ -51,8 +50,8 @@ void SystemAvoidance::UpdateEntity(float dt, Entity entity)
 #endif
 
 	// We only avoid projectiles for now...
-	const std::unordered_map<Entity, ProjectileComponent>& projectiles = m_manager.GetComponentStore<ProjectileComponent>().GetComponents();
-	for (auto e : projectiles)
+	const std::unordered_map<Entity, AvoidableComponent>& avoidables = m_manager.GetComponentStore<AvoidableComponent>().GetComponents();
+	for (auto e : avoidables)
 	{
 		ColliderComponent& otherCollider = m_manager.GetComponentStore<ColliderComponent>().Get(e.first);
 		TranslationComponent& otherTranslation = m_manager.GetComponentStore<TranslationComponent>().Get(e.first);
@@ -60,7 +59,7 @@ void SystemAvoidance::UpdateEntity(float dt, Entity entity)
 		Vector2 projectVector = otherTranslation.position - translation.position;
 		Vector2 projectedVector = normalisedAhead * (avoidance.ahead.Dot(projectVector) / avoidance.ahead.Length());
 
-		if (projectedVector.Length() > maxLookAhead)
+		if (projectedVector.LengthSquared() > std::pow(maxLookAhead, 2))
 		{
 #if _DEBUG
 			projectedVector *= (maxLookAhead / projectedVector.Length());
@@ -72,7 +71,8 @@ void SystemAvoidance::UpdateEntity(float dt, Entity entity)
 			Vector2::DistanceSquared(otherTranslation.position, translation.position) <= std::pow(otherCollider.avoidanceRadius, 2))
 		{
 			if (!mostThreateningObstancle ||
-				(Vector2::DistanceSquared(translation.position, otherTranslation.position) < Vector2::DistanceSquared(translation.position, mostThreateningObstancle->position)))
+				(Vector2::DistanceSquared(translation.position, otherTranslation.position) < 
+					Vector2::DistanceSquared(translation.position, mostThreateningObstancle->position)))
 			{
 				mostThreateningObstancle = &otherTranslation;
 			}
@@ -89,6 +89,6 @@ void SystemAvoidance::UpdateEntity(float dt, Entity entity)
 		Vector2 avoidanceForce = avoidance.ahead - mostThreateningObstancle->position;
 		avoidanceForce.Normalize();
 
-		translation.acceleration += (avoidanceForce * 1000.0f);
+		translation.acceleration += (avoidanceForce * 8000.0f);
 	}
 }

@@ -22,14 +22,14 @@ SystemFollowPlayer::SystemFollowPlayer(EntityManager& manager) :
 void SystemFollowPlayer::UpdateEntity(float dt, Entity entity)
 {
     FollowPlayerComponent& follow = m_manager.GetComponentStore<FollowPlayerComponent>().Get(entity);
+	
 	if (!follow.playerStatus->isAlive)
 	{
 		m_manager.QueueEntityForDrop(entity);
 		return;
 	}
 
-	EnemyComponent& enemy = m_manager.GetComponentStore<EnemyComponent>().Get(entity);
-	if (!enemy.alive)
+	if (!m_manager.GetComponentStore<EnemyComponent>().Get(entity).alive)
 	{
 		return;
 	}
@@ -38,16 +38,19 @@ void SystemFollowPlayer::UpdateEntity(float dt, Entity entity)
     
 	TranslationComponent& translation = translationComponents.Get(entity);
     TranslationComponent& playerTranslation = translationComponents.Get(follow.playerStatus->currentEntityId);
-    Vector2 delta = playerTranslation.position - translation.position;
-               
-    if (delta.Length() > 50.0f)
+
+	Vector2 playerFuturePosition = playerTranslation.position + playerTranslation.velocity * 0.3f;
+
+    Vector2 delta = playerFuturePosition - translation.position;
+
+    if (delta.LengthSquared() > std::pow(50.0f, 2))
     {
         delta.Normalize();
 
-        float accLength = delta.LengthSquared();
-        if (accLength > 1.0f)
+        float normalisedLength = delta.LengthSquared();
+        if (normalisedLength > 1.0f)
         {
-            delta *= (1.0f / sqrt(accLength));
+            delta *= (1.0f / sqrt(normalisedLength));
         }
 
         translation.acceleration = (delta * follow.movementSpeed) + (translation.velocity * -follow.drag);

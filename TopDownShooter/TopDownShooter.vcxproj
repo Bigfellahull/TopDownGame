@@ -153,6 +153,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AssetManager.h" />
+    <ClInclude Include="AvoidableComponent.h" />
     <ClInclude Include="AvoidanceComponent.h" />
     <ClInclude Include="AvoidanceSystem.h" />
     <ClInclude Include="ColliderComponent.h" />

@@ -22,9 +22,7 @@ SystemSeparation::SystemSeparation(EntityManager& manager) :
 
 void SystemSeparation::UpdateEntity(float dt, Entity entity)
 {
-	EnemyComponent& enemy = m_manager.GetComponentStore<EnemyComponent>().Get(entity);
-
-	if (!enemy.alive)
+	if (!m_manager.GetComponentStore<EnemyComponent>().Get(entity).alive)
 	{
 		return;
 	}

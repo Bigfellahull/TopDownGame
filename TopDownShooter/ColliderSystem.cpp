@@ -23,22 +23,10 @@ void SystemCollider::UpdateEntity(float dt, Entity entity)
 	ComponentStore<EnemyComponent>& enemies = m_manager.GetComponentStore<EnemyComponent>();
 	ComponentStore<PlayerComponent>& players = m_manager.GetComponentStore<PlayerComponent>();
 
-	if (enemies.Has(entity))
+	if ((enemies.Has(entity) && !enemies.Get(entity).alive) || 
+		(players.Has(entity) && !players.Get(entity).status->isAlive))
 	{
-		EnemyComponent& enemy = enemies.Get(entity);
-		if (!enemy.alive)
-		{
-			return;
-		}
-	}
-
-	if (players.Has(entity))
-	{
-		PlayerComponent& player = players.Get(entity);
-		if (!player.status->isAlive)
-		{
-			return;
-		}
+		return;
 	}
 
     ColliderComponent& collider = m_manager.GetComponentStore<ColliderComponent>().Get(entity);
@@ -48,29 +36,16 @@ void SystemCollider::UpdateEntity(float dt, Entity entity)
     for (auto e : otherColliders)
     {
         ComponentStore<TranslationComponent>& translationComponents = m_manager.GetComponentStore<TranslationComponent>();
-
-        if (e.first == entity || !translationComponents.Has(e.first))
+		
+		if (e.first == entity || !translationComponents.Has(e.first))
         {
-            // Don't collide with self!
             continue;
         }
 
-		if (enemies.Has(e.first))
+		if ((enemies.Has(e.first) && !enemies.Get(e.first).alive) ||
+			(players.Has(e.first) && !players.Get(e.first).status->isAlive))
 		{
-			EnemyComponent& enemy = enemies.Get(e.first);
-			if (!enemy.alive)
-			{
-				continue;
-			}
-		}
-
-		if (players.Has(e.first))
-		{
-			PlayerComponent& player = players.Get(e.first);
-			if (!player.status->isAlive)
-			{
-				continue;
-			}
+			continue;
 		}
 
         TranslationComponent& otherTranslation = translationComponents.Get(e.first);
@@ -85,7 +60,6 @@ void SystemCollider::UpdateEntity(float dt, Entity entity)
             }
 
             m_manager.QueueEntityForDrop(entity);
-            m_manager.QueueEntityForDrop(e.first);
         }
     }
 }

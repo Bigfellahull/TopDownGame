@@ -6,6 +6,7 @@
 #include "TranslationComponent.h"
 #include "RenderComponent.h"
 #include "ColliderComponent.h"
+#include "AvoidableComponent.h"
 #include "MathHelper.h"
 
 using namespace DirectX::SimpleMath;
@@ -27,11 +28,8 @@ void SystemProjectileSource::UpdateEntity(float dt, Entity entity)
     TranslationComponent& translation = m_manager.GetComponentStore<TranslationComponent>().Get(entity);
     RenderComponent& render = m_manager.GetComponentStore<RenderComponent>().Get(entity);
 
-    if (projectile.aimDirection.LengthSquared() > 1)
-    {
-        projectile.aimDirection.Normalize();
-    }
-
+    projectile.aimDirection.Normalize();
+    
     float aimLength = projectile.aimDirection.LengthSquared();
     if (aimLength > 1.0f)
     {
@@ -57,6 +55,7 @@ void SystemProjectileSource::UpdateEntity(float dt, Entity entity)
             m_manager.AddComponent(bullet, TranslationComponent(translation.position + offset, velocity, aimAngle));
             m_manager.AddComponent(bullet, RenderComponent(render.spriteBatch, projectile.assetManager->GetTexture(BulletAsset)));
             m_manager.AddComponent(bullet, ProjectileComponent());
+			m_manager.AddComponent(bullet, AvoidableComponent());
             m_manager.AddComponent(bullet, ColliderComponent(4.0f, 40.0f));
             m_manager.RegisterEntity(bullet);
         }
@@ -67,6 +66,7 @@ void SystemProjectileSource::UpdateEntity(float dt, Entity entity)
             m_manager.AddComponent(bullet, TranslationComponent(translation.position + offset, velocity, aimAngle));
             m_manager.AddComponent(bullet, RenderComponent(render.spriteBatch, projectile.assetManager->GetTexture(BulletAsset)));
             m_manager.AddComponent(bullet, ProjectileComponent());
+			m_manager.AddComponent(bullet, AvoidableComponent());
             m_manager.AddComponent(bullet, ColliderComponent(4.0f, 40.0f));
             m_manager.RegisterEntity(bullet);
         }

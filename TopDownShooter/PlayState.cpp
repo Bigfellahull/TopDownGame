@@ -15,6 +15,7 @@
 #include "AvoidanceComponent.h"
 #include "SeparationComponent.h"
 #include "EnemyComponent.h"
+#include "AvoidableComponent.h"
 
 #include "MoveSystem.h"
 #include "RenderSystem.h"
@@ -55,6 +56,7 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_entityManager->CreateComponentStore<AvoidanceComponent>();
 	m_entityManager->CreateComponentStore<SeparationComponent>();
 	m_entityManager->CreateComponentStore<EnemyComponent>();
+	m_entityManager->CreateComponentStore<AvoidableComponent>();
 		
 	// The order systems are added in is important.
 	// They are executed in order from first added to last.
@@ -85,7 +87,7 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 void PlayState::SpawnPlayer()
 {
     m_playerStatus.currentEntityId = m_entityManager->CreateEntity();
-    m_entityManager->AddComponent(m_playerStatus.currentEntityId, TranslationComponent(GenerateRandomPosition(), Vector2(0, 0), 0.0f));
+    m_entityManager->AddComponent(m_playerStatus.currentEntityId, TranslationComponent(GenerateRandomPosition(), Vector2::Zero, 0.0f));
     m_entityManager->AddComponent(m_playerStatus.currentEntityId, RenderComponent(*m_spriteBatch.get(), m_assetManager->GetTexture(PlayerAsset)));
     m_entityManager->AddComponent(m_playerStatus.currentEntityId, ProjectileSourceComponent(m_assetManager.get()));
     m_entityManager->AddComponent(m_playerStatus.currentEntityId, ColliderComponent(20.0f, 40.0f));
