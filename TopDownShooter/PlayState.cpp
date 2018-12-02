@@ -259,7 +259,7 @@ void PlayState::SpawnEnemies(float dt)
 		m_entityManager->AddComponent(enemy, TranslationComponent(GenerateRandomPosition(), Vector2(0, 0), MathHelper::Random(0.0f, 6.2f)));
 		m_entityManager->AddComponent(enemy, RenderComponent(*m_spriteBatch.get(), m_assetManager->GetTexture(WanderEnemyAsset)));
 		m_entityManager->AddComponent(enemy, EnemyComponent(1.2f));
-		m_entityManager->AddComponent(enemy, WanderComponent(4500.0f, 10.0f));
+		m_entityManager->AddComponent(enemy, WanderComponent(&m_playerStatus, 4500.0f, 10.0f));
 		m_entityManager->AddComponent(enemy, SeparationComponent());
 		m_entityManager->AddComponent(enemy, ColliderComponent(15.0f, 35.0f));
 		m_entityManager->RegisterEntity(enemy);

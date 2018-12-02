@@ -7,11 +7,13 @@ struct WanderComponent : public Component
 {
 	static const ComponentType Type = 13;
 
+	PlayerStatus* playerStatus;
 	float movementSpeed;
 	float drag;
 	float wanderAngle;
 
-	WanderComponent(float aMovementSpeed, float aDrag) :
+	WanderComponent(PlayerStatus* aPlayerStatus, float aMovementSpeed, float aDrag) :
+		playerStatus(aPlayerStatus),
 		movementSpeed(aMovementSpeed),
 		drag(aDrag),
 		wanderAngle(0.0f) { }
