@@ -258,20 +258,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Content\1x1.png">
-      <Filter>Content</Filter>
-    </Image>
-    <Image Include="Content\Bullet.png">
-      <Filter>Content</Filter>
-    </Image>
-    <Image Include="Content\Player.png">
-      <Filter>Content</Filter>
-    </Image>
-    <Image Include="Content\Seeker.png">
-      <Filter>Content</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
     <CopyFileToFolders Include="Content\Fonts\SegoeUI_18.spritefont">
       <Filter>Content\Fonts</Filter>
     </CopyFileToFolders>
@@ -286,5 +272,25 @@
     <ImageContentTask Include="Content\Wanderer.png">
       <Filter>Content</Filter>
     </ImageContentTask>
+    <ImageContentTask Include="Content\1x1.png">
+      <Filter>Content</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="Content\Bullet.png">
+      <Filter>Content</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="Content\Player.png">
+      <Filter>Content</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="Content\Seeker.png">
+      <Filter>Content</Filter>
+    </ImageContentTask>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Content\BackgroundLayer3.png">
+      <Filter>Content</Filter>
+    </Image>
+    <Image Include="Content\BackgroundLayer4.png">
+      <Filter>Content</Filter>
+    </Image>
   </ItemGroup>
 </Project>

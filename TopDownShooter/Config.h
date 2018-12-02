@@ -13,3 +13,4 @@ constexpr const wchar_t* WanderEnemyAsset = L"Wanderer.dds";
 constexpr const wchar_t* BackgroundLayer1 = L"BackgroundLayer1.dds";
 constexpr const wchar_t* BackgroundLayer2 = L"BackgroundLayer2.dds";
 constexpr const wchar_t* BackgroundLayer3 = L"BackgroundLayer3.dds";
+constexpr const wchar_t* BackgroundLayer4 = L"BackgroundLayer4.dds";

@@ -42,7 +42,7 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	Rectangle screenBounds = Rectangle(0, 0, windowSize.right - windowSize.left, windowSize.bottom - windowSize.top);
 
 	// TODO: Improve this
-	Rectangle worldBounds = Rectangle(0, 0, 4000, 4000);
+	Rectangle worldBounds = Rectangle(0, 0, 2000, 2000);
 
 	m_spriteBatch = std::make_unique<SpriteBatch>(context);
 	m_spriteBatch->SetViewport(deviceResources.GetScreenViewport());
@@ -94,9 +94,12 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 
 	m_fixedBackground = m_assetManager->GetTexture(BackgroundLayer1);
 
-	m_backgroundLayers.push_back(std::make_unique<BackgroundLayer>(m_camera.get(), Vector2(0.5f, 0.5f)));
+	m_backgroundLayers.push_back(std::make_unique<BackgroundLayer>(m_camera.get(), Vector2(0.4f, 0.4f)));
+	m_backgroundLayers.push_back(std::make_unique<BackgroundLayer>(m_camera.get(), Vector2(0.8f, 0.8f)));
 		
-	m_backgroundLayers[0]->AddBackgroundSprite(BackgroundSprite(Vector2(1400.0f, 1400.0f), m_assetManager->GetTexture(BackgroundLayer2)));
+	m_backgroundLayers[0]->AddBackgroundSprite(BackgroundSprite(Vector2(1100.0f, 400.0f), m_assetManager->GetTexture(BackgroundLayer2)));
+	m_backgroundLayers[0]->AddBackgroundSprite(BackgroundSprite(Vector2(0.0f, 50.0f), m_assetManager->GetTexture(BackgroundLayer3)));
+	m_backgroundLayers[1]->AddBackgroundSprite(BackgroundSprite(Vector2(400.0f, 1000.0f), m_assetManager->GetTexture(BackgroundLayer4)));
 }
 
 void PlayState::SpawnPlayer()
