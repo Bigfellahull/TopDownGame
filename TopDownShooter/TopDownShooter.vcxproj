@@ -255,7 +255,6 @@
   </ItemGroup>
   <ItemGroup>
     <ImageContentTask Include="Content\BackgroundLayer2.png" />
-    <ImageContentTask Include="Content\BackgroundLayer1.png" />
     <ImageContentTask Include="Content\1x1.png" />
     <ImageContentTask Include="Content\Bullet.png" />
     <ImageContentTask Include="Content\Player.png" />
@@ -295,6 +294,9 @@
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">SpriteVertexShader</EntryPointName>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">SpriteVertexShader</EntryPointName>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ImageContentTask Include="Content\BackgroundLayer1.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

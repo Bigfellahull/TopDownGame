@@ -19,7 +19,19 @@ void BackgroundLayer::Draw(SpriteBatch& spriteBatch)
 
 	for (auto& e : m_sprites)
 	{
-		spriteBatch.Draw(e.texture->GetSrv(), e.position, Colors::White);
+		float width = e.texture->GetWidth();
+		float height = e.texture->GetHeight();
+
+		spriteBatch.Draw(
+			e.texture->GetSrv(),
+			e.position,
+			nullptr,
+			Colors::White,
+			0.0f,
+			Vector2(width / 2, height / 2),
+			e.scale,
+			SpriteEffects::SpriteEffects_None,
+			0);
 	}
 
 	spriteBatch.End();

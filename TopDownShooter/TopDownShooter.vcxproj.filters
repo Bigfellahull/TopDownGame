@@ -266,9 +266,6 @@
     </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
-    <ImageContentTask Include="Content\BackgroundLayer1.png">
-      <Filter>Content</Filter>
-    </ImageContentTask>
     <ImageContentTask Include="Content\BackgroundLayer2.png">
       <Filter>Content</Filter>
     </ImageContentTask>
@@ -291,6 +288,9 @@
       <Filter>Content</Filter>
     </ImageContentTask>
     <ImageContentTask Include="Content\BackgroundLayer4.png">
+      <Filter>Content</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="Content\BackgroundLayer1.png">
       <Filter>Content</Filter>
     </ImageContentTask>
   </ItemGroup>

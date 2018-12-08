@@ -10,10 +10,12 @@ struct BackgroundSprite
 {
 	DirectX::SimpleMath::Vector2 position;
 	Texture2d* texture;
+	float scale;
 
-	BackgroundSprite(DirectX::SimpleMath::Vector2 aPosition, Texture2d* aTexture) :
+	BackgroundSprite(DirectX::SimpleMath::Vector2 aPosition, Texture2d* aTexture, float aScale = 1.0f) :
 		position(aPosition),
-		texture(aTexture) { }
+		texture(aTexture),
+		scale(aScale) { }
 };
 
 class BackgroundLayer
