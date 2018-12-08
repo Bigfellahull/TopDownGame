@@ -8,6 +8,7 @@ public:
 	Camera(DirectX::SimpleMath::Rectangle screenBounds);
 	
 	DirectX::SimpleMath::Matrix GetViewMatrix(DirectX::SimpleMath::Vector2 parallax = DirectX::SimpleMath::Vector2(1, 1));
+	DirectX::SimpleMath::Matrix GetScrollMatrix(DirectX::SimpleMath::Vector2 textureSize = DirectX::SimpleMath::Vector2(1, 1));
 	
 	void LookAt(DirectX::SimpleMath::Vector2 position);
 	void Move(DirectX::SimpleMath::Vector2 displacement, bool respectRotation = false);

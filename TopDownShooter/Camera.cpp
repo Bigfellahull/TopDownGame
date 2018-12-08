@@ -28,6 +28,15 @@ Matrix Camera::GetViewMatrix(Vector2 parallax)
 		Matrix::CreateTranslation(Vector3(m_origin.x, m_origin.y, 0.0f));
 }
 
+Matrix Camera::GetScrollMatrix(Vector2 textureSize)
+{
+	return Matrix::CreateTranslation(Vector3(-m_origin.x / textureSize.x, -m_origin.y / textureSize.y, 0.0f)) *
+		Matrix::CreateScale(1.0f / m_zoom) *
+		Matrix::CreateRotationZ(m_rotation) *
+		Matrix::CreateTranslation(Vector3(m_origin.x / textureSize.x, m_origin.y / textureSize.y, 0.0f)) *
+		Matrix::CreateTranslation(Vector3(m_position.x / textureSize.x, m_position.y / textureSize.y, 0.0f));
+}
+
 void Camera::SetLimits(Rectangle limits)
 {
 	m_limits = Rectangle(

@@ -93,7 +93,27 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_enemyInverseSpawnChance = 60.0f;
 
 	m_fixedBackground = m_assetManager->GetTexture(BackgroundLayer1);
+	
+	m_backgroundBuffer = std::make_unique<BackgroundBuffer>();
+	D3D11_BUFFER_DESC cbufferDesc = {};
+	cbufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	cbufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	cbufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	cbufferDesc.ByteWidth = (sizeof(BackgroundBuffer) + 15) / 16 * 16;
+	DX::ThrowIfFailed(
+		device->CreateBuffer(&cbufferDesc, nullptr, m_backgroundD3dBuffer.ReleaseAndGetAddressOf())
+	);
 
+	std::vector<uint8_t> backgroundPsBlob = DX::ReadData(L"BackgroundPixelShader.cso");
+	DX::ThrowIfFailed(
+		device->CreatePixelShader(&backgroundPsBlob.front(), backgroundPsBlob.size(), nullptr, &m_backgroundPs)
+	);
+
+	std::vector<uint8_t> backgroundVsBlob = DX::ReadData(L"BackgroundVertexShader.cso");
+	DX::ThrowIfFailed(
+		device->CreateVertexShader(&backgroundVsBlob.front(), backgroundVsBlob.size(), nullptr, &m_backgroundVs)
+	);
+	
 	m_backgroundLayers.push_back(std::make_unique<BackgroundLayer>(m_camera.get(), Vector2(0.4f, 0.4f)));
 	m_backgroundLayers.push_back(std::make_unique<BackgroundLayer>(m_camera.get(), Vector2(0.8f, 0.8f)));
 		
@@ -116,14 +136,20 @@ void PlayState::SpawnPlayer()
 
 void PlayState::CleanUp() 
 {
+	m_states.reset();
 	m_spriteBatch.reset();
 	m_spriteFont.reset();
-    m_states.reset();
+    
+	m_camera.reset();
 	m_assetManager.reset();
 	m_entityManager.reset();
-	m_camera.reset();
-
+	
 	m_backgroundLayers.clear();
+	m_backgroundBuffer.reset();
+	m_backgroundD3dBuffer.Reset();
+
+	m_backgroundPs.Reset();
+	m_backgroundVs.Reset();
 }
 
 void PlayState::Update(DX::StepTimer const& timer, Game* game)
@@ -328,7 +354,24 @@ void PlayState::Render(DX::DeviceResources const& deviceResources)
 	context->ClearRenderTargetView(renderTarget, DirectX::Colors::Black);
 
 	RECT outputSize = deviceResources.GetOutputSize();
-	m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Deferred, nullptr, m_states->LinearWrap(), nullptr, nullptr, nullptr, Matrix::Identity);
+		
+	Matrix viewPortTransform = GetViewportTransform(outputSize);
+	m_backgroundBuffer->MatrixTransform = Matrix::Identity * viewPortTransform;
+	m_backgroundBuffer->ScrollTransform = m_camera->GetScrollMatrix(Vector2(m_fixedBackground->GetWidth(), m_fixedBackground->GetHeight())) * viewPortTransform;
+	
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	DX::ThrowIfFailed(
+		context->Map(m_backgroundD3dBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource)
+	);
+	*static_cast<BackgroundBuffer*>(mappedResource.pData) = *m_backgroundBuffer;
+	context->Unmap(m_backgroundD3dBuffer.Get(), 0);
+
+	m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Deferred, nullptr, m_states->LinearWrap(), nullptr, nullptr, [=]
+	{
+		context->VSSetShader(m_backgroundVs.Get(), nullptr, 0);
+		context->PSSetShader(m_backgroundPs.Get(), nullptr, 0);
+		context->VSSetConstantBuffers(0, 1, m_backgroundD3dBuffer.GetAddressOf());
+	});
 	m_spriteBatch->Draw(m_fixedBackground->GetSrv(), outputSize, &outputSize, Colors::White, 0.0f, Vector2::Zero, SpriteEffects::SpriteEffects_None, 0.0f);
 	m_spriteBatch->End();
 
@@ -348,3 +391,14 @@ void PlayState::Render(DX::DeviceResources const& deviceResources)
     m_spriteBatch->End();
 #endif
 };
+
+Matrix PlayState::GetViewportTransform(RECT outputSize)
+{
+	auto width = outputSize.right - outputSize.left;
+	auto height = outputSize.bottom - outputSize.top;
+
+	float xScale = (width > 0) ? 2.0f / width : 0.0f;
+	float yScale = (height > 0) ? 2.0f / height : 0.0f;
+
+	return XMMATRIX(xScale, 0, 0, 0, 0, -yScale, 0, 0, 0, 0, 1, 0, -1, 1, 0, 1);
+}

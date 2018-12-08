@@ -170,6 +170,9 @@
     <ClInclude Include="WanderSystem.h">
       <Filter>Inc\Systems</Filter>
     </ClInclude>
+    <ClInclude Include="ReadData.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -284,13 +287,19 @@
     <ImageContentTask Include="Content\Seeker.png">
       <Filter>Content</Filter>
     </ImageContentTask>
+    <ImageContentTask Include="Content\BackgroundLayer3.png">
+      <Filter>Content</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="Content\BackgroundLayer4.png">
+      <Filter>Content</Filter>
+    </ImageContentTask>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Content\BackgroundLayer3.png">
+    <FxCompile Include="BackgroundVertexShader.hlsl">
       <Filter>Content</Filter>
-    </Image>
-    <Image Include="Content\BackgroundLayer4.png">
+    </FxCompile>
+    <FxCompile Include="BackgroundPixelShader.hlsl">
       <Filter>Content</Filter>
-    </Image>
+    </FxCompile>
   </ItemGroup>
 </Project>

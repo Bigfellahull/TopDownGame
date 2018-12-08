@@ -8,6 +8,12 @@
 #include "Camera.h"
 #include "BackgroundLayer.h"
 
+struct BackgroundBuffer
+{
+	DirectX::SimpleMath::Matrix MatrixTransform;
+	DirectX::SimpleMath::Matrix ScrollTransform;
+};
+
 class PlayState : public IGameState
 {
 public:
@@ -31,6 +37,7 @@ private:
 	void SpawnEnemies(float dt);
 	DirectX::SimpleMath::Vector2 GenerateRandomPosition();
     void SpawnPlayer();
+	DirectX::SimpleMath::Matrix GetViewportTransform(RECT outputSize);
     
     std::unique_ptr<DirectX::CommonStates> m_states;
 	std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
@@ -45,9 +52,14 @@ private:
 
 	Texture2d* m_fixedBackground;
 	std::vector<std::unique_ptr<BackgroundLayer>> m_backgroundLayers;
+	std::unique_ptr<BackgroundBuffer> m_backgroundBuffer;
+	Microsoft::WRL::ComPtr<ID3D11Buffer> m_backgroundD3dBuffer;
 
 	float m_enemyInverseSpawnChance;
 
 	wchar_t m_framesPerSecond[100];
 	wchar_t m_entityCount[100];
+
+	Microsoft::WRL::ComPtr<ID3D11PixelShader> m_backgroundPs;
+	Microsoft::WRL::ComPtr<ID3D11VertexShader> m_backgroundVs;
 };
