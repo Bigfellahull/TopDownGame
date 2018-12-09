@@ -75,10 +75,12 @@ void SystemDebugRender::RenderEntity(Entity entity)
     // Draw velocity and accerlation
     Vector2 normalisedVelocity = translation.velocity;
     normalisedVelocity.Normalize();
+
     Vector2 normalisedAcceleration = translation.acceleration;
     normalisedAcceleration.Normalize();
-    Vector2 scaledVelocity = normalisedVelocity * 150.0f;
-	Vector2 scaledAcceleration = normalisedAcceleration * 150.0f;
+
+    Vector2 scaledVelocity = normalisedVelocity * 100.0f;
+	Vector2 scaledAcceleration = normalisedAcceleration * 100.0f;
     
 	DrawLine(render.spriteBatch, translation.position, translation.position + scaledVelocity, DirectX::Colors::Red, 1);
     DrawLine(render.spriteBatch, translation.position, translation.position + scaledAcceleration, DirectX::Colors::Orange, 1);
@@ -88,11 +90,18 @@ void SystemDebugRender::RenderEntity(Entity entity)
     {
         AvoidanceComponent& avoidance = avoidanceComponents.Get(entity);
 
-		DrawLine(render.spriteBatch, translation.position, translation.position + avoidance.ahead, DirectX::Colors::Purple, 1);
+		for (int i = 0; i < 3; i++)
+		{
+			DrawLine(render.spriteBatch, translation.position, translation.position + avoidance.ahead[i], DirectX::Colors::Purple, 1);
+		}
 
 		for (size_t i = 0; i < avoidance.debugProjectVector.size(); ++i)
 		{
 			DrawLine(render.spriteBatch, translation.position, translation.position + avoidance.debugProjectVector[i], DirectX::Colors::DarkGreen, 1);
+		}
+
+		for (size_t i = 0; i < avoidance.debugProjectedVector.size(); ++i)
+		{
 			DrawLine(render.spriteBatch, translation.position, translation.position + avoidance.debugProjectedVector[i], DirectX::Colors::Blue, 1);
 		}
     }

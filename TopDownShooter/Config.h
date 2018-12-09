@@ -2,7 +2,11 @@
 
 constexpr bool SlowModeEnabled = false;
 
+#if _DEBUG
 constexpr bool FullScreen = false;
+#else
+constexpr bool FullScreen = true;
+#endif
 
 constexpr const wchar_t* DebugAsset = L"1x1.dds";
 constexpr const wchar_t* PlayerAsset = L"Player.dds";

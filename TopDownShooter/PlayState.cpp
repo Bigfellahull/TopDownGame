@@ -168,10 +168,11 @@ void PlayState::Update(DX::StepTimer const& timer, Game* game)
         SpawnEnemies(dt);
     }
 
+#if _DEBUG
 	for (int i = 0; i < 10; i++)
 	{
 		float speed = 11.0f * (1.0f - 1 / MathHelper::Random(1.0f, 10.0f));
-		float theta = MathHelper::Random(0.0f, 1.0f) * 2.0f * 3.142;
+		float theta = MathHelper::Random(0.0f, 1.0f) * 2.0f * 3.142f;
 
 		float hue1 = MathHelper::Random(0.0f, 6.0f);
 		float hue2 = std::fmod(hue1 + MathHelper::Random(0.0f, 2.0f), 6.0f);
@@ -191,6 +192,7 @@ void PlayState::Update(DX::StepTimer const& timer, Game* game)
 			230.0f,
 			Vector2(0.7f, 0.7f));
 	}
+#endif
 
     UpdateUserInput(game->GetInputManager());
 
