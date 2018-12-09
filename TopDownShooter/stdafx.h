@@ -51,6 +51,7 @@
 
 #include "MathHelper.h"
 #include "Config.h"
+#include "ColourUtility.h"
 #include "ReadData.h"
 
 namespace DX

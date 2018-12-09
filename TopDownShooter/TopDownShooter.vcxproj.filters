@@ -173,6 +173,15 @@
     <ClInclude Include="ReadData.h">
       <Filter>Inc</Filter>
     </ClInclude>
+    <ClInclude Include="ParticleManager.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="CircularArray.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="ColourUtility.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -256,6 +265,9 @@
     <ClCompile Include="WanderSystem.cpp">
       <Filter>Src\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="ParticleManager.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -301,5 +313,10 @@
     <FxCompile Include="BackgroundPixelShader.hlsl">
       <Filter>Content</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Content\Particle.png">
+      <Filter>Content</Filter>
+    </Image>
   </ItemGroup>
 </Project>

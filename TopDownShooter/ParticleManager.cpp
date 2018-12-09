@@ -1,0 +1,112 @@
+#include "stdafx.h"
+
+#include "ParticleManager.h"
+
+using namespace DirectX;
+using namespace DirectX::SimpleMath;
+
+ParticleManager::ParticleManager() :
+	m_particles(2000)
+{
+
+}
+
+void ParticleManager::CreateParticle(
+	Texture2d* texture,
+	DirectX::SimpleMath::Vector2 position,
+	DirectX::SimpleMath::Vector2 velocity,
+	DirectX::SimpleMath::Vector4 colour,
+	float duration,
+	DirectX::SimpleMath::Vector2 scale,
+	float theta)
+{
+	int index;
+
+	int particleCapacity = m_particles.GetCapacity();
+
+	if (m_particles.count == particleCapacity)
+	{
+		index = 0;
+		m_particles.start = (m_particles.start + 1) % particleCapacity;
+	}
+	else
+	{
+		index = m_particles.count++;
+	}
+
+	Particle& particle = m_particles[index];
+
+	particle.texture = texture;
+	particle.position = position;
+	particle.velocity = velocity;
+	particle.scale = scale;
+	particle.colour = colour;
+	particle.orientation = theta;
+	particle.duration = duration;
+	particle.percentLife = 1.0f;
+}
+
+void ParticleManager::Update(float dt)
+{
+	int removalCount = 0;
+
+	for (int i = 0; i < m_particles.count; i++)
+	{
+		Particle& particle = m_particles[i];
+
+		particle.position += particle.velocity;
+		particle.orientation = static_cast<float>(std::atan2(particle.velocity.y, particle.velocity.x));
+
+		float speed = particle.velocity.Length();
+		float alpha = std::min(1.0f, std::min(particle.percentLife * 2, speed * 1.0f));
+		alpha *= alpha;
+
+		particle.colour.w = alpha;
+		particle.scale.x = 1.0f * std::min(std::min(1.0f, 0.2f * speed + 0.1f), alpha);
+
+		if (std::abs(particle.velocity.x) + std::abs(particle.velocity.y) < 0.00000000001f)
+		{
+			particle.velocity = Vector2::Zero;
+		}
+
+		particle.velocity *= 0.97f;
+		
+		particle.percentLife -= 1.0f / particle.duration;
+
+		SwapIndex(i - removalCount, i);
+
+		if (particle.percentLife < 0)
+		{
+			removalCount++;
+		}
+	}
+
+	m_particles.count -= removalCount;
+}
+
+void ParticleManager::SwapIndex(int a, int b)
+{
+	Particle& temp = m_particles[a];
+	m_particles[a] = m_particles[b];
+	m_particles[b] = temp;
+}
+
+void ParticleManager::Draw(SpriteBatch& spriteBatch)
+{
+	for (int i = 0; i < m_particles.count; i++)
+	{
+		Particle& p = m_particles[i];
+
+		Vector2 origin = Vector2(p.texture->GetWidth() / 2, p.texture->GetHeight() / 2);
+		spriteBatch.Draw(
+			p.texture->GetSrv(), 
+			p.position, 
+			nullptr, 
+			p.colour, 
+			p.orientation, 
+			origin, 
+			p.scale, 
+			SpriteEffects::SpriteEffects_None, 
+			0.0f);
+	}
+}

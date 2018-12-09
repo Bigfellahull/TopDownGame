@@ -3,6 +3,7 @@
 #include "IGameState.h"
 #include "EntityManager.h"
 #include "AssetManager.h"
+#include "ParticleManager.h"
 
 #include "PlayerStatus.h"
 #include "Camera.h"
@@ -49,6 +50,7 @@ private:
 	std::unique_ptr<Camera> m_camera;
 	std::unique_ptr<AssetManager> m_assetManager;
 	std::unique_ptr<EntityManager> m_entityManager;
+	std::unique_ptr<ParticleManager> m_particleManager;
 
 	Texture2d* m_fixedBackground;
 	std::vector<std::unique_ptr<BackgroundLayer>> m_backgroundLayers;

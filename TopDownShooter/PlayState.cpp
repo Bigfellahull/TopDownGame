@@ -50,6 +50,7 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_spriteFont = std::make_unique<SpriteFont>(device, L"SegoeUI_18.spritefont");
 	m_assetManager = std::make_unique<AssetManager>(device);
 	m_entityManager = std::make_unique<EntityManager>(worldBounds);
+	m_particleManager = std::make_unique<ParticleManager>();
 
 	m_entityManager->CreateComponentStore<TranslationComponent>();
 	m_entityManager->CreateComponentStore<RenderComponent>();
@@ -167,8 +168,33 @@ void PlayState::Update(DX::StepTimer const& timer, Game* game)
         SpawnEnemies(dt);
     }
 
+	for (int i = 0; i < 10; i++)
+	{
+		float speed = 11.0f * (1.0f - 1 / MathHelper::Random(1.0f, 10.0f));
+		float theta = MathHelper::Random(0.0f, 1.0f) * 2.0f * 3.142;
+
+		float hue1 = MathHelper::Random(0.0f, 6.0f);
+		float hue2 = std::fmod(hue1 + MathHelper::Random(0.0f, 2.0f), 6.0f);
+
+		Vector4 colour1 = ColourUtility::HsvToColour(hue1, 0.8f, 1.0f);
+		Vector4 colour2 = ColourUtility::HsvToColour(hue2, 0.8f, 1.0f);
+
+		Vector4 colour = Vector4::Lerp(colour1, colour2, MathHelper::Random(0.0f, 1.0f));
+
+		Vector2 velocity = Vector2(speed * static_cast<float>(std::cosf(theta)), speed * static_cast<float>(std::sinf(theta)));
+
+		m_particleManager->CreateParticle(
+			m_assetManager->GetTexture(ParticleAsset),
+			Vector2(900, 900),
+			velocity,
+			colour,
+			230.0f,
+			Vector2(0.7f, 0.7f));
+	}
+
     UpdateUserInput(game->GetInputManager());
 
+	m_particleManager->Update(dt);
 	m_entityManager->RebuildQuadTree();
     m_entityManager->UpdateEntities(dt);
 
@@ -388,6 +414,7 @@ void PlayState::Render(DX::DeviceResources const& deviceResources)
 
 	m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Deferred, nullptr, nullptr, nullptr, nullptr, nullptr, m_camera->GetViewMatrix());
 	m_entityManager->RenderEntities();
+	m_particleManager->Draw(*m_spriteBatch.get());
 	m_spriteBatch->End();
 
 #if _DEBUG
