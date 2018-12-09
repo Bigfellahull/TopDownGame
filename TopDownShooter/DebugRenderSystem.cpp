@@ -100,17 +100,4 @@ void SystemDebugRender::RenderEntity(Entity entity)
     // Draw colliders
     DrawCircle(render.spriteBatch, translation.position, collider.radius, DirectX::Colors::LightGreen, 1);
 	DrawCircle(render.spriteBatch, translation.position, collider.avoidanceRadius, DirectX::Colors::LightPink, 1);
-
-	// Draw quadtree
-	std::vector<Rectangle> quadTreeBounds = m_manager.GetQuadTree()->GetAllBounds(m_manager.GetQuadTree());
-
-	for (size_t i = 0; i < quadTreeBounds.size(); ++i)
-	{
-		Rectangle r = quadTreeBounds[i];
-
-		render.spriteBatch.Draw(m_debugTexture->GetSrv(), Rectangle(r.x, r.y, r.width, 1), DirectX::Colors::White);
-		render.spriteBatch.Draw(m_debugTexture->GetSrv(), Rectangle(r.x, r.y, 1, r.height), DirectX::Colors::White);
-		render.spriteBatch.Draw(m_debugTexture->GetSrv(), Rectangle(r.x + r.width - 1, r.y, 1, r.height), DirectX::Colors::White);
-		render.spriteBatch.Draw(m_debugTexture->GetSrv(), Rectangle(r.x, r.y + r.height - 1, r.width, 1), DirectX::Colors::White);
-	}
 }

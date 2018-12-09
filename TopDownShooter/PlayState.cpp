@@ -389,6 +389,21 @@ void PlayState::Render(DX::DeviceResources const& deviceResources)
     m_spriteFont->DrawString(m_spriteBatch.get(), m_framesPerSecond, XMFLOAT2(10, 10), Colors::White, 0.0f, XMFLOAT2(0, 0), 0.7f);
 	m_spriteFont->DrawString(m_spriteBatch.get(), m_entityCount, XMFLOAT2(10, 30), Colors::White, 0.0f, XMFLOAT2(0, 0), 0.7f);
     m_spriteBatch->End();
+
+	m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Deferred, nullptr, nullptr, nullptr, nullptr, nullptr, m_camera->GetViewMatrix());
+	// Draw quadtree
+	std::vector<Rectangle> quadTreeBounds = m_entityManager->GetQuadTree()->GetAllBounds(m_entityManager->GetQuadTree());
+
+	for (size_t i = 0; i < quadTreeBounds.size(); ++i)
+	{
+		Rectangle r = quadTreeBounds[i];
+
+		m_spriteBatch->Draw(m_assetManager->GetTexture(DebugAsset)->GetSrv(), Rectangle(r.x, r.y, r.width, 1), DirectX::Colors::White);
+		m_spriteBatch->Draw(m_assetManager->GetTexture(DebugAsset)->GetSrv(), Rectangle(r.x, r.y, 1, r.height), DirectX::Colors::White);
+		m_spriteBatch->Draw(m_assetManager->GetTexture(DebugAsset)->GetSrv(), Rectangle(r.x + r.width - 1, r.y, 1, r.height), DirectX::Colors::White);
+		m_spriteBatch->Draw(m_assetManager->GetTexture(DebugAsset)->GetSrv(), Rectangle(r.x, r.y + r.height - 1, r.width, 1), DirectX::Colors::White);
+	}
+	m_spriteBatch->End();
 #endif
 };
 
