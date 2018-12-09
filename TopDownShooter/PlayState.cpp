@@ -83,6 +83,7 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 
 	m_camera = std::make_unique<Camera>(screenBounds);
 	m_camera->SetLimits(worldBounds);
+	//m_camera->SetZoom(0.5f);
 	
 	m_regionEntity = m_entityManager->CreateEntity();
 	m_entityManager->AddComponent(m_regionEntity, RegionComponent(Vector2(0, 0), Vector2(static_cast<float>(worldBounds.width), static_cast<float>(worldBounds.height))));
@@ -126,7 +127,7 @@ void PlayState::SpawnPlayer()
 {
     m_playerStatus.currentEntityId = m_entityManager->CreateEntity();
     m_entityManager->AddComponent(m_playerStatus.currentEntityId, TranslationComponent(GenerateRandomPosition(), Vector2::Zero, 0.0f));
-    m_entityManager->AddComponent(m_playerStatus.currentEntityId, RenderComponent(*m_spriteBatch.get(), m_assetManager->GetTexture(PlayerAsset)));
+    m_entityManager->AddComponent(m_playerStatus.currentEntityId, RenderComponent(*m_spriteBatch.get(), m_assetManager->GetTexture(PlayerAsset), m_spriteFont.get()));
     m_entityManager->AddComponent(m_playerStatus.currentEntityId, ProjectileSourceComponent(m_assetManager.get()));
     m_entityManager->AddComponent(m_playerStatus.currentEntityId, ColliderComponent(20.0f, 40.0f));
     m_entityManager->AddComponent(m_playerStatus.currentEntityId, PlayerComponent(&m_playerStatus));
@@ -259,7 +260,12 @@ Vector2 PlayState::GenerateRandomPosition()
 
 void PlayState::SpawnEnemies(float dt)
 {
-	if (MathHelper::Random(0, static_cast<int>(m_enemyInverseSpawnChance)) == 0 && m_entityManager->GetNumberOfEntities() < 20)
+	if (m_entityManager->GetNumberOfEntities() > 20)
+	{
+		return;
+	}
+
+	if (MathHelper::Random(0, static_cast<int>(m_enemyInverseSpawnChance)) == 0)
 	{
 		TranslationComponent& playerTranslation = m_entityManager->GetComponentStore<TranslationComponent>().Get(m_playerStatus.currentEntityId);
 
@@ -273,7 +279,7 @@ void PlayState::SpawnEnemies(float dt)
 
 		auto enemy = m_entityManager->CreateEntity();
 		m_entityManager->AddComponent(enemy, TranslationComponent(spawnPosition, Vector2(0, 0), MathHelper::Random(0.0f, 6.2f)));
-		m_entityManager->AddComponent(enemy, RenderComponent(*m_spriteBatch.get(), m_assetManager->GetTexture(SeekerEnemyAsset)));
+		m_entityManager->AddComponent(enemy, RenderComponent(*m_spriteBatch.get(), m_assetManager->GetTexture(SeekerEnemyAsset), m_spriteFont.get()));
 		m_entityManager->AddComponent(enemy, EnemyComponent(1.0f));
 		m_entityManager->AddComponent(enemy, FollowPlayerComponent(&m_playerStatus, 6500.0f, 15.0f));
 		m_entityManager->AddComponent(enemy, AvoidanceComponent());
@@ -286,7 +292,7 @@ void PlayState::SpawnEnemies(float dt)
 	{
 		auto enemy = m_entityManager->CreateEntity();
 		m_entityManager->AddComponent(enemy, TranslationComponent(GenerateRandomPosition(), Vector2(0, 0), MathHelper::Random(0.0f, 6.2f)));
-		m_entityManager->AddComponent(enemy, RenderComponent(*m_spriteBatch.get(), m_assetManager->GetTexture(WanderEnemyAsset)));
+		m_entityManager->AddComponent(enemy, RenderComponent(*m_spriteBatch.get(), m_assetManager->GetTexture(WanderEnemyAsset), m_spriteFont.get()));
 		m_entityManager->AddComponent(enemy, EnemyComponent(1.2f));
 		m_entityManager->AddComponent(enemy, WanderComponent(&m_playerStatus, 4500.0f, 10.0f));
 		m_entityManager->AddComponent(enemy, SeparationComponent());

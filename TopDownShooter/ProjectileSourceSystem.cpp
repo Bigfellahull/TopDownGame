@@ -53,7 +53,7 @@ void SystemProjectileSource::UpdateEntity(float dt, Entity entity)
         {
             Entity bullet = m_manager.CreateEntity();
             m_manager.AddComponent(bullet, TranslationComponent(translation.position + offset, velocity, aimAngle));
-            m_manager.AddComponent(bullet, RenderComponent(render.spriteBatch, projectile.assetManager->GetTexture(BulletAsset)));
+            m_manager.AddComponent(bullet, RenderComponent(render.spriteBatch, projectile.assetManager->GetTexture(BulletAsset), render.spriteFont));
             m_manager.AddComponent(bullet, ProjectileComponent());
 			m_manager.AddComponent(bullet, AvoidableComponent());
             m_manager.AddComponent(bullet, ColliderComponent(4.0f, 40.0f));
@@ -64,7 +64,7 @@ void SystemProjectileSource::UpdateEntity(float dt, Entity entity)
         {
             Entity bullet = m_manager.CreateEntity();
             m_manager.AddComponent(bullet, TranslationComponent(translation.position + offset, velocity, aimAngle));
-            m_manager.AddComponent(bullet, RenderComponent(render.spriteBatch, projectile.assetManager->GetTexture(BulletAsset)));
+            m_manager.AddComponent(bullet, RenderComponent(render.spriteBatch, projectile.assetManager->GetTexture(BulletAsset), render.spriteFont));
             m_manager.AddComponent(bullet, ProjectileComponent());
 			m_manager.AddComponent(bullet, AvoidableComponent());
             m_manager.AddComponent(bullet, ColliderComponent(4.0f, 40.0f));

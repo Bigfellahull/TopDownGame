@@ -97,10 +97,11 @@ void QuadTree::Insert(QuadTreeEntry entry)
 		size_t i = 0;
 		while (i < m_entities.size())
 		{
-			int index = GetIndex(entry.position);
+			QuadTreeEntry toRedistribute = m_entities[i];
+			int index = GetIndex(toRedistribute.position);
 			if (index != -1)
 			{
-				m_nodes[index]->Insert(m_entities[i]);
+				m_nodes[index]->Insert(toRedistribute);
 				m_entities.erase(m_entities.begin() + i);
 			}
 			else
