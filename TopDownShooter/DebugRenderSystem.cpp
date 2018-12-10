@@ -5,6 +5,7 @@
 #include "TranslationComponent.h"
 #include "RenderComponent.h"
 #include "AvoidanceComponent.h"
+#include "SeparationComponent.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -105,6 +106,17 @@ void SystemDebugRender::RenderEntity(Entity entity)
 			DrawLine(render.spriteBatch, translation.position, translation.position + avoidance.debugProjectedVector[i], DirectX::Colors::Blue, 1);
 		}
     }
+
+	ComponentStore<SeparationComponent>& separationComponents = m_manager.GetComponentStore<SeparationComponent>();
+	if (separationComponents.Has(entity))
+	{
+		SeparationComponent& separation = separationComponents.Get(entity);
+
+		for (size_t i = 0; i < separation.debugProjectVector.size(); ++i)
+		{
+			DrawLine(render.spriteBatch, translation.position, translation.position + separation.debugProjectVector[i], DirectX::Colors::DarkGreen, 1);
+		}
+	}
 	
     // Draw colliders
     DrawCircle(render.spriteBatch, translation.position, collider.radius, DirectX::Colors::LightGreen, 1);

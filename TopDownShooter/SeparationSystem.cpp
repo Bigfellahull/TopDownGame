@@ -33,6 +33,14 @@ void SystemSeparation::UpdateEntity(float dt, Entity entity)
 	Vector2 separationForce = Vector2::Zero;
 	int neighbourCount = 0;
 
+	ComponentStore<SeparationComponent>& separationComponents = m_manager.GetComponentStore<SeparationComponent>();
+
+	SeparationComponent& separator = separationComponents.Get(entity);
+
+#if _DEBUG
+	separator.debugProjectVector.clear();
+#endif
+
 	std::vector<Entity> nearTranslationEntities = m_manager.GetQuadTree()->Retrieve(translation.position);
 	for (auto e : nearTranslationEntities)
 	{
@@ -41,14 +49,17 @@ void SystemSeparation::UpdateEntity(float dt, Entity entity)
 			continue;
 		}
 
-		ComponentStore<SeparationComponent>& separates = m_manager.GetComponentStore<SeparationComponent>();
-		if (!separates.Has(e))
+		if (!separationComponents.Has(e))
 		{
 			continue;
 		}
-		
+
 		ColliderComponent& otherCollider = m_manager.GetComponentStore<ColliderComponent>().Get(e);
 		TranslationComponent& otherTranslation = m_manager.GetComponentStore<TranslationComponent>().Get(e);
+
+#if _DEBUG
+		separator.debugProjectVector.push_back(otherTranslation.position - translation.position);
+#endif
 
 		float radius = collider.avoidanceRadius + otherCollider.avoidanceRadius;
 		if (Vector2::DistanceSquared(otherTranslation.position, translation.position) <= std::pow(radius, 2))
