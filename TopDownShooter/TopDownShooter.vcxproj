@@ -179,6 +179,8 @@
     <ClInclude Include="ComponentStore.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="DebugRenderSystem.h" />
+    <ClInclude Include="DestructableComponent.h" />
+    <ClInclude Include="DestructableSystem.h" />
     <ClInclude Include="DeviceResources.h" />
     <ClInclude Include="EnemyActivatorSystem.h" />
     <ClInclude Include="EnemyComponent.h" />
@@ -223,6 +225,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ColliderSystem.cpp" />
     <ClCompile Include="DebugRenderSystem.cpp" />
+    <ClCompile Include="DestructableSystem.cpp" />
     <ClCompile Include="DeviceResources.cpp" />
     <ClCompile Include="EnemyActivatorSystem.cpp" />
     <ClCompile Include="FollowPlayerSystem.cpp" />

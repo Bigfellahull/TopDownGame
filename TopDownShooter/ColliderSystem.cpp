@@ -59,13 +59,15 @@ void SystemCollider::UpdateEntity(float dt, Entity entity)
         float radius = collider.radius + otherCollider.radius;
         if (Vector2::DistanceSquared(translation.position, otherTranslation.position) < std::pow(radius, 2))
         {
+			// TODO: Move
             if (players.Has(entity))
             {
                 PlayerComponent& player = players.Get(entity);
                 player.status->isAlive = false;
             }
 
-            m_manager.QueueEntityForDrop(entity);
+			collider.hasCollided = true;
+			collider.collidedWith = e;
         }
     }
 }

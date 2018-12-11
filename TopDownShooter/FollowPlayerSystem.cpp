@@ -23,13 +23,8 @@ void SystemFollowPlayer::UpdateEntity(float dt, Entity entity)
 {
     FollowPlayerComponent& follow = m_manager.GetComponentStore<FollowPlayerComponent>().Get(entity);
 	
-	if (!follow.playerStatus->isAlive)
-	{
-		m_manager.QueueEntityForDrop(entity);
-		return;
-	}
-
-	if (!m_manager.GetComponentStore<EnemyComponent>().Get(entity).alive)
+	if (!m_manager.GetComponentStore<EnemyComponent>().Get(entity).alive ||
+		!follow.playerStatus->isAlive)
 	{
 		return;
 	}

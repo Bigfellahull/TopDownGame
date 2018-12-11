@@ -17,6 +17,7 @@
 #include "EnemyComponent.h"
 #include "AvoidableComponent.h"
 #include "WanderComponent.h"
+#include "DestructableComponent.h"
 
 #include "MoveSystem.h"
 #include "RenderSystem.h"
@@ -29,6 +30,7 @@
 #include "SeparationSystem.h"
 #include "EnemyActivatorSystem.h"
 #include "WanderSystem.h"
+#include "DestructableSystem.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -65,6 +67,7 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_entityManager->CreateComponentStore<EnemyComponent>();
 	m_entityManager->CreateComponentStore<AvoidableComponent>();
 	m_entityManager->CreateComponentStore<WanderComponent>();
+	m_entityManager->CreateComponentStore<DestructableComponent>();
 		
 	// The order systems are added in is important.
 	// They are executed in order from first added to last.
@@ -77,6 +80,7 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemSeparation(*m_entityManager.get())));
 	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemMove(*m_entityManager.get())));
 	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemCollider(*m_entityManager.get())));
+	m_entityManager->AddSystem(std::make_shared<SystemDestructable>(*m_entityManager.get()));
 	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemRender(*m_entityManager.get())));
 #if _DEBUG
     m_entityManager->AddSystem(std::shared_ptr<System>(new SystemDebugRender(*m_entityManager.get(), m_assetManager->GetTexture(DebugAsset))));
@@ -132,7 +136,8 @@ void PlayState::SpawnPlayer()
     m_entityManager->AddComponent(m_playerStatus.currentEntityId, ProjectileSourceComponent(m_assetManager.get()));
     m_entityManager->AddComponent(m_playerStatus.currentEntityId, ColliderComponent(20.0f, 40.0f));
     m_entityManager->AddComponent(m_playerStatus.currentEntityId, PlayerComponent(&m_playerStatus));
-    m_entityManager->RegisterEntity(m_playerStatus.currentEntityId);
+	m_entityManager->AddComponent(m_playerStatus.currentEntityId, DestructableComponent(m_particleManager.get(), m_assetManager->GetTexture(ParticleAsset), 25.0f));
+	m_entityManager->RegisterEntity(m_playerStatus.currentEntityId);
     m_playerStatus.isAlive = true;
 }
 
@@ -167,32 +172,6 @@ void PlayState::Update(DX::StepTimer const& timer, Game* game)
     {
         SpawnEnemies(dt);
     }
-
-#if _DEBUG
-	for (int i = 0; i < 10; i++)
-	{
-		float speed = 11.0f * (1.0f - 1 / MathHelper::Random(1.0f, 10.0f));
-		float theta = MathHelper::Random(0.0f, 1.0f) * 2.0f * 3.142f;
-
-		float hue1 = MathHelper::Random(0.0f, 6.0f);
-		float hue2 = std::fmod(hue1 + MathHelper::Random(0.0f, 2.0f), 6.0f);
-
-		Vector4 colour1 = ColourUtility::HsvToColour(hue1, 0.8f, 1.0f);
-		Vector4 colour2 = ColourUtility::HsvToColour(hue2, 0.8f, 1.0f);
-
-		Vector4 colour = Vector4::Lerp(colour1, colour2, MathHelper::Random(0.0f, 1.0f));
-
-		Vector2 velocity = Vector2(speed * static_cast<float>(std::cosf(theta)), speed * static_cast<float>(std::sinf(theta)));
-
-		m_particleManager->CreateParticle(
-			m_assetManager->GetTexture(ParticleAsset),
-			Vector2(900, 900),
-			velocity,
-			colour,
-			230.0f,
-			Vector2(0.7f, 0.7f));
-	}
-#endif
 
     UpdateUserInput(game->GetInputManager());
 
@@ -313,6 +292,7 @@ void PlayState::SpawnEnemies(float dt)
 		m_entityManager->AddComponent(enemy, AvoidanceComponent());
 		m_entityManager->AddComponent(enemy, SeparationComponent());
 		m_entityManager->AddComponent(enemy, ColliderComponent(15.0f, 35.0f));
+		m_entityManager->AddComponent(enemy, DestructableComponent(m_particleManager.get(), m_assetManager->GetTexture(ParticleAsset)));
 		m_entityManager->RegisterEntity(enemy);
 	}
 
@@ -325,6 +305,7 @@ void PlayState::SpawnEnemies(float dt)
 		m_entityManager->AddComponent(enemy, WanderComponent(&m_playerStatus, 4500.0f, 10.0f));
 		m_entityManager->AddComponent(enemy, SeparationComponent());
 		m_entityManager->AddComponent(enemy, ColliderComponent(15.0f, 35.0f));
+		m_entityManager->AddComponent(enemy, DestructableComponent(m_particleManager.get(), m_assetManager->GetTexture(ParticleAsset)));
 		m_entityManager->RegisterEntity(enemy);
 	}
 

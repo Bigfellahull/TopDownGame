@@ -9,7 +9,12 @@ struct ColliderComponent : public Component
 	float radius;
 	float avoidanceRadius;
 
+	float hasCollided;
+	Entity collidedWith;
+
 	ColliderComponent(float aRadius, float aAvoidanceRadius) :
 		radius(aRadius),
-		avoidanceRadius(aAvoidanceRadius) { }
+		avoidanceRadius(aAvoidanceRadius),
+		hasCollided(false),
+		collidedWith(InvalidEntity) { }
 };

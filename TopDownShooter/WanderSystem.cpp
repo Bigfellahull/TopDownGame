@@ -23,12 +23,6 @@ void SystemWander::UpdateEntity(float dt, Entity entity)
 {
 	WanderComponent& wander = m_manager.GetComponentStore<WanderComponent>().Get(entity);
 
-	if (!wander.playerStatus->isAlive)
-	{
-		m_manager.QueueEntityForDrop(entity);
-		return;
-	}
-
 	if (!m_manager.GetComponentStore<EnemyComponent>().Get(entity).alive)
 	{
 		return;
