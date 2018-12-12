@@ -27,7 +27,7 @@ void SystemDestructable::UpdateEntity(float dt, Entity entity)
 	TranslationComponent& translation = m_manager.GetComponentStore<TranslationComponent>().Get(entity);
 	ColliderComponent& collider = m_manager.GetComponentStore<ColliderComponent>().Get(entity);
 
-	if (collider.hasCollided)
+	if (collider.hasCollided || destructable.destroy)
 	{
 		m_manager.QueueEntityForDrop(entity);
 

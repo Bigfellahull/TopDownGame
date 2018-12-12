@@ -5,6 +5,7 @@
 #include "TranslationComponent.h"
 #include "PlayerComponent.h"
 #include "EnemyComponent.h"
+#include "DestructableComponent.h"
 
 using namespace DirectX::SimpleMath;
 
@@ -64,6 +65,12 @@ void SystemCollider::UpdateEntity(float dt, Entity entity)
             {
                 PlayerComponent& player = players.Get(entity);
                 player.status->isAlive = false;
+
+				ComponentStore<DestructableComponent>& destructableComponents = m_manager.GetComponentStore<DestructableComponent>();
+				for (auto& x : destructableComponents.GetComponents())
+				{
+					destructableComponents.Get(x.first).destroy = true;
+				}
             }
 
 			collider.hasCollided = true;
