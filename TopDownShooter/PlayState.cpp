@@ -52,7 +52,7 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_spriteFont = std::make_unique<SpriteFont>(device, L"SegoeUI_18.spritefont");
 	m_assetManager = std::make_unique<AssetManager>(device);
 	m_entityManager = std::make_unique<EntityManager>(worldBounds);
-	m_particleManager = std::make_unique<ParticleManager>();
+	m_particleManager = std::make_unique<ParticleManager>(worldBounds);
 
 	m_entityManager->CreateComponentStore<TranslationComponent>();
 	m_entityManager->CreateComponentStore<RenderComponent>();
@@ -71,19 +71,19 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 		
 	// The order systems are added in is important.
 	// They are executed in order from first added to last.
-	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemEnemyActivator(*m_entityManager.get())));
-	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemProjectileSource(*m_entityManager.get())));
-	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemProjectile(*m_entityManager.get())));
-	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemFollowPlayer(*m_entityManager.get())));
-	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemWander(*m_entityManager.get())));
-	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemAvoidance(*m_entityManager.get())));
-	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemSeparation(*m_entityManager.get())));
-	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemMove(*m_entityManager.get())));
-	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemCollider(*m_entityManager.get())));
+	m_entityManager->AddSystem(std::make_shared<SystemEnemyActivator>(*m_entityManager.get()));
+	m_entityManager->AddSystem(std::make_shared<SystemProjectileSource>(*m_entityManager.get()));
+	m_entityManager->AddSystem(std::make_shared<SystemProjectile>(*m_entityManager.get()));
+	m_entityManager->AddSystem(std::make_shared<SystemFollowPlayer>(*m_entityManager.get()));
+	m_entityManager->AddSystem(std::make_shared<SystemWander>(*m_entityManager.get()));
+	m_entityManager->AddSystem(std::make_shared<SystemAvoidance>(*m_entityManager.get()));
+	m_entityManager->AddSystem(std::make_shared<SystemSeparation>(*m_entityManager.get()));
+	m_entityManager->AddSystem(std::make_shared<SystemMove>(*m_entityManager.get()));
+	m_entityManager->AddSystem(std::make_shared<SystemCollider>(*m_entityManager.get()));
 	m_entityManager->AddSystem(std::make_shared<SystemDestructable>(*m_entityManager.get()));
-	m_entityManager->AddSystem(std::shared_ptr<System>(new SystemRender(*m_entityManager.get())));
+	m_entityManager->AddSystem(std::make_shared<SystemRender>(*m_entityManager.get()));
 #if _DEBUG
-    m_entityManager->AddSystem(std::shared_ptr<System>(new SystemDebugRender(*m_entityManager.get(), m_assetManager->GetTexture(DebugAsset))));
+    m_entityManager->AddSystem(std::make_shared<SystemDebugRender>(*m_entityManager.get(), m_assetManager->GetTexture(DebugAsset)));
 #endif
 
 	m_camera = std::make_unique<Camera>(screenBounds);
@@ -133,7 +133,7 @@ void PlayState::SpawnPlayer()
     m_playerStatus.currentEntityId = m_entityManager->CreateEntity();
     m_entityManager->AddComponent(m_playerStatus.currentEntityId, TranslationComponent(GenerateRandomPosition(), Vector2::Zero, 0.0f));
     m_entityManager->AddComponent(m_playerStatus.currentEntityId, RenderComponent(*m_spriteBatch.get(), m_assetManager->GetTexture(PlayerAsset), m_spriteFont.get()));
-    m_entityManager->AddComponent(m_playerStatus.currentEntityId, ProjectileSourceComponent(m_assetManager.get()));
+    m_entityManager->AddComponent(m_playerStatus.currentEntityId, ProjectileSourceComponent(m_assetManager.get(), m_particleManager.get()));
     m_entityManager->AddComponent(m_playerStatus.currentEntityId, ColliderComponent(20.0f, 40.0f));
     m_entityManager->AddComponent(m_playerStatus.currentEntityId, PlayerComponent(&m_playerStatus));
 	m_entityManager->AddComponent(m_playerStatus.currentEntityId, DestructableComponent(m_particleManager.get(), m_assetManager->GetTexture(ParticleAsset), 25.0f));

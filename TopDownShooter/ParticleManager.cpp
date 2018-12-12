@@ -5,7 +5,8 @@
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
 
-ParticleManager::ParticleManager() :
+ParticleManager::ParticleManager(Rectangle worldBounds) :
+	m_worldBounds(worldBounds),
 	m_particles(2000)
 {
 
@@ -63,6 +64,24 @@ void ParticleManager::Update(float dt)
 
 		particle.colour.w = alpha;
 		particle.scale.x = 1.0f * std::min(std::min(1.0f, 0.2f * speed + 0.1f), alpha);
+
+		if (particle.position.x < m_worldBounds.x)
+		{
+			particle.velocity.x = std::abs(particle.velocity.x);
+		}
+		else if (particle.position.x > m_worldBounds.width)
+		{
+			particle.velocity.x = -std::abs(particle.velocity.x);
+		}
+
+		if (particle.position.y < m_worldBounds.y)
+		{
+			particle.velocity.y = std::abs(particle.velocity.y);
+		}
+		else if (particle.position.y > m_worldBounds.height)
+		{
+			particle.velocity.y = -std::abs(particle.velocity.y);
+		}
 
 		if (std::abs(particle.velocity.x) + std::abs(particle.velocity.y) < 0.00000000001f)
 		{

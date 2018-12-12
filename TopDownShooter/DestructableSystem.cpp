@@ -39,7 +39,7 @@ void SystemDestructable::UpdateEntity(float dt, Entity entity)
 
 		Vector4 colour = Vector4::Lerp(colour1, colour2, MathHelper::Random(0.0f, 1.0f));
 
-		for (int i = 0; i < 200; i++)
+		for (int i = 0; i < destructable.numberOfParticles; i++)
 		{
 			float speed = destructable.particleSpeed * (1.0f - 1 / MathHelper::Random(1.0f, 10.0f));
 			float theta = MathHelper::Random(0.0f, 1.0f) * 2.0f * 3.142f;

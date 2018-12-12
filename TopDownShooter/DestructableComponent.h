@@ -10,11 +10,13 @@ struct DestructableComponent : public Component
 	ParticleManager* particleManger;
 	Texture2d* particleTexture;
 	float particleSpeed;
+	int numberOfParticles;
 	bool destroy;
 	
-	DestructableComponent(ParticleManager* aParticleManger, Texture2d* aParticleTexture, float aParticleSpeed = 11.0f) :
+	DestructableComponent(ParticleManager* aParticleManger, Texture2d* aParticleTexture, float aParticleSpeed = 11.0f, int aNumberOfParticles = 200) :
 		particleManger(aParticleManger),
 		particleTexture(aParticleTexture),
 		particleSpeed(aParticleSpeed),
+		numberOfParticles(aNumberOfParticles),
 		destroy(false) { }
 };

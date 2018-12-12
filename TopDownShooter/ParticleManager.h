@@ -30,7 +30,7 @@ public:
 			percentLife(1.0f) { }
 	};
 
-	ParticleManager();
+	ParticleManager(DirectX::SimpleMath::Rectangle worldBounds);
 	
 	void CreateParticle(
 		Texture2d* texture, 
@@ -44,6 +44,8 @@ public:
 	void Draw(DirectX::SpriteBatch& spriteBatch);
 private:
 	void SwapIndex(int a, int b);
+
+	DirectX::SimpleMath::Rectangle m_worldBounds;
 
 	CircularArray<Particle> m_particles;
 };
