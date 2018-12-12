@@ -395,8 +395,13 @@ void PlayState::Render(DX::DeviceResources const& deviceResources)
 		l->Draw(*m_spriteBatch.get());
 	}
 
-	m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Deferred, nullptr, nullptr, nullptr, nullptr, nullptr, m_camera->GetViewMatrix());
+	Matrix cameraViewMatrix = m_camera->GetViewMatrix();
+
+	m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Deferred, nullptr, nullptr, nullptr, nullptr, nullptr, cameraViewMatrix);
 	m_entityManager->RenderEntities();
+	m_spriteBatch->End();
+
+	m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Texture, nullptr, nullptr, nullptr, nullptr, nullptr, cameraViewMatrix);
 	m_particleManager->Draw(*m_spriteBatch.get());
 	m_spriteBatch->End();
 
@@ -406,10 +411,8 @@ void PlayState::Render(DX::DeviceResources const& deviceResources)
 	m_spriteFont->DrawString(m_spriteBatch.get(), m_entityCount, XMFLOAT2(10, 30), Colors::White, 0.0f, XMFLOAT2(0, 0), 0.7f);
     m_spriteBatch->End();
 
-	m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Deferred, nullptr, nullptr, nullptr, nullptr, nullptr, m_camera->GetViewMatrix());
-	// Draw quadtree
+	m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Deferred, nullptr, nullptr, nullptr, nullptr, nullptr, cameraViewMatrix);
 	std::vector<Rectangle> quadTreeBounds = m_entityManager->GetQuadTree()->GetAllBounds(m_entityManager->GetQuadTree());
-
 	for (size_t i = 0; i < quadTreeBounds.size(); ++i)
 	{
 		Rectangle r = quadTreeBounds[i];
@@ -425,8 +428,8 @@ void PlayState::Render(DX::DeviceResources const& deviceResources)
 
 Matrix PlayState::GetViewportTransform(RECT outputSize)
 {
-	auto width = outputSize.right - outputSize.left;
-	auto height = outputSize.bottom - outputSize.top;
+	LONG width = outputSize.right - outputSize.left;
+	LONG height = outputSize.bottom - outputSize.top;
 
 	float xScale = (width > 0) ? 2.0f / width : 0.0f;
 	float yScale = (height > 0) ? 2.0f / height : 0.0f;

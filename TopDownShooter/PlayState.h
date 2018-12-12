@@ -20,7 +20,8 @@ class PlayState : public IGameState
 public:
 	PlayState() :
 		m_playerStatus(),
-		m_regionEntity() { }
+		m_regionEntity(),
+		m_fixedBackground(nullptr) { }
 
 	void Initialise(DX::DeviceResources const& deviceResources);
 	void CleanUp();

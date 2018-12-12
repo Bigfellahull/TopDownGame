@@ -6,7 +6,9 @@ template <typename T>
 class CircularArray
 {
 public:
-	CircularArray(int capacity)
+	CircularArray(int capacity) :
+		start(0),
+		count(0)
 	{
 		m_list.resize(capacity);
 	}

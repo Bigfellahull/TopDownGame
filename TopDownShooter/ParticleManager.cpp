@@ -92,7 +92,7 @@ void ParticleManager::Update(float dt)
 		
 		particle.percentLife -= 1.0f / particle.duration;
 
-		SwapIndex(i - removalCount, i);
+		std::swap(m_particles[i - removalCount], m_particles[i]);
 
 		if (particle.percentLife < 0)
 		{
@@ -101,13 +101,6 @@ void ParticleManager::Update(float dt)
 	}
 
 	m_particles.count -= removalCount;
-}
-
-void ParticleManager::SwapIndex(int a, int b)
-{
-	Particle& temp = m_particles[a];
-	m_particles[a] = m_particles[b];
-	m_particles[b] = temp;
 }
 
 void ParticleManager::Draw(SpriteBatch& spriteBatch)

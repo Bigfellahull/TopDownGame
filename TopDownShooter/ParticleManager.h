@@ -43,9 +43,6 @@ public:
 	void Update(float dt);
 	void Draw(DirectX::SpriteBatch& spriteBatch);
 private:
-	void SwapIndex(int a, int b);
-
 	DirectX::SimpleMath::Rectangle m_worldBounds;
-
 	CircularArray<Particle> m_particles;
 };
