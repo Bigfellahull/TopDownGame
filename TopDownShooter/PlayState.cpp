@@ -254,6 +254,11 @@ void PlayState::UpdateUserInput(InputManager* inputManager)
         }
 
         translation.acceleration = (acceleration * movementSpeed) + (translation.velocity * -drag);
+
+		if (translation.acceleration.LengthSquared() < 0.1f)
+		{
+			translation.acceleration = Vector2::Zero;
+		}
     }
     else if (kb.Q || state.IsBPressed())
     {

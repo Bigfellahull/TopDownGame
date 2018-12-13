@@ -23,9 +23,8 @@ void SystemMove::UpdateEntity(float dt, float totalTime, Entity entity)
     translation.position += delta;
     
     translation.velocity += translation.acceleration * dt;
-    if (translation.velocity.LengthSquared() < 2.0f)
+    if (translation.velocity.LengthSquared() < 0.1f)
     {
-        // If our velocity is small, just set it to zero.
         translation.velocity = Vector2::Zero;
     }
 

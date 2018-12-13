@@ -31,7 +31,7 @@ void SystemExhaustPlume::UpdateEntity(float dt, float totalTime, Entity entity)
 	Quaternion rotation = Quaternion::CreateFromYawPitchRoll(0.0f, 0.0f, orientation);
 
 	Vector2 baseVelocity = translation.velocity * (-3.0f / translation.velocity.Length());
-	Vector2 perpendicularVelocity = Vector2(baseVelocity.y, -baseVelocity.x) * (0.6f * static_cast<float>(std::sin(totalTime * 10.0f)));
+	Vector2 perpendicularVelocity = Vector2(baseVelocity.y, -baseVelocity.x) * (0.6f * std::sinf(totalTime * 10.0f));
 
 	Vector4 colour1 = Vector4(0.78f, 0.15f, 0.04f, 1.0f);
 	Vector4 colour2 = Vector4(1.0f, 0.73f, 0.12f, 1.0f);

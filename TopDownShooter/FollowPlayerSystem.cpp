@@ -54,4 +54,9 @@ void SystemFollowPlayer::UpdateEntity(float dt, float totalTime, Entity entity)
     {
         translation.acceleration = translation.velocity * -follow.drag;
     }
+
+	if (translation.acceleration.LengthSquared() < 0.1f)
+	{
+		translation.acceleration = Vector2::Zero;
+	}
 }
