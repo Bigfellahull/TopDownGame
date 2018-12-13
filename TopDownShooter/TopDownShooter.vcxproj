@@ -185,6 +185,8 @@
     <ClInclude Include="EnemyActivatorSystem.h" />
     <ClInclude Include="EnemyComponent.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="ExhaustPlumeComponent.h" />
+    <ClInclude Include="ExhaustPlumeSystem.h" />
     <ClInclude Include="FollowPlayerComponent.h" />
     <ClInclude Include="FollowPlayerSystem.h" />
     <ClInclude Include="Game.h" />
@@ -228,6 +230,7 @@
     <ClCompile Include="DestructableSystem.cpp" />
     <ClCompile Include="DeviceResources.cpp" />
     <ClCompile Include="EnemyActivatorSystem.cpp" />
+    <ClCompile Include="ExhaustPlumeSystem.cpp" />
     <ClCompile Include="FollowPlayerSystem.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="InputManager.cpp" />
@@ -307,6 +310,9 @@
   </ItemGroup>
   <ItemGroup>
     <ImageContentTask Include="Content\Particle.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ImageContentTask Include="Content\GlowParticle.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

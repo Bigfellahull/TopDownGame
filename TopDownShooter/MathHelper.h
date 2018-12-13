@@ -26,6 +26,12 @@ public:
 			sinTheta * (point.x - centre.x) + cosTheta * (point.y - centre.y) + centre.y
 		);
 	}
+	static DirectX::SimpleMath::Vector2 NextVector2(float min, float max)
+	{
+		float theta = MathHelper::Random(0.0f, 1.0f) * 2.0f * 3.142f;
+		float length = MathHelper::Random(min, max);
+		return DirectX::SimpleMath::Vector2(length * static_cast<float>(std::cosf(theta)), length * static_cast<float>(std::sinf(theta)));
+	}
 private:
 	static bool m_randomInit;
 };

@@ -188,6 +188,12 @@
     <ClInclude Include="DestructableSystem.h">
       <Filter>Inc\Systems</Filter>
     </ClInclude>
+    <ClInclude Include="ExhaustPlumeSystem.h">
+      <Filter>Inc\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="ExhaustPlumeComponent.h">
+      <Filter>Inc\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -277,6 +283,9 @@
     <ClCompile Include="DestructableSystem.cpp">
       <Filter>Src\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="ExhaustPlumeSystem.cpp">
+      <Filter>Src\Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -315,6 +324,9 @@
       <Filter>Content</Filter>
     </ImageContentTask>
     <ImageContentTask Include="Content\Particle.png" />
+    <ImageContentTask Include="Content\GlowParticle.png">
+      <Filter>Content</Filter>
+    </ImageContentTask>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="BackgroundVertexShader.hlsl">

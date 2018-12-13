@@ -42,17 +42,16 @@ void SystemDestructable::UpdateEntity(float dt, Entity entity)
 		for (int i = 0; i < destructable.numberOfParticles; i++)
 		{
 			float speed = destructable.particleSpeed * (1.0f - 1 / MathHelper::Random(1.0f, 10.0f));
-			float theta = MathHelper::Random(0.0f, 1.0f) * 2.0f * 3.142f;
-
-			Vector2 velocity = Vector2(speed * static_cast<float>(std::cosf(theta)), speed * static_cast<float>(std::sinf(theta)));
-
+			
+			Vector2 velocity = MathHelper::NextVector2(speed, speed);
+			
 			destructable.particleManger->CreateParticle(
 				destructable.particleTexture,
-				translation.position,
+				translation.position + Vector2(10, 10),
 				velocity,
 				colour,
 				200.0f,
-				Vector2(0.7f, 0.7f));
+				Vector2(0.7f, 0.7f));			
 		}
 	}
 }
