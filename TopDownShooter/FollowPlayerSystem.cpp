@@ -19,7 +19,7 @@ SystemFollowPlayer::SystemFollowPlayer(EntityManager& manager) :
     SetRequiredComponents(std::move(requiredComponents));
 }
 
-void SystemFollowPlayer::UpdateEntity(float dt, Entity entity)
+void SystemFollowPlayer::UpdateEntity(float dt, float totalTime, Entity entity)
 {
     FollowPlayerComponent& follow = m_manager.GetComponentStore<FollowPlayerComponent>().Get(entity);
 	

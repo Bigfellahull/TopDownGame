@@ -21,7 +21,7 @@ SystemDestructable::SystemDestructable(EntityManager& manager) :
 	SetRequiredComponents(std::move(requiredComponents));
 }
 
-void SystemDestructable::UpdateEntity(float dt, Entity entity)
+void SystemDestructable::UpdateEntity(float dt, float totalTime, Entity entity)
 {
 	DestructableComponent& destructable = m_manager.GetComponentStore<DestructableComponent>().Get(entity);
 	TranslationComponent& translation = m_manager.GetComponentStore<TranslationComponent>().Get(entity);

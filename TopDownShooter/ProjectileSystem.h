@@ -8,5 +8,5 @@ class SystemProjectile : public System
 public:
     SystemProjectile(EntityManager& manager);
 
-    virtual void UpdateEntity(float dt, Entity entity);
+    virtual void UpdateEntity(float dt, float totalTime, Entity entity);
 };

@@ -9,7 +9,7 @@ System::System(EntityManager& manager, bool isRender) :
 
 System::~System() { }
 
-size_t System::UpdateEntities(float dt) 
+size_t System::UpdateEntities(float dt, float totalTime) 
 {
 	size_t updatedEntities = 0;
 
@@ -17,7 +17,7 @@ size_t System::UpdateEntities(float dt)
 		entity != m_matchingEntities.end();
 		++entity) 
 	{
-		UpdateEntity(dt, *entity);
+		UpdateEntity(dt, totalTime, *entity);
 		++updatedEntities;
 	}
 

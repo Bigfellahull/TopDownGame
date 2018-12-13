@@ -19,7 +19,7 @@ SystemWander::SystemWander(EntityManager& manager) :
 	SetRequiredComponents(std::move(requiredComponents));
 }
 
-void SystemWander::UpdateEntity(float dt, Entity entity)
+void SystemWander::UpdateEntity(float dt, float totalTime, Entity entity)
 {
 	WanderComponent& wander = m_manager.GetComponentStore<WanderComponent>().Get(entity);
 

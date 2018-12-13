@@ -180,9 +180,11 @@ void PlayState::Update(DX::StepTimer const& timer, Game* game)
 
     UpdateUserInput(game->GetInputManager());
 
-	m_particleManager->Update(dt);
 	m_entityManager->RebuildQuadTree();
-    m_entityManager->UpdateEntities(dt);
+    m_entityManager->UpdateEntities(dt, timer.GetTotalSeconds());
+	// Ensure we update particles after entities as particles get 
+	// added in the entity systems.
+	m_particleManager->Update(dt);
 
 	if (m_playerStatus.isAlive)
 	{

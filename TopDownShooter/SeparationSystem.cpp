@@ -20,7 +20,7 @@ SystemSeparation::SystemSeparation(EntityManager& manager) :
 	SetRequiredComponents(std::move(requiredComponents));
 }
 
-void SystemSeparation::UpdateEntity(float dt, Entity entity)
+void SystemSeparation::UpdateEntity(float dt, float totalTime, Entity entity)
 {
 	if (!m_manager.GetComponentStore<EnemyComponent>().Get(entity).alive)
 	{

@@ -22,7 +22,7 @@ SystemAvoidance::SystemAvoidance(EntityManager& manager) :
 	SetRequiredComponents(std::move(requiredComponents));
 }
 
-void SystemAvoidance::UpdateEntity(float dt, Entity entity)
+void SystemAvoidance::UpdateEntity(float dt, float totalTime, Entity entity)
 {
 	if (!m_manager.GetComponentStore<EnemyComponent>().Get(entity).alive)
 	{

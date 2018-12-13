@@ -16,7 +16,7 @@ SystemEnemyActivator::SystemEnemyActivator(EntityManager& manager) :
 	SetRequiredComponents(std::move(requiredComponents));
 }
 
-void SystemEnemyActivator::UpdateEntity(float dt, Entity entity)
+void SystemEnemyActivator::UpdateEntity(float dt, float totalTime, Entity entity)
 {
 	EnemyComponent& enemy = m_manager.GetComponentStore<EnemyComponent>().Get(entity);
 	RenderComponent& render = m_manager.GetComponentStore<RenderComponent>().Get(entity);

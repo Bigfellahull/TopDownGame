@@ -8,5 +8,5 @@ class SystemMove : public System
 public:
     SystemMove(EntityManager& manager);
 
-    virtual void UpdateEntity(float dt, Entity entity);
+    virtual void UpdateEntity(float dt, float totalTime, Entity entity);
 };

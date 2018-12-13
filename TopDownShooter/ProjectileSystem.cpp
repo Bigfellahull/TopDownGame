@@ -19,7 +19,7 @@ SystemProjectile::SystemProjectile(EntityManager& manager) :
     SetRequiredComponents(std::move(requiredComponents));
 }
 
-void SystemProjectile::UpdateEntity(float dt, Entity entity)
+void SystemProjectile::UpdateEntity(float dt, float totalTime, Entity entity)
 {
     TranslationComponent& translation = m_manager.GetComponentStore<TranslationComponent>().Get(entity);
 	DestructableComponent& destructable = m_manager.GetComponentStore<DestructableComponent>().Get(entity);

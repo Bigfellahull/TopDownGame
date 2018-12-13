@@ -34,9 +34,9 @@ public:
 		return (m_matchingEntities.end() != m_matchingEntities.find(entity));
 	}
 
-	size_t UpdateEntities(float dt);
+	size_t UpdateEntities(float dt, float totalTime);
 
-	virtual void UpdateEntity(float dt, Entity entity) { }
+	virtual void UpdateEntity(float dt, float totalTime, Entity entity) { }
 
 	size_t RenderEntities();
 

@@ -88,7 +88,7 @@ void EntityManager::RebuildQuadTree()
 	}
 }
 
-size_t EntityManager::UpdateEntities(float dt)
+size_t EntityManager::UpdateEntities(float dt, float totalTime)
 {
 	size_t updatedEntities = 0;
 
@@ -101,7 +101,7 @@ size_t EntityManager::UpdateEntities(float dt)
 			continue;
 		}
 
-		updatedEntities += (*system)->UpdateEntities(dt);
+		updatedEntities += (*system)->UpdateEntities(dt, totalTime);
 	}
 
 	// It's possible systems have queued entities to be removed.

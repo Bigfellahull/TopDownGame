@@ -15,7 +15,7 @@ SystemMove::SystemMove(EntityManager& manager) :
     SetRequiredComponents(std::move(requiredComponents));
 }
 
-void SystemMove::UpdateEntity(float dt, Entity entity)
+void SystemMove::UpdateEntity(float dt, float totalTime, Entity entity)
 {
     TranslationComponent& translation = m_manager.GetComponentStore<TranslationComponent>().Get(entity);
 

@@ -23,7 +23,7 @@ SystemProjectileSource::SystemProjectileSource(EntityManager& manager) :
     SetRequiredComponents(std::move(requiredComponents));
 }
 
-void SystemProjectileSource::UpdateEntity(float dt, Entity entity)
+void SystemProjectileSource::UpdateEntity(float dt, float totalTime, Entity entity)
 {
     ProjectileSourceComponent& projectile = m_manager.GetComponentStore<ProjectileSourceComponent>().Get(entity);
     TranslationComponent& translation = m_manager.GetComponentStore<TranslationComponent>().Get(entity);

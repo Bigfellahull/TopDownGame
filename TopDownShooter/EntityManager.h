@@ -72,7 +72,7 @@ public:
 	
 	size_t RegisterEntity(const Entity entity);
 	size_t UnregisterEntity(const Entity entity);
-	size_t UpdateEntities(float dt);
+	size_t UpdateEntities(float dt, float totalTime);
 	size_t RenderEntities();
 
 	void QueueEntityForDrop(const Entity entity);

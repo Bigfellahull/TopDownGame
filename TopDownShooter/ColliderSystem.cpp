@@ -19,7 +19,7 @@ SystemCollider::SystemCollider(EntityManager& manager) :
     SetRequiredComponents(std::move(requiredComponents));
 }
 
-void SystemCollider::UpdateEntity(float dt, Entity entity)
+void SystemCollider::UpdateEntity(float dt, float totalTime, Entity entity)
 {
 	ComponentStore<EnemyComponent>& enemies = m_manager.GetComponentStore<EnemyComponent>();
 	ComponentStore<PlayerComponent>& players = m_manager.GetComponentStore<PlayerComponent>();
