@@ -31,13 +31,22 @@ void SystemDestructable::UpdateEntity(float dt, float totalTime, Entity entity)
 	{
 		m_manager.QueueEntityForDrop(entity);
 
-		float hue1 = MathHelper::Random(0.0f, 6.0f);
-		float hue2 = std::fmod(hue1 + MathHelper::Random(0.0f, 2.0f), 6.0f);
+		Vector4 colour;
+		
+		if (destructable.randomColour)
+		{
+			float hue1 = MathHelper::Random(0.0f, 6.0f);
+			float hue2 = std::fmod(hue1 + MathHelper::Random(0.0f, 2.0f), 6.0f);
 
-		Vector4 colour1 = ColourUtility::HsvToColour(hue1, 0.8f, 1.0f);
-		Vector4 colour2 = ColourUtility::HsvToColour(hue2, 0.8f, 1.0f);
+			Vector4 colour1 = ColourUtility::HsvToColour(hue1, 0.8f, 1.0f);
+			Vector4 colour2 = ColourUtility::HsvToColour(hue2, 0.8f, 1.0f);
 
-		Vector4 colour = Vector4::Lerp(colour1, colour2, MathHelper::Random(0.0f, 1.0f));
+			colour = Vector4::Lerp(colour1, colour2, MathHelper::Random(0.0f, 1.0f));
+		}
+		else
+		{
+			colour = destructable.colour;
+		}
 
 		for (int i = 0; i < destructable.numberOfParticles; i++)
 		{

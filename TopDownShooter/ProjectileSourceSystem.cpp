@@ -50,7 +50,7 @@ void SystemProjectileSource::UpdateEntity(float dt, float totalTime, Entity enti
         Vector2 velocity = 1000.0f *
             Vector2(static_cast<float>(std::cos(aimAngle + randomSpread)), static_cast<float>(std::sin(aimAngle + randomSpread)));
 
-        Vector2 offset = Vector2::Transform(Vector2(40, -8), aimQuat);
+        Vector2 offset = Vector2::Transform(Vector2(30, -8), aimQuat);
         {
             Entity bullet = m_manager.CreateEntity();
             m_manager.AddComponent(bullet, TranslationComponent(translation.position + offset, velocity, aimAngle));
@@ -58,11 +58,11 @@ void SystemProjectileSource::UpdateEntity(float dt, float totalTime, Entity enti
             m_manager.AddComponent(bullet, ProjectileComponent());
 			m_manager.AddComponent(bullet, AvoidableComponent());
             m_manager.AddComponent(bullet, ColliderComponent(4.0f, 40.0f));
-			m_manager.AddComponent(bullet, DestructableComponent(projectile.particleManager, projectile.assetManager->GetTexture(ParticleAsset), 8.0f, 5));
+			m_manager.AddComponent(bullet, DestructableComponent(projectile.particleManager, projectile.assetManager->GetTexture(ParticleAsset), 8.0f, 5, false, Vector4::One));
             m_manager.RegisterEntity(bullet);
         }
 
-        offset = Vector2::Transform(Vector2(40, 8), aimQuat);
+        offset = Vector2::Transform(Vector2(30, 8), aimQuat);
         {
             Entity bullet = m_manager.CreateEntity();
             m_manager.AddComponent(bullet, TranslationComponent(translation.position + offset, velocity, aimAngle));
@@ -70,7 +70,7 @@ void SystemProjectileSource::UpdateEntity(float dt, float totalTime, Entity enti
             m_manager.AddComponent(bullet, ProjectileComponent());
 			m_manager.AddComponent(bullet, AvoidableComponent());
             m_manager.AddComponent(bullet, ColliderComponent(4.0f, 40.0f));
-			m_manager.AddComponent(bullet, DestructableComponent(projectile.particleManager, projectile.assetManager->GetTexture(ParticleAsset), 8.0f, 5));
+			m_manager.AddComponent(bullet, DestructableComponent(projectile.particleManager, projectile.assetManager->GetTexture(ParticleAsset), 8.0f, 5, false, Vector4::One));
             m_manager.RegisterEntity(bullet);
         }
     }
