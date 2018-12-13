@@ -62,6 +62,7 @@ private:
 
 	wchar_t m_framesPerSecond[100];
 	wchar_t m_entityCount[100];
+	wchar_t m_particleCount[100];
 
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> m_backgroundPs;
 	Microsoft::WRL::ComPtr<ID3D11VertexShader> m_backgroundVs;

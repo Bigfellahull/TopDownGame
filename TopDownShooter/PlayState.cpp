@@ -100,7 +100,7 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 
     SpawnPlayer();
 
-	m_enemyInverseSpawnChance = 60.0f;
+	m_enemyInverseSpawnChance = 120.0f;
 
 	m_fixedBackground = m_assetManager->GetTexture(BackgroundLayer1);
 	
@@ -169,6 +169,7 @@ void PlayState::Update(DX::StepTimer const& timer, Game* game)
 #if _DEBUG
 	swprintf_s(m_framesPerSecond, L"FPS %d\n", timer.GetFramesPerSecond());
 	swprintf_s(m_entityCount, L"Entities: %zd\n", m_entityManager->GetNumberOfEntities());
+	swprintf_s(m_particleCount, L"Particles: %zd\n", m_particleManager->GetNumberOfParticles());
 #endif
 
 	float dt = SlowModeEnabled ? 0.001f : static_cast<float>(timer.GetElapsedSeconds());
@@ -181,7 +182,7 @@ void PlayState::Update(DX::StepTimer const& timer, Game* game)
     UpdateUserInput(game->GetInputManager());
 
 	m_entityManager->RebuildQuadTree();
-    m_entityManager->UpdateEntities(dt, timer.GetTotalSeconds());
+    m_entityManager->UpdateEntities(dt, static_cast<float>(timer.GetTotalSeconds()));
 	// Ensure we update particles after entities as particles get 
 	// added in the entity systems.
 	m_particleManager->Update(dt);
@@ -416,6 +417,7 @@ void PlayState::Render(DX::DeviceResources const& deviceResources)
     m_spriteBatch->Begin();
     m_spriteFont->DrawString(m_spriteBatch.get(), m_framesPerSecond, XMFLOAT2(10, 10), Colors::White, 0.0f, XMFLOAT2(0, 0), 0.7f);
 	m_spriteFont->DrawString(m_spriteBatch.get(), m_entityCount, XMFLOAT2(10, 30), Colors::White, 0.0f, XMFLOAT2(0, 0), 0.7f);
+	m_spriteFont->DrawString(m_spriteBatch.get(), m_particleCount, XMFLOAT2(10, 50), Colors::White, 0.0f, XMFLOAT2(0, 0), 0.7f);
     m_spriteBatch->End();
 
 	m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Deferred, nullptr, nullptr, nullptr, nullptr, nullptr, cameraViewMatrix);

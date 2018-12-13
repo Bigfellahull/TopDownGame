@@ -77,5 +77,5 @@ void SystemSeparation::UpdateEntity(float dt, float totalTime, Entity entity)
 
 	separationForce.Normalize();
 
-	translation.acceleration += (separationForce * 1000.0f);
+	translation.acceleration += (separationForce * 1500.0f);
 }

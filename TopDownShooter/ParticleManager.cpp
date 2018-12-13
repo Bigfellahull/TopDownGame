@@ -122,3 +122,8 @@ void ParticleManager::Draw(SpriteBatch& spriteBatch)
 			0.0f);
 	}
 }
+
+int ParticleManager::GetNumberOfParticles()
+{
+	return m_particles.count;
+}

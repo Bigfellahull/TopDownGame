@@ -125,7 +125,19 @@ void SystemDebugRender::RenderEntity(Entity entity)
 	if (render.spriteFont)
 	{
 		wchar_t entityNumber[50];
-		swprintf_s(entityNumber, L"%d\n", entity);
-		render.spriteFont->DrawString(&render.spriteBatch, entityNumber, translation.position + Vector2(0.0f, 15.0f), Colors::White, 0.0f, XMFLOAT2(0.0f, 0.0f), 1.0f);
+		swprintf_s(entityNumber, L"Entity - %d\n", entity);
+		render.spriteFont->DrawString(&render.spriteBatch, entityNumber, translation.position + Vector2(0.0f, 15.0f), Colors::White, 0.0f, XMFLOAT2(0.0f, 0.0f), 0.6f);
+
+		wchar_t entityPosition[50];
+		swprintf_s(entityPosition, L"Position - x:%f,y:%f\n", translation.position.x, translation.position.y);
+		render.spriteFont->DrawString(&render.spriteBatch, entityPosition, translation.position + Vector2(0.0f, 35.0f), Colors::White, 0.0f, XMFLOAT2(0.0f, 0.0f), 0.6f);
+
+		wchar_t entityVelocity[50];
+		swprintf_s(entityVelocity, L"Velocity - x:%f,y:%f\n", translation.velocity.x, translation.velocity.y);
+		render.spriteFont->DrawString(&render.spriteBatch, entityVelocity, translation.position + Vector2(0.0f, 55.0f), Colors::White, 0.0f, XMFLOAT2(0.0f, 0.0f), 0.6f);
+
+		wchar_t entityAcceleration[50];
+		swprintf_s(entityAcceleration, L"Acceleration - x:%f,y:%f\n", translation.acceleration.x, translation.acceleration.y);
+		render.spriteFont->DrawString(&render.spriteBatch, entityAcceleration, translation.position + Vector2(0.0f, 75.0f), Colors::White, 0.0f, XMFLOAT2(0.0f, 0.0f), 0.6f);
 	}
 }
