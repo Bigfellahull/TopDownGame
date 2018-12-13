@@ -100,8 +100,6 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 
     SpawnPlayer();
 
-	m_enemyInverseSpawnChance = 120.0f;
-
 	m_fixedBackground = m_assetManager->GetTexture(BackgroundLayer1);
 	
 	m_backgroundBuffer = std::make_unique<BackgroundBuffer>();

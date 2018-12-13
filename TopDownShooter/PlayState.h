@@ -21,7 +21,11 @@ public:
 	PlayState() :
 		m_playerStatus(),
 		m_regionEntity(),
-		m_fixedBackground(nullptr) { }
+		m_fixedBackground(nullptr),
+		m_enemyInverseSpawnChance(120.0f),
+		m_framesPerSecond(),
+		m_entityCount(),
+		m_particleCount() { }
 
 	void Initialise(DX::DeviceResources const& deviceResources);
 	void CleanUp();
