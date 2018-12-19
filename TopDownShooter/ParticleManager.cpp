@@ -55,7 +55,7 @@ void ParticleManager::Update(float dt)
 	{
 		Particle& particle = m_particles[i];
 
-		particle.position += particle.velocity;
+		particle.position += particle.velocity * dt;
 		particle.orientation = static_cast<float>(std::atan2(particle.velocity.y, particle.velocity.x));
 
 		float speed = particle.velocity.Length();

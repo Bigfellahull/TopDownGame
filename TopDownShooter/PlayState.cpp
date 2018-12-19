@@ -138,7 +138,7 @@ void PlayState::SpawnPlayer()
     m_entityManager->AddComponent(m_playerStatus.currentEntityId, ProjectileSourceComponent(m_assetManager.get(), m_particleManager.get()));
     m_entityManager->AddComponent(m_playerStatus.currentEntityId, ColliderComponent(20.0f, 40.0f));
     m_entityManager->AddComponent(m_playerStatus.currentEntityId, PlayerComponent(&m_playerStatus));
-	m_entityManager->AddComponent(m_playerStatus.currentEntityId, DestructableComponent(m_particleManager.get(), m_assetManager->GetTexture(ParticleAsset), 25.0f));
+	m_entityManager->AddComponent(m_playerStatus.currentEntityId, DestructableComponent(m_particleManager.get(), m_assetManager->GetTexture(ParticleAsset), 900.0f, 300));
 	m_entityManager->AddComponent(m_playerStatus.currentEntityId, ExhaustPlumeComponent(m_particleManager.get(), m_assetManager->GetTexture(ParticleAsset), m_assetManager->GetTexture(ParticleGlowAsset)));
 	m_entityManager->RegisterEntity(m_playerStatus.currentEntityId);
     m_playerStatus.isAlive = true;
@@ -244,7 +244,7 @@ void PlayState::UpdateUserInput(InputManager* inputManager)
             acceleration.x = -1.0f;
         }
 
-        float movementSpeed = 8000.0f;
+        float movementSpeed = 6500.0f;
         float drag = 10.0f;
 
         float accelerationLength = acceleration.LengthSquared();
@@ -299,7 +299,7 @@ void PlayState::SpawnEnemies(float dt)
 		m_entityManager->AddComponent(enemy, TranslationComponent(spawnPosition, Vector2(0, 0), MathHelper::Random(0.0f, 6.2f)));
 		m_entityManager->AddComponent(enemy, RenderComponent(*m_spriteBatch.get(), m_assetManager->GetTexture(SeekerEnemyAsset), m_spriteFont.get()));
 		m_entityManager->AddComponent(enemy, EnemyComponent(1.0f));
-		m_entityManager->AddComponent(enemy, FollowPlayerComponent(&m_playerStatus, 6500.0f, 15.0f));
+		m_entityManager->AddComponent(enemy, FollowPlayerComponent(&m_playerStatus, 5000.0f, 10.0f));
 		m_entityManager->AddComponent(enemy, AvoidanceComponent());
 		m_entityManager->AddComponent(enemy, SeparationComponent());
 		m_entityManager->AddComponent(enemy, ColliderComponent(15.0f, 35.0f));
@@ -313,7 +313,7 @@ void PlayState::SpawnEnemies(float dt)
 		m_entityManager->AddComponent(enemy, TranslationComponent(GenerateRandomPosition(), Vector2(0, 0), MathHelper::Random(0.0f, 6.2f)));
 		m_entityManager->AddComponent(enemy, RenderComponent(*m_spriteBatch.get(), m_assetManager->GetTexture(WanderEnemyAsset), m_spriteFont.get()));
 		m_entityManager->AddComponent(enemy, EnemyComponent(1.2f));
-		m_entityManager->AddComponent(enemy, WanderComponent(&m_playerStatus, 4500.0f, 10.0f));
+		m_entityManager->AddComponent(enemy, WanderComponent(&m_playerStatus, 3500.0f, 10.0f));
 		m_entityManager->AddComponent(enemy, SeparationComponent());
 		m_entityManager->AddComponent(enemy, ColliderComponent(15.0f, 35.0f));
 		m_entityManager->AddComponent(enemy, DestructableComponent(m_particleManager.get(), m_assetManager->GetTexture(ParticleAsset)));

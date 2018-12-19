@@ -30,7 +30,7 @@ void SystemExhaustPlume::UpdateEntity(float dt, float totalTime, Entity entity)
 	float orientation = std::atan2(translation.velocity.y, translation.velocity.x);
 	Quaternion rotation = Quaternion::CreateFromYawPitchRoll(0.0f, 0.0f, orientation);
 
-	Vector2 baseVelocity = translation.velocity * (-3.0f / translation.velocity.Length());
+	Vector2 baseVelocity = translation.velocity * (-150.0f / translation.velocity.Length());
 	Vector2 perpendicularVelocity = Vector2(baseVelocity.y, -baseVelocity.x) * (0.6f * std::sinf(totalTime * 10.0f));
 
 	Vector4 colour1 = Vector4(0.78f, 0.15f, 0.04f, 1.0f);

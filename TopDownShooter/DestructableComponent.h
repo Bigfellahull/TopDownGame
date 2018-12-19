@@ -18,7 +18,7 @@ struct DestructableComponent : public Component
 	DestructableComponent(
 		ParticleManager* aParticleManger, 
 		Texture2d* aParticleTexture, 
-		float aParticleSpeed = 11.0f, 
+		float aParticleSpeed = 500.0f, 
 		int aNumberOfParticles = 200, 
 		bool aRandomColour = true, 
 		DirectX::SimpleMath::Vector4 aColour = DirectX::SimpleMath::Vector4::Zero) :

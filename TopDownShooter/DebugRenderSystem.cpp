@@ -122,6 +122,7 @@ void SystemDebugRender::RenderEntity(Entity entity)
     DrawCircle(render.spriteBatch, translation.position, collider.radius, DirectX::Colors::LightGreen, 1);
 	DrawCircle(render.spriteBatch, translation.position, collider.avoidanceRadius, DirectX::Colors::LightPink, 1);
 
+#if 0
 	if (render.spriteFont)
 	{
 		wchar_t entityNumber[50];
@@ -140,4 +141,5 @@ void SystemDebugRender::RenderEntity(Entity entity)
 		swprintf_s(entityAcceleration, L"Acceleration - x:%f,y:%f\n", translation.acceleration.x, translation.acceleration.y);
 		render.spriteFont->DrawString(&render.spriteBatch, entityAcceleration, translation.position + Vector2(0.0f, 75.0f), Colors::White, 0.0f, XMFLOAT2(0.0f, 0.0f), 0.6f);
 	}
+#endif
 }
