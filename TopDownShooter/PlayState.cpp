@@ -167,7 +167,7 @@ void PlayState::Update(DX::StepTimer const& timer, Game* game)
 #if _DEBUG
 	swprintf_s(m_framesPerSecond, L"FPS %d\n", timer.GetFramesPerSecond());
 	swprintf_s(m_entityCount, L"Entities: %zd\n", m_entityManager->GetNumberOfEntities());
-	swprintf_s(m_particleCount, L"Particles: %zd\n", m_particleManager->GetNumberOfParticles());
+	swprintf_s(m_particleCount, L"Particles: %d\n", m_particleManager->GetNumberOfParticles());
 #endif
 
 	float dt = SlowModeEnabled ? 0.001f : static_cast<float>(timer.GetElapsedSeconds());
