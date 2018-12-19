@@ -6,5 +6,8 @@ struct ProjectileComponent : public Component
 {
 	static const ComponentType Type = 3;
 
-	ProjectileComponent() { }
+	float damage;
+
+	ProjectileComponent(float aDamage = 10.0f) :
+		damage(aDamage) { }
 };

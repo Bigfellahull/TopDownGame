@@ -194,6 +194,12 @@
     <ClInclude Include="ExhaustPlumeComponent.h">
       <Filter>Inc\Components</Filter>
     </ClInclude>
+    <ClInclude Include="CollisionHandlerSystem.h">
+      <Filter>Inc\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="HealthComponent.h">
+      <Filter>Inc\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -284,6 +290,9 @@
       <Filter>Src\Systems</Filter>
     </ClCompile>
     <ClCompile Include="ExhaustPlumeSystem.cpp">
+      <Filter>Src\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionHandlerSystem.cpp">
       <Filter>Src\Systems</Filter>
     </ClCompile>
   </ItemGroup>

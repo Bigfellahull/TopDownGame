@@ -46,7 +46,7 @@ void SystemExhaustPlume::UpdateEntity(float dt, float totalTime, Entity entity)
 		position,
 		velocityMid,
 		Vector4::One * alpha,
-		40.0f,
+		30.0f,
 		Vector2(0.4f, 0.7f));
 
 	exhaustPlume.particleManger->CreateParticle(
@@ -54,7 +54,7 @@ void SystemExhaustPlume::UpdateEntity(float dt, float totalTime, Entity entity)
 		position,
 		velocityMid,
 		colour2 * alpha,
-		40.0f,
+		30.0f,
 		Vector2(0.4f, 0.7f));
 
 	Vector2 velocitySide1 = baseVelocity + perpendicularVelocity + MathHelper::NextVector2(0.0f, 0.3f);
@@ -65,7 +65,7 @@ void SystemExhaustPlume::UpdateEntity(float dt, float totalTime, Entity entity)
 		position,
 		velocitySide1,
 		Vector4::One * alpha,
-		50.0f,
+		40.0f,
 		Vector2(0.4f, 0.7f));
 
 	exhaustPlume.particleManger->CreateParticle(
@@ -73,7 +73,7 @@ void SystemExhaustPlume::UpdateEntity(float dt, float totalTime, Entity entity)
 		position,
 		velocitySide1,
 		colour1 * alpha,
-		50.0f,
+		40.0f,
 		Vector2(0.4f, 0.7f));
 
 	exhaustPlume.particleManger->CreateParticle(
@@ -81,7 +81,7 @@ void SystemExhaustPlume::UpdateEntity(float dt, float totalTime, Entity entity)
 		position,
 		velocitySide2,
 		Vector4::One * alpha,
-		50.0f,
+		40.0f,
 		Vector2(0.4f, 0.7f));
 
 	exhaustPlume.particleManger->CreateParticle(
@@ -89,6 +89,6 @@ void SystemExhaustPlume::UpdateEntity(float dt, float totalTime, Entity entity)
 		position,
 		velocitySide2,
 		colour1 * alpha,
-		50.0f,
+		40.0f,
 		Vector2(0.4f, 0.7f));	
 }

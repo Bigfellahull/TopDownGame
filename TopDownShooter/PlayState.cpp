@@ -19,6 +19,7 @@
 #include "WanderComponent.h"
 #include "DestructableComponent.h"
 #include "ExhaustPlumeComponent.h"
+#include "HealthComponent.h"
 
 #include "MoveSystem.h"
 #include "RenderSystem.h"
@@ -33,6 +34,7 @@
 #include "WanderSystem.h"
 #include "DestructableSystem.h"
 #include "ExhaustPlumeSystem.h"
+#include "CollisionHandlerSystem.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -71,6 +73,7 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_entityManager->CreateComponentStore<WanderComponent>();
 	m_entityManager->CreateComponentStore<DestructableComponent>();
 	m_entityManager->CreateComponentStore<ExhaustPlumeComponent>();
+	m_entityManager->CreateComponentStore<HealthComponent>();
 		
 	// The order systems are added in is important.
 	// They are executed in order from first added to last.
@@ -83,6 +86,7 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_entityManager->AddSystem(std::make_shared<SystemSeparation>(*m_entityManager.get()));
 	m_entityManager->AddSystem(std::make_shared<SystemMove>(*m_entityManager.get()));
 	m_entityManager->AddSystem(std::make_shared<SystemCollider>(*m_entityManager.get()));
+	m_entityManager->AddSystem(std::make_shared<SystemCollisionHandler>(*m_entityManager.get()));
 	m_entityManager->AddSystem(std::make_shared<SystemExhaustPlume>(*m_entityManager.get()));
 	m_entityManager->AddSystem(std::make_shared<SystemDestructable>(*m_entityManager.get()));
 	m_entityManager->AddSystem(std::make_shared<SystemRender>(*m_entityManager.get()));
@@ -140,6 +144,7 @@ void PlayState::SpawnPlayer()
     m_entityManager->AddComponent(m_playerStatus.currentEntityId, PlayerComponent(&m_playerStatus));
 	m_entityManager->AddComponent(m_playerStatus.currentEntityId, DestructableComponent(m_particleManager.get(), m_assetManager->GetTexture(ParticleAsset), 900.0f, 300));
 	m_entityManager->AddComponent(m_playerStatus.currentEntityId, ExhaustPlumeComponent(m_particleManager.get(), m_assetManager->GetTexture(ParticleAsset), m_assetManager->GetTexture(ParticleGlowAsset)));
+	m_entityManager->AddComponent(m_playerStatus.currentEntityId, HealthComponent(30.0f));
 	m_entityManager->RegisterEntity(m_playerStatus.currentEntityId);
     m_playerStatus.isAlive = true;
 }
@@ -304,6 +309,7 @@ void PlayState::SpawnEnemies(float dt)
 		m_entityManager->AddComponent(enemy, SeparationComponent());
 		m_entityManager->AddComponent(enemy, ColliderComponent(15.0f, 35.0f));
 		m_entityManager->AddComponent(enemy, DestructableComponent(m_particleManager.get(), m_assetManager->GetTexture(ParticleAsset)));
+		m_entityManager->AddComponent(enemy, HealthComponent(20.0f));
 		m_entityManager->RegisterEntity(enemy);
 	}
 
@@ -317,6 +323,7 @@ void PlayState::SpawnEnemies(float dt)
 		m_entityManager->AddComponent(enemy, SeparationComponent());
 		m_entityManager->AddComponent(enemy, ColliderComponent(15.0f, 35.0f));
 		m_entityManager->AddComponent(enemy, DestructableComponent(m_particleManager.get(), m_assetManager->GetTexture(ParticleAsset)));
+		m_entityManager->AddComponent(enemy, HealthComponent(40.0f));
 		m_entityManager->RegisterEntity(enemy);
 	}
 

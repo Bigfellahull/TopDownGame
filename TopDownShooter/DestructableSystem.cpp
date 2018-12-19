@@ -4,7 +4,6 @@
 #include "DestructableComponent.h"
 #include "RenderComponent.h"
 #include "TranslationComponent.h"
-#include "ColliderComponent.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -16,7 +15,6 @@ SystemDestructable::SystemDestructable(EntityManager& manager) :
 	requiredComponents.insert(DestructableComponent::Type);
 	requiredComponents.insert(RenderComponent::Type);
 	requiredComponents.insert(TranslationComponent::Type);
-	requiredComponents.insert(ColliderComponent::Type);
 
 	SetRequiredComponents(std::move(requiredComponents));
 }
@@ -25,9 +23,8 @@ void SystemDestructable::UpdateEntity(float dt, float totalTime, Entity entity)
 {
 	DestructableComponent& destructable = m_manager.GetComponentStore<DestructableComponent>().Get(entity);
 	TranslationComponent& translation = m_manager.GetComponentStore<TranslationComponent>().Get(entity);
-	ColliderComponent& collider = m_manager.GetComponentStore<ColliderComponent>().Get(entity);
-
-	if (collider.hasCollided || destructable.destroy)
+	
+	if (destructable.destroy)
 	{
 		m_manager.QueueEntityForDrop(entity);
 
@@ -59,7 +56,7 @@ void SystemDestructable::UpdateEntity(float dt, float totalTime, Entity entity)
 				translation.position + Vector2(10, 10),
 				velocity,
 				colour,
-				200.0f,
+				100.0f,
 				Vector2(0.7f, 0.7f));			
 		}
 	}

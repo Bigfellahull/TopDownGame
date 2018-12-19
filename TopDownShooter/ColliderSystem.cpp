@@ -60,19 +60,6 @@ void SystemCollider::UpdateEntity(float dt, float totalTime, Entity entity)
         float radius = collider.radius + otherCollider.radius;
         if (Vector2::DistanceSquared(translation.position, otherTranslation.position) < std::pow(radius, 2))
         {
-			// TODO: Move
-            if (players.Has(entity))
-            {
-                PlayerComponent& player = players.Get(entity);
-                player.status->isAlive = false;
-
-				ComponentStore<DestructableComponent>& destructableComponents = m_manager.GetComponentStore<DestructableComponent>();
-				for (auto& x : destructableComponents.GetComponents())
-				{
-					destructableComponents.Get(x.first).destroy = true;
-				}
-            }
-
 			collider.hasCollided = true;
 			collider.collidedWith = e;
         }
