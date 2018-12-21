@@ -24,7 +24,7 @@ void SystemFollowPlayer::UpdateEntity(float dt, float totalTime, Entity entity)
     FollowPlayerComponent& follow = m_manager.GetComponentStore<FollowPlayerComponent>().Get(entity);
 	
 	if (!m_manager.GetComponentStore<EnemyComponent>().Get(entity).alive ||
-		!follow.playerStatus->isAlive)
+		!follow.playerStatus->IsAlive())
 	{
 		return;
 	}
@@ -32,7 +32,7 @@ void SystemFollowPlayer::UpdateEntity(float dt, float totalTime, Entity entity)
     ComponentStore<TranslationComponent>& translationComponents = m_manager.GetComponentStore<TranslationComponent>();
     
 	TranslationComponent& translation = translationComponents.Get(entity);
-    TranslationComponent& playerTranslation = translationComponents.Get(follow.playerStatus->currentEntityId);
+    TranslationComponent& playerTranslation = translationComponents.Get(follow.playerStatus->GetCurrentEntityId());
 
 	Vector2 playerFuturePosition = playerTranslation.position + playerTranslation.velocity * 0.3f;
 

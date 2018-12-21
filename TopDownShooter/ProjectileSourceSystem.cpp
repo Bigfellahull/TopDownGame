@@ -55,7 +55,7 @@ void SystemProjectileSource::UpdateEntity(float dt, float totalTime, Entity enti
             Entity bullet = m_manager.CreateEntity();
             m_manager.AddComponent(bullet, TranslationComponent(translation.position + offset, velocity, aimAngle));
             m_manager.AddComponent(bullet, RenderComponent(render.spriteBatch, projectile.assetManager->GetTexture(BulletAsset), render.spriteFont));
-            m_manager.AddComponent(bullet, ProjectileComponent());
+            m_manager.AddComponent(bullet, ProjectileComponent(entity));
 			m_manager.AddComponent(bullet, AvoidableComponent());
             m_manager.AddComponent(bullet, ColliderComponent(4.0f, 40.0f));
 			m_manager.AddComponent(bullet, DestructableComponent(projectile.particleManager, projectile.assetManager->GetTexture(ParticleAsset), 300.0f, 5, false, Vector4::One));
@@ -67,7 +67,7 @@ void SystemProjectileSource::UpdateEntity(float dt, float totalTime, Entity enti
             Entity bullet = m_manager.CreateEntity();
             m_manager.AddComponent(bullet, TranslationComponent(translation.position + offset, velocity, aimAngle));
             m_manager.AddComponent(bullet, RenderComponent(render.spriteBatch, projectile.assetManager->GetTexture(BulletAsset), render.spriteFont));
-            m_manager.AddComponent(bullet, ProjectileComponent());
+            m_manager.AddComponent(bullet, ProjectileComponent(entity));
 			m_manager.AddComponent(bullet, AvoidableComponent());
             m_manager.AddComponent(bullet, ColliderComponent(4.0f, 40.0f));
 			m_manager.AddComponent(bullet, DestructableComponent(projectile.particleManager, projectile.assetManager->GetTexture(ParticleAsset), 300.0f, 5, false, Vector4::One));

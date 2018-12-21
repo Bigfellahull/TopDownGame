@@ -47,7 +47,7 @@ void SystemCollisionHandler::UpdateEntity(float dt, float totalTime, Entity enti
 				if (health.hitPoints <= 0.0f)
 				{
 					PlayerComponent& player = playerComponents.Get(entity);
-					player.status->isAlive = false;
+					player.status->SetAlive(false);
 
 					DestoryAllDestructableComponents();
 				}
@@ -57,6 +57,8 @@ void SystemCollisionHandler::UpdateEntity(float dt, float totalTime, Entity enti
 
 	if (enemyComponents.Has(entity))
 	{
+		EnemyComponent& enemy = enemyComponents.Get(entity);
+
 		if (playerComponents.Has(collider.collidedWith))
 		{
 			DestroyEntity(entity);
@@ -71,7 +73,14 @@ void SystemCollisionHandler::UpdateEntity(float dt, float totalTime, Entity enti
 				health.hitPoints -= projectile.damage;
 
 				if (health.hitPoints <= 0.0f)
-				{
+				{		
+					if (playerComponents.Has(projectile.firedByEntity))
+					{
+						PlayerComponent& player = playerComponents.Get(projectile.firedByEntity);
+						player.status->AddPoints(enemy.points);
+						player.status->IncreaseMultiplier();
+					}
+
 					DestroyEntity(entity);
 				}
 			}

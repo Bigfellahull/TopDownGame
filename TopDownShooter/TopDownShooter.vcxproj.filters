@@ -295,6 +295,9 @@
     <ClCompile Include="CollisionHandlerSystem.cpp">
       <Filter>Src\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="PlayerStatus.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

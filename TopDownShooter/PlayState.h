@@ -22,10 +22,15 @@ public:
 		m_playerStatus(),
 		m_regionEntity(),
 		m_fixedBackground(nullptr),
-		m_enemyInverseSpawnChance(120.0f),
-		m_framesPerSecond(),
+		m_enemyInverseSpawnChance(120.0f)
+#if _DEBUG
+		,m_framesPerSecond(),
 		m_entityCount(),
-		m_particleCount() { }
+		m_particleCount()
+#endif
+	{
+	
+	}
 
 	void Initialise(DX::DeviceResources const& deviceResources);
 	void CleanUp();
@@ -64,9 +69,15 @@ private:
 
 	float m_enemyInverseSpawnChance;
 
+	wchar_t m_scoreDisplay[100];
+	wchar_t m_multiplierDisplay[100];
+	wchar_t m_healthDisplay[100];
+
+#if _DEBUG
 	wchar_t m_framesPerSecond[100];
 	wchar_t m_entityCount[100];
 	wchar_t m_particleCount[100];
+#endif
 
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> m_backgroundPs;
 	Microsoft::WRL::ComPtr<ID3D11VertexShader> m_backgroundVs;

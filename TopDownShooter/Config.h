@@ -8,6 +8,10 @@ constexpr bool FullScreen = false;
 constexpr bool FullScreen = true;
 #endif
 
+#if _DEBUG
+constexpr bool ShowDebugInformation = false;
+#endif
+
 constexpr const wchar_t* DebugAsset = L"1x1.dds";
 constexpr const wchar_t* PlayerAsset = L"Player.dds";
 constexpr const wchar_t* BulletAsset = L"Bullet.dds";

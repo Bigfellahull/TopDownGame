@@ -18,7 +18,7 @@ struct ProjectileSourceComponent : public Component
 	ProjectileSourceComponent(AssetManager* aAssetManager, ParticleManager* aParticleManager) :
 		assetManager(aAssetManager),
 		aimDirection(DirectX::SimpleMath::Vector2(0, 0)),
-		cooldownTime(0.15f),
+		cooldownTime(0.10f),
 		cooldownRemaining(0),
 		particleManager(aParticleManager) { }
 };

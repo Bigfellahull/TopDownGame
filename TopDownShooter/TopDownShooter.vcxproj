@@ -243,6 +243,7 @@
     <ClCompile Include="MoveSystem.cpp" />
     <ClCompile Include="ParticleManager.cpp" />
     <ClCompile Include="PauseState.cpp" />
+    <ClCompile Include="PlayerStatus.cpp" />
     <ClCompile Include="PlayState.cpp" />
     <ClCompile Include="ProjectileSourceSystem.cpp" />
     <ClCompile Include="ProjectileSystem.cpp" />

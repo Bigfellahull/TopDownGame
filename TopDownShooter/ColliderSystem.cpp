@@ -25,7 +25,7 @@ void SystemCollider::UpdateEntity(float dt, float totalTime, Entity entity)
 	ComponentStore<PlayerComponent>& players = m_manager.GetComponentStore<PlayerComponent>();
 
 	if ((enemies.Has(entity) && !enemies.Get(entity).alive) || 
-		(players.Has(entity) && !players.Get(entity).status->isAlive))
+		(players.Has(entity) && !players.Get(entity).status->IsAlive()))
 	{
 		return;
 	}
@@ -49,7 +49,7 @@ void SystemCollider::UpdateEntity(float dt, float totalTime, Entity entity)
         }
 
 		if ((enemies.Has(e) && !enemies.Get(e).alive) ||
-			(players.Has(e) && !players.Get(e).status->isAlive))
+			(players.Has(e) && !players.Get(e).status->IsAlive()))
 		{
 			continue;
 		}

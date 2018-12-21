@@ -116,6 +116,6 @@ void SystemAvoidance::UpdateEntity(float dt, float totalTime, Entity entity)
 			avoidanceForce *= (1.0f / sqrt(normalisedLength));
 		}
 
-		translation.acceleration += (avoidanceForce * 8000.0f);
+		translation.acceleration += (avoidanceForce * 5000.0f);
 	}
 }
