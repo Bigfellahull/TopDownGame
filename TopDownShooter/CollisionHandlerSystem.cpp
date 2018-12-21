@@ -48,6 +48,7 @@ void SystemCollisionHandler::UpdateEntity(float dt, float totalTime, Entity enti
 				{
 					PlayerComponent& player = playerComponents.Get(entity);
 					player.status->SetAlive(false);
+					player.status->RemoveLife();
 
 					DestoryAllDestructableComponents();
 				}

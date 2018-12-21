@@ -97,15 +97,17 @@ void Game::PushState(std::unique_ptr<IGameState> state)
 
 void Game::PopState()
 {
+	std::string previousState;
 	if (!m_states.empty())
 	{
+		previousState = m_states.back()->name;
 		m_states.back()->CleanUp();
 		m_states.pop_back();
 	}
 
-	if (!m_states.empty()) 
+	if (!m_states.empty())
 	{
-		m_states.back()->Resume();
+		m_states.back()->Resume(previousState);
 	}
 }
 

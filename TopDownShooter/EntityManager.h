@@ -76,7 +76,8 @@ public:
 	size_t RenderEntities();
 
 	void QueueEntityForDrop(const Entity entity);
-
+	void DropEntities();
+	
 	QuadTree* GetQuadTree() { return m_quadtree.get(); }
 private:
 	Entity m_lastEntity;
@@ -84,7 +85,5 @@ private:
 	std::map<ComponentType, std::unique_ptr<IComponentStore>> m_componentStores;
 	std::vector<std::shared_ptr<System>> m_systems;
 	std::unordered_set<Entity> m_tempEntitiesToDrop;
-	std::unique_ptr<QuadTree> m_quadtree;
-
-	void DropEntities();
+	std::unique_ptr<QuadTree> m_quadtree;	
 };

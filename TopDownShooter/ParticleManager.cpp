@@ -127,3 +127,8 @@ int ParticleManager::GetNumberOfParticles()
 {
 	return m_particles.count;
 }
+
+void ParticleManager::ClearParticles()
+{
+	m_particles.count = 0;
+}

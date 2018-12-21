@@ -45,7 +45,7 @@ void PauseState::Pause()
 
 }
 
-void PauseState::Resume()
+void PauseState::Resume(std::string previousState)
 {
 
 }

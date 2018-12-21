@@ -13,7 +13,7 @@ void PlayerStatus::Reset(Entity entityId)
 	m_currentEntityId = entityId;
 	m_score = 0;
 	m_multiplier = 1;
-	m_lives = 4;
+	m_lives = 3;
 	m_scoreForExtraLife = 2000;
 	m_multiplierTimeLeft = 0;
 	m_alive = true;
@@ -97,7 +97,18 @@ int PlayerStatus::GetMultiplier()
 	return m_multiplier;
 }
 
+int PlayerStatus::GetLives()
+{
+	return m_lives;
+}
+
 Entity PlayerStatus::GetCurrentEntityId()
 {
 	return m_currentEntityId;
+}
+
+void PlayerStatus::SetCurrentEntityId(Entity id)
+{
+	m_currentEntityId = id;
+	m_alive = true;
 }

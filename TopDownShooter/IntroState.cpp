@@ -54,7 +54,7 @@ void IntroState::Pause()
 
 }
 
-void IntroState::Resume()
+void IntroState::Resume(std::string previousState)
 {
 
 }

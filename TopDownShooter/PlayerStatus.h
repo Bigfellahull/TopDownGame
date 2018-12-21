@@ -19,7 +19,9 @@ public:
 
 	int GetScore();
 	int GetMultiplier();
+	int GetLives();
 	Entity GetCurrentEntityId();
+	void SetCurrentEntityId(Entity id);
 private:
 	Entity m_currentEntityId;
 	bool m_alive;

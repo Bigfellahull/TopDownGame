@@ -200,6 +200,9 @@
     <ClInclude Include="HealthComponent.h">
       <Filter>Inc\Components</Filter>
     </ClInclude>
+    <ClInclude Include="GameOverState.h">
+      <Filter>Inc\GameStates</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -297,6 +300,9 @@
     </ClCompile>
     <ClCompile Include="PlayerStatus.cpp">
       <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="GameOverState.cpp">
+      <Filter>Src\GameStates</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

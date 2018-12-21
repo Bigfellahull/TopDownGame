@@ -3,6 +3,7 @@
 #include "PlayState.h"
 #include "IntroState.h"
 #include "PauseState.h"
+#include "GameOverState.h"
 
 #include "TranslationComponent.h"
 #include "ProjectileSourceComponent.h"
@@ -105,7 +106,7 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_entityManager->AddComponent(m_regionEntity, RegionComponent(Vector2(0, 0), Vector2(static_cast<float>(worldBounds.width), static_cast<float>(worldBounds.height))));
 	m_entityManager->RegisterEntity(m_regionEntity);
 
-    SpawnPlayer();
+    SpawnPlayer(true);
 
 	m_fixedBackground = m_assetManager->GetTexture(BackgroundLayer1);
 	
@@ -137,9 +138,33 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_backgroundLayers[1]->AddBackgroundSprite(BackgroundSprite(Vector2(600.0f, 1200.0f), m_assetManager->GetTexture(BackgroundLayer4), 0.5f));
 }
 
-void PlayState::SpawnPlayer()
+// TODO: Improve this!
+void PlayState::RestartGame()
 {
-	m_playerStatus.Reset(m_entityManager->CreateEntity());
+	m_enemyInverseSpawnChance = 120.0f;
+	ComponentStore<DestructableComponent>& destructableComponents = m_entityManager->GetComponentStore<DestructableComponent>();
+	for (auto& x : destructableComponents.GetComponents())
+	{
+		m_entityManager->QueueEntityForDrop(x.first);
+	}
+	m_entityManager->DropEntities();
+	m_particleManager->ClearParticles();
+	SpawnPlayer(true);
+}
+
+void PlayState::SpawnPlayer(bool reset)
+{
+	Entity playerEntity = m_entityManager->CreateEntity();
+
+	if (reset)
+	{
+		m_playerStatus.Reset(playerEntity);
+	}
+	else
+	{
+		m_playerStatus.SetCurrentEntityId(playerEntity);
+	}
+	
     m_entityManager->AddComponent(m_playerStatus.GetCurrentEntityId(), TranslationComponent(GenerateRandomPosition(), Vector2::Zero, 0.0f));
     m_entityManager->AddComponent(m_playerStatus.GetCurrentEntityId(), RenderComponent(*m_spriteBatch.get(), m_assetManager->GetTexture(PlayerAsset), m_spriteFont.get()));
     m_entityManager->AddComponent(m_playerStatus.GetCurrentEntityId(), ProjectileSourceComponent(m_assetManager.get(), m_particleManager.get()));
@@ -183,6 +208,7 @@ void PlayState::Update(DX::StepTimer const& timer, Game* game)
 		shieldValue = static_cast<int>((playerHealth.hitPoints / 30.0f) * 100.0f);
 	}
 	swprintf_s(m_healthDisplay, L"Shields: %d%%\n", shieldValue);
+	swprintf_s(m_livesDisplay, L"Lives: %d\n", m_playerStatus.GetLives());
 
     if (m_playerStatus.IsAlive() && m_entityManager->GetNumberOfEntities() < 200) 
     {
@@ -210,6 +236,11 @@ void PlayState::Update(DX::StepTimer const& timer, Game* game)
 	swprintf_s(m_entityCount, L"Entities: %zd\n", m_entityManager->GetNumberOfEntities());
 	swprintf_s(m_particleCount, L"Particles: %d\n", m_particleManager->GetNumberOfParticles());
 #endif
+
+	if (m_playerStatus.IsGameOver())
+	{
+		game->PushState(std::move(std::make_unique<GameOverState>()));
+	}
 }
 
 void PlayState::UpdateUserInput(InputManager* inputManager)
@@ -282,7 +313,7 @@ void PlayState::UpdateUserInput(InputManager* inputManager)
     }
     else if (kb.Q || state.IsBPressed())
     {
-        SpawnPlayer();
+        SpawnPlayer(false);
     }
 }
 
@@ -384,9 +415,12 @@ void PlayState::Pause()
 
 }
 
-void PlayState::Resume()
+void PlayState::Resume(std::string previousState)
 {
-
+	if (previousState == "GameOverState")
+	{
+		RestartGame();
+	}
 }
 
 void PlayState::WindowSizeChanged(D3D11_VIEWPORT viewPort)
@@ -443,6 +477,7 @@ void PlayState::Render(DX::DeviceResources const& deviceResources)
 	m_spriteFont->DrawString(m_spriteBatch.get(), m_scoreDisplay, XMFLOAT2(10, 10), Colors::White, 0.0f, XMFLOAT2(0, 0), 0.7f);
 	m_spriteFont->DrawString(m_spriteBatch.get(), m_multiplierDisplay, XMFLOAT2(10, 30), Colors::White, 0.0f, XMFLOAT2(0, 0), 0.7f);
 	m_spriteFont->DrawString(m_spriteBatch.get(), m_healthDisplay, XMFLOAT2(10, 50), Colors::White, 0.0f, XMFLOAT2(0, 0), 0.7f);
+	m_spriteFont->DrawString(m_spriteBatch.get(), m_livesDisplay, XMFLOAT2(10, 70), Colors::White, 0.0f, XMFLOAT2(0, 0), 0.7f);
 	m_spriteBatch->End();
 
 #if _DEBUG

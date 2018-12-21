@@ -140,7 +140,7 @@ void EntityManager::QueueEntityForDrop(const Entity entity)
 
 void EntityManager::DropEntities()
 {
-	for (auto e : m_tempEntitiesToDrop)
+	for (auto& e : m_tempEntitiesToDrop)
 	{
 		UnregisterEntity(e);
 

@@ -2,10 +2,10 @@
 
 #include "IGameState.h"
 
-class PauseState : public IGameState
+class GameOverState : public IGameState
 {
 public:
-	PauseState() 
+	GameOverState() 
 	{
 		name = __func__;
 	}
@@ -21,4 +21,7 @@ public:
 	void Update(DX::StepTimer const& timer, Game* game);
 	void HandleStateChange(Game* game);
 	void Render(DX::DeviceResources const& deviceResources);
+private:
+	std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
+	std::unique_ptr<DirectX::SpriteFont> m_spriteFont;
 };

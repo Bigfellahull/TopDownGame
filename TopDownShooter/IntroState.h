@@ -5,13 +5,16 @@
 class IntroState : public IGameState
 {
 public:
-	IntroState() { }
+	IntroState()
+	{
+		name = __func__;
+	}
 
 	void Initialise(DX::DeviceResources const& deviceResources);
 	void CleanUp();
 
 	void Pause();
-	void Resume();
+	void Resume(std::string previousState);
 
 	void WindowSizeChanged(D3D11_VIEWPORT viewPort);
 

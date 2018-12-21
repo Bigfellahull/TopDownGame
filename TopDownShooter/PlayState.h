@@ -29,14 +29,14 @@ public:
 		m_particleCount()
 #endif
 	{
-	
+		name = __func__;
 	}
 
 	void Initialise(DX::DeviceResources const& deviceResources);
 	void CleanUp();
 
 	void Pause();
-	void Resume();
+	void Resume(std::string previousState);
 
 	void WindowSizeChanged(D3D11_VIEWPORT viewPort);
 
@@ -44,10 +44,11 @@ public:
 	void HandleStateChange(Game* game);
 	void Render(DX::DeviceResources const& deviceResources);
 private:
+	void RestartGame();
 	void UpdateUserInput(InputManager* inputManager);
 	void SpawnEnemies(float dt);
 	DirectX::SimpleMath::Vector2 GenerateRandomPosition();
-    void SpawnPlayer();
+    void SpawnPlayer(bool reset);
 	DirectX::SimpleMath::Matrix GetViewportTransform(RECT outputSize);
     
     std::unique_ptr<DirectX::CommonStates> m_states;
@@ -72,6 +73,7 @@ private:
 	wchar_t m_scoreDisplay[100];
 	wchar_t m_multiplierDisplay[100];
 	wchar_t m_healthDisplay[100];
+	wchar_t m_livesDisplay[100];
 
 #if _DEBUG
 	wchar_t m_framesPerSecond[100];

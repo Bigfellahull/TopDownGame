@@ -43,6 +43,7 @@ public:
 	void Update(float dt);
 	void Draw(DirectX::SpriteBatch& spriteBatch);
 	int GetNumberOfParticles();
+	void ClearParticles();
 private:
 	DirectX::SimpleMath::Rectangle m_worldBounds;
 	CircularArray<Particle> m_particles;
