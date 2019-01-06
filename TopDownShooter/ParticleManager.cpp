@@ -109,7 +109,10 @@ void ParticleManager::Draw(SpriteBatch& spriteBatch)
 	{
 		Particle& p = m_particles[i];
 
-		Vector2 origin = Vector2(p.texture->GetWidth() / 2, p.texture->GetHeight() / 2);
+		Vector2 origin = Vector2(
+			static_cast<float>(p.texture->GetWidth() / 2),
+			static_cast<float>(p.texture->GetHeight() / 2));
+
 		spriteBatch.Draw(
 			p.texture->GetSrv(), 
 			p.position, 

@@ -22,7 +22,11 @@ public:
 		m_playerStatus(),
 		m_regionEntity(),
 		m_fixedBackground(nullptr),
-		m_enemyInverseSpawnChance(120.0f)
+		m_enemyInverseSpawnChance(120.0f),
+		m_scoreDisplay(),
+		m_multiplierDisplay(),
+		m_healthDisplay(),
+		m_livesDisplay()
 #if _DEBUG
 		,m_framesPerSecond(),
 		m_entityCount(),

@@ -17,6 +17,6 @@ void Texture2d::Load(ID3D11Device* device, const wchar_t* filename)
 	D3D11_TEXTURE2D_DESC description;
 	texture->GetDesc(&description);
 
-	m_width = static_cast<float>(description.Width);
-	m_height = static_cast<float>(description.Height);
+	m_width = static_cast<int>(description.Width);
+	m_height = static_cast<int>(description.Height);
 }

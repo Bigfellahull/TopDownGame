@@ -19,8 +19,8 @@ void BackgroundLayer::Draw(SpriteBatch& spriteBatch)
 
 	for (auto& e : m_sprites)
 	{
-		float width = e.texture->GetWidth();
-		float height = e.texture->GetHeight();
+		int width = e.texture->GetWidth();
+		int height = e.texture->GetHeight();
 
 		spriteBatch.Draw(
 			e.texture->GetSrv(),
@@ -28,7 +28,7 @@ void BackgroundLayer::Draw(SpriteBatch& spriteBatch)
 			nullptr,
 			Colors::White,
 			0.0f,
-			Vector2(width / 2, height / 2),
+			Vector2(static_cast<float>(width / 2), static_cast<float>(height / 2)),
 			e.scale,
 			SpriteEffects::SpriteEffects_None,
 			0);

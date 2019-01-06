@@ -96,11 +96,6 @@ size_t EntityManager::UpdateEntities(float dt, float totalTime)
 		system != m_systems.end();
 		++system) 
 	{
-		if ((*system)->IsRender())
-		{
-			continue;
-		}
-
 		updatedEntities += (*system)->UpdateEntities(dt, totalTime);
 	}
 

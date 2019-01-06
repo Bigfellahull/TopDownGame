@@ -16,6 +16,7 @@ constexpr const wchar_t* DebugAsset = L"1x1.dds";
 constexpr const wchar_t* PlayerAsset = L"Player.dds";
 constexpr const wchar_t* BulletAsset = L"Bullet.dds";
 constexpr const wchar_t* SeekerEnemyAsset = L"Seeker.dds";
+constexpr const wchar_t* SeekerAEnemyAsset = L"SeekerA.dds";
 constexpr const wchar_t* WanderEnemyAsset = L"Wanderer.dds";
 
 constexpr const wchar_t* ParticleAsset = L"Particle.dds";

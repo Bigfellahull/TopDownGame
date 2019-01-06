@@ -320,6 +320,9 @@
   <ItemGroup>
     <ImageContentTask Include="Content\GlowParticle.png" />
   </ItemGroup>
+  <ItemGroup>
+    <ImageContentTask Include="Content\SeekerA.png" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\directxtk_desktop_2015.2018.10.31.1\build\native\directxtk_desktop_2015.targets" Condition="Exists('..\packages\directxtk_desktop_2015.2018.10.31.1\build\native\directxtk_desktop_2015.targets')" />

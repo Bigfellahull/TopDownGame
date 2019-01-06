@@ -8,17 +8,17 @@ class Texture2d
 public:
 	Texture2d() :
 		m_srv(),
-		m_width(0.0f),
-		m_height(0.0f) { };
+		m_width(0),
+		m_height(0) { };
 
 	void Load(ID3D11Device* device, const wchar_t* filename);
 
 	ID3D11ShaderResourceView* GetSrv() const { return m_srv.Get(); }
 	
-	const float GetWidth() const { return m_width; }
-	const float GetHeight() const { return m_height; }
+	const int GetWidth() const { return m_width; }
+	const int GetHeight() const { return m_height; }
 protected:
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_srv;
-	float m_width;
-	float m_height;
+	int m_width;
+	int m_height;
 };

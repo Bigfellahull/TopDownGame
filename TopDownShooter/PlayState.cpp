@@ -348,7 +348,7 @@ void PlayState::SpawnEnemies(float dt)
 
 		auto enemy = m_entityManager->CreateEntity();
 		m_entityManager->AddComponent(enemy, TranslationComponent(spawnPosition, Vector2(0, 0), MathHelper::Random(0.0f, 6.2f)));
-		m_entityManager->AddComponent(enemy, RenderComponent(*m_spriteBatch.get(), m_assetManager->GetTexture(SeekerEnemyAsset), m_spriteFont.get()));
+		m_entityManager->AddComponent(enemy, RenderComponent(*m_spriteBatch.get(), m_assetManager->GetTexture(SeekerAEnemyAsset), m_spriteFont.get(), 5, 5));
 		m_entityManager->AddComponent(enemy, EnemyComponent(1.0f, 20));
 		m_entityManager->AddComponent(enemy, FollowPlayerComponent(&m_playerStatus, 4000.0f, 10.0f));
 		m_entityManager->AddComponent(enemy, AvoidanceComponent());
@@ -439,7 +439,9 @@ void PlayState::Render(DX::DeviceResources const& deviceResources)
 		
 	Matrix viewPortTransform = GetViewportTransform(outputSize);
 	m_backgroundBuffer->MatrixTransform = Matrix::Identity * viewPortTransform;
-	m_backgroundBuffer->ScrollTransform = m_camera->GetScrollMatrix(Vector2(m_fixedBackground->GetWidth(), m_fixedBackground->GetHeight())) * viewPortTransform;
+	m_backgroundBuffer->ScrollTransform = m_camera->GetScrollMatrix(
+		Vector2(static_cast<float>(m_fixedBackground->GetWidth()), 
+			static_cast<float>(m_fixedBackground->GetHeight()))) * viewPortTransform;
 	
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	DX::ThrowIfFailed(
@@ -470,6 +472,16 @@ void PlayState::Render(DX::DeviceResources const& deviceResources)
 
 	m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Texture, m_states->Additive(), nullptr, nullptr, nullptr, nullptr, cameraViewMatrix);
 	m_particleManager->Draw(*m_spriteBatch.get());
+	m_spriteBatch->End();
+
+	// TODO: Refactor drawing helpers so we can call draw rect!
+	RegionComponent& region = m_entityManager->GetComponentStore<RegionComponent>().Get(m_regionEntity);
+	m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Deferred, nullptr, nullptr, nullptr, nullptr, nullptr, cameraViewMatrix);
+	Rectangle r = Rectangle(region.min.x, region.min.y, region.max.x, region.max.y);
+	m_spriteBatch->Draw(m_assetManager->GetTexture(DebugAsset)->GetSrv(), Rectangle(r.x, r.y, r.width, 8), DirectX::Colors::White);
+	m_spriteBatch->Draw(m_assetManager->GetTexture(DebugAsset)->GetSrv(), Rectangle(r.x, r.y, 8, r.height), DirectX::Colors::White);
+	m_spriteBatch->Draw(m_assetManager->GetTexture(DebugAsset)->GetSrv(), Rectangle(r.x + r.width - 8, r.y, 8, r.height), DirectX::Colors::White);
+	m_spriteBatch->Draw(m_assetManager->GetTexture(DebugAsset)->GetSrv(), Rectangle(r.x, r.y + r.height - 8, r.width, 8), DirectX::Colors::White);
 	m_spriteBatch->End();
 
 	// GUI

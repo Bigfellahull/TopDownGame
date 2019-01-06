@@ -3,8 +3,14 @@
 #include "PlayerStatus.h"
 
 PlayerStatus::PlayerStatus() :
+	m_alive(false),
+	m_lives(3),
+	m_score(0),
+	m_multiplier(1),
+	m_maxMultiplier(20),
+	m_multiplierTimeLeft(0),
 	m_multiplerExpiryTime(1.5f),
-	m_maxMultiplier(20)
+	m_scoreForExtraLife(2000)
 {
 }
 

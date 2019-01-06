@@ -26,14 +26,15 @@ void SystemEnemyActivator::UpdateEntity(float dt, float totalTime, Entity entity
 		enemy.timeToStart -= dt;
 
 		render.colour = Colors::White * (1.0f - static_cast<float>(enemy.timeToStart) / enemy.initialTimeToStart);
-		render.scale = 1.6f - (enemy.timeToStart / enemy.initialTimeToStart);
+		float scale = 1.6f - (enemy.timeToStart / enemy.initialTimeToStart);
+		render.scale = Vector2(scale, scale);
 	}
 	else
 	{
 		if (!enemy.alive)
 		{
 			render.colour = Colors::White;
-			render.scale = 1.0f;
+			render.scale = Vector2::One;
 
 			enemy.alive = true;
 		}
