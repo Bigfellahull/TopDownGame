@@ -15,6 +15,7 @@ Camera::Camera(Rectangle screenBounds) :
 	m_origin(Vector2(screenBounds.width / 2.0f, screenBounds.height / 2.0f)),
 	m_zoom(1.0f),
 	m_rotation(0.0f),
+	m_moveSpeed(3.0f),
 	m_limitSet(false)
 {
 }
@@ -54,6 +55,15 @@ void Camera::SetLimits(Rectangle limits)
 void Camera::LookAt(Vector2 position)
 {
 	SetPosition(position - m_origin);
+}
+
+void Camera::LookAtSmooth(Vector2 position, float dt)
+{
+	Vector2 targetPosition = position - m_origin;
+
+	Vector2 delta = m_position + ((targetPosition - m_position) * m_moveSpeed * dt);
+
+	SetPosition(delta);
 }
 
 void Camera::Move(Vector2 displacement, bool respectRotation)

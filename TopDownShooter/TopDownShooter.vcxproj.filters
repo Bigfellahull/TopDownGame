@@ -48,6 +48,12 @@
     <Filter Include="Src\Game States">
       <UniqueIdentifier>{9b78e192-e2d3-496d-98a3-8848525a9c22}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Content\Shaders">
+      <UniqueIdentifier>{75d6be4f-244d-4e94-b40f-708d58fd7147}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Content\Sprites">
+      <UniqueIdentifier>{e1035641-c680-4a15-b0c2-5c35f14edaee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -332,47 +338,47 @@
     </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
+    <ImageContentTask Include="Content\Particle.png" />
+    <ImageContentTask Include="Content\BackgroundLayer1.png">
+      <Filter>Content\Sprites</Filter>
+    </ImageContentTask>
     <ImageContentTask Include="Content\BackgroundLayer2.png">
-      <Filter>Content</Filter>
-    </ImageContentTask>
-    <ImageContentTask Include="Content\Wanderer.png">
-      <Filter>Content</Filter>
-    </ImageContentTask>
-    <ImageContentTask Include="Content\1x1.png">
-      <Filter>Content</Filter>
-    </ImageContentTask>
-    <ImageContentTask Include="Content\Bullet.png">
-      <Filter>Content</Filter>
-    </ImageContentTask>
-    <ImageContentTask Include="Content\Player.png">
-      <Filter>Content</Filter>
-    </ImageContentTask>
-    <ImageContentTask Include="Content\Seeker.png">
-      <Filter>Content</Filter>
+      <Filter>Content\Sprites</Filter>
     </ImageContentTask>
     <ImageContentTask Include="Content\BackgroundLayer3.png">
-      <Filter>Content</Filter>
+      <Filter>Content\Sprites</Filter>
     </ImageContentTask>
     <ImageContentTask Include="Content\BackgroundLayer4.png">
-      <Filter>Content</Filter>
+      <Filter>Content\Sprites</Filter>
     </ImageContentTask>
-    <ImageContentTask Include="Content\BackgroundLayer1.png">
-      <Filter>Content</Filter>
+    <ImageContentTask Include="Content\Bullet.png">
+      <Filter>Content\Sprites</Filter>
     </ImageContentTask>
-    <ImageContentTask Include="Content\Particle.png" />
     <ImageContentTask Include="Content\GlowParticle.png">
-      <Filter>Content</Filter>
+      <Filter>Content\Sprites</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="Content\Player.png">
+      <Filter>Content\Sprites</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="Content\Seeker.png">
+      <Filter>Content\Sprites</Filter>
     </ImageContentTask>
     <ImageContentTask Include="Content\SeekerA.png">
-      <Filter>Content</Filter>
+      <Filter>Content\Sprites</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="Content\Wanderer.png">
+      <Filter>Content\Sprites</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="Content\1x1.png">
+      <Filter>Content\Sprites</Filter>
     </ImageContentTask>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="BackgroundVertexShader.hlsl">
-      <Filter>Content</Filter>
-    </FxCompile>
     <FxCompile Include="BackgroundPixelShader.hlsl">
-      <Filter>Content</Filter>
+      <Filter>Content\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="BackgroundVertexShader.hlsl">
+      <Filter>Content\Shaders</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

@@ -99,7 +99,12 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 #endif
 
 	m_camera = std::make_unique<Camera>(screenBounds);
-	m_camera->SetLimits(worldBounds);
+	Rectangle cameraLimit = worldBounds;
+	cameraLimit.x -= 50;
+	cameraLimit.y -= 50;
+	cameraLimit.width += 100;
+	cameraLimit.height += 100;
+	m_camera->SetLimits(cameraLimit);
 	//m_camera->SetZoom(0.5f);
 	
 	m_regionEntity = m_entityManager->CreateEntity();
@@ -165,7 +170,8 @@ void PlayState::SpawnPlayer(bool reset)
 		m_playerStatus.SetCurrentEntityId(playerEntity);
 	}
 	
-    m_entityManager->AddComponent(m_playerStatus.GetCurrentEntityId(), TranslationComponent(GenerateRandomPosition(), Vector2::Zero, 0.0f));
+	Vector2 position = GenerateRandomPosition();
+    m_entityManager->AddComponent(m_playerStatus.GetCurrentEntityId(), TranslationComponent(position, Vector2::Zero, 0.0f));
     m_entityManager->AddComponent(m_playerStatus.GetCurrentEntityId(), RenderComponent(*m_spriteBatch.get(), m_assetManager->GetTexture(PlayerAsset), m_spriteFont.get()));
     m_entityManager->AddComponent(m_playerStatus.GetCurrentEntityId(), ProjectileSourceComponent(m_assetManager.get(), m_particleManager.get()));
     m_entityManager->AddComponent(m_playerStatus.GetCurrentEntityId(), ColliderComponent(20.0f, 40.0f));
@@ -174,6 +180,8 @@ void PlayState::SpawnPlayer(bool reset)
 	m_entityManager->AddComponent(m_playerStatus.GetCurrentEntityId(), ExhaustPlumeComponent(m_particleManager.get(), m_assetManager->GetTexture(ParticleAsset), m_assetManager->GetTexture(ParticleGlowAsset)));
 	m_entityManager->AddComponent(m_playerStatus.GetCurrentEntityId(), HealthComponent(30.0f));
 	m_entityManager->RegisterEntity(m_playerStatus.GetCurrentEntityId());
+
+	m_camera->LookAt(position);
 }
 
 void PlayState::CleanUp() 
@@ -226,7 +234,7 @@ void PlayState::Update(DX::StepTimer const& timer, Game* game)
 	if (m_playerStatus.IsAlive())
 	{
 		TranslationComponent& translation = m_entityManager->GetComponentStore<TranslationComponent>().Get(m_playerStatus.GetCurrentEntityId());
-		m_camera->LookAt(translation.position);
+		m_camera->LookAtSmooth(translation.position, dt);
 
 		m_playerStatus.Update(dt);
 	}

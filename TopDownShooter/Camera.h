@@ -7,9 +7,10 @@ class Camera
 public:
 	Camera(DirectX::SimpleMath::Rectangle screenBounds);
 	
-	DirectX::SimpleMath::Matrix GetViewMatrix(DirectX::SimpleMath::Vector2 parallax = DirectX::SimpleMath::Vector2(1, 1));
-	DirectX::SimpleMath::Matrix GetScrollMatrix(DirectX::SimpleMath::Vector2 textureSize = DirectX::SimpleMath::Vector2(1, 1));
+	DirectX::SimpleMath::Matrix GetViewMatrix(DirectX::SimpleMath::Vector2 parallax = DirectX::SimpleMath::Vector2::One);
+	DirectX::SimpleMath::Matrix GetScrollMatrix(DirectX::SimpleMath::Vector2 textureSize = DirectX::SimpleMath::Vector2::One);
 	
+	void LookAtSmooth(DirectX::SimpleMath::Vector2 position, float dt);
 	void LookAt(DirectX::SimpleMath::Vector2 position);
 	void Move(DirectX::SimpleMath::Vector2 displacement, bool respectRotation = false);
 	void SetZoom(float zoom);
@@ -24,6 +25,7 @@ private:
 	DirectX::SimpleMath::Vector2 m_origin;
 	float m_zoom;
 	float m_rotation;
+	float m_moveSpeed;
 
 	bool m_limitSet;
 		
