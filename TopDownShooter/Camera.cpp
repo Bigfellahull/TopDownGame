@@ -20,11 +20,40 @@ Camera::Camera(Rectangle screenBounds) :
 {
 }
 
+void Camera::Update(float dt)
+{
+	Vector2 targetPosition = m_targetPosition - m_origin;
+
+	Vector2 delta = m_position + ((targetPosition - m_position) * m_moveSpeed * dt);
+
+	if (delta.LengthSquared() > 0.1f)
+	{
+		SetPosition(delta);
+	}
+
+	m_offsetPosition = Vector2::Zero;
+	m_offsetRotation = 0.0f;
+
+	if (m_trauma > 0.0f)
+	{
+		m_trauma -= (dt * 4.0f);
+		m_offsetPosition = Vector2(10.0f, 10.0f) * std::pow(m_trauma, 2) * MathHelper::Random(-1.0f, 1.0f);
+		m_offsetRotation = 0.02f * std::pow(m_trauma, 2) * MathHelper::Random(-1.0f, 1.0f);
+	}
+	else
+	{
+		m_trauma = 0.0f;
+	}
+}
+
 Matrix Camera::GetViewMatrix(Vector2 parallax)
 {
-	return Matrix::CreateTranslation(Vector3(-m_position.x * parallax.x, -m_position.y * parallax.y, 0.0f)) *
+	Vector2 position = m_position + m_offsetPosition;
+	float rotation = m_rotation + m_offsetRotation;
+
+	return Matrix::CreateTranslation(Vector3(-position.x * parallax.x, -position.y * parallax.y, 0.0f)) *
 		Matrix::CreateTranslation(Vector3(-m_origin.x, -m_origin.y, 0.0f)) *
-		Matrix::CreateRotationZ(m_rotation) *
+		Matrix::CreateRotationZ(rotation) *
 		Matrix::CreateScale(m_zoom, m_zoom, 1.0f) *
 		Matrix::CreateTranslation(Vector3(m_origin.x, m_origin.y, 0.0f));
 }
@@ -54,16 +83,7 @@ void Camera::SetLimits(Rectangle limits)
 
 void Camera::LookAt(Vector2 position)
 {
-	SetPosition(position - m_origin);
-}
-
-void Camera::LookAtSmooth(Vector2 position, float dt)
-{
-	Vector2 targetPosition = position - m_origin;
-
-	Vector2 delta = m_position + ((targetPosition - m_position) * m_moveSpeed * dt);
-
-	SetPosition(delta);
+	m_targetPosition = position;
 }
 
 void Camera::Move(Vector2 displacement, bool respectRotation)
@@ -97,6 +117,12 @@ void Camera::SetPosition(Vector2 position)
 	m_position = position;
 
 	ValidatePosition();
+}
+
+void Camera::Trauma(float traumaAmount)
+{
+	m_trauma += traumaAmount;
+	m_trauma = std::min(m_trauma, 5.0f);
 }
 
 void Camera::ValidatePosition()

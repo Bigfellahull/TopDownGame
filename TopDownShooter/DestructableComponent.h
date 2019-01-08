@@ -2,6 +2,7 @@
 
 #include "Component.h"
 #include "ParticleManager.h"
+#include "Camera.h"
 
 struct DestructableComponent : public Component
 {
@@ -14,10 +15,14 @@ struct DestructableComponent : public Component
 	bool destroy;
 	bool randomColour;
 	DirectX::SimpleMath::Vector4 colour;
+
+	// TODO: Refactor this to somewhere more sensible
+	Camera* camera;
 	
 	DestructableComponent(
 		ParticleManager* aParticleManger, 
-		Texture2d* aParticleTexture, 
+		Texture2d* aParticleTexture,
+		Camera* aCamera,
 		float aParticleSpeed = 500.0f, 
 		int aNumberOfParticles = 200, 
 		bool aRandomColour = true, 
@@ -28,5 +33,6 @@ struct DestructableComponent : public Component
 		numberOfParticles(aNumberOfParticles),
 		destroy(false),
 		randomColour(aRandomColour),
-		colour(aColour) { }
+		colour(aColour),
+		camera(aCamera) { }
 };

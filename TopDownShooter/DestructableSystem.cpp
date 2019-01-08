@@ -28,6 +28,11 @@ void SystemDestructable::UpdateEntity(float dt, float totalTime, Entity entity)
 	{
 		m_manager.QueueEntityForDrop(entity);
 
+		if (destructable.camera)
+		{
+			destructable.camera->Trauma(1.5f);
+		}
+		
 		Vector4 colour;
 		
 		if (destructable.randomColour)
