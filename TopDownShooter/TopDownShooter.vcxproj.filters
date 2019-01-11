@@ -227,6 +227,9 @@
     <ClInclude Include="QuadTree.h">
       <Filter>Inc\Spatial Structures</Filter>
     </ClInclude>
+    <ClInclude Include="GraphicsHelper.h">
+      <Filter>Inc\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -326,6 +329,9 @@
       <Filter>Src\Spatial Structures</Filter>
     </ClCompile>
     <ClCompile Include="MathHelper.cpp">
+      <Filter>Src\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsHelper.cpp">
       <Filter>Src\Utils</Filter>
     </ClCompile>
   </ItemGroup>

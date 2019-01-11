@@ -20,6 +20,8 @@ public:
 	void SetLimits(DirectX::SimpleMath::Rectangle limits);
 
 	void Trauma(float traumaAmount);
+
+	void Reset();
 private:
 	DirectX::SimpleMath::Rectangle m_screenBounds;
 

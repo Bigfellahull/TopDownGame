@@ -92,6 +92,10 @@ void SystemCollisionHandler::UpdateEntity(float dt, float totalTime, Entity enti
 	{
 		DestroyEntity(entity);
 	}
+
+	// Collision handled so now clear out
+	collider.hasCollided = false;
+	collider.collidedWith = InvalidEntity;
 }
 
 void SystemCollisionHandler::DestroyEntity(Entity entity)

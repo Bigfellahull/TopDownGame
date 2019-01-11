@@ -143,7 +143,6 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_backgroundLayers[1]->AddBackgroundSprite(BackgroundSprite(Vector2(600.0f, 1200.0f), m_assetManager->GetTexture(BackgroundLayer4), 0.5f));
 }
 
-// TODO: Improve this!
 void PlayState::RestartGame()
 {
 	m_enemyInverseSpawnChance = 120.0f;
@@ -154,6 +153,7 @@ void PlayState::RestartGame()
 	}
 	m_entityManager->DropEntities();
 	m_particleManager->ClearParticles();
+	m_camera->Reset();
 	SpawnPlayer(true);
 }
 
@@ -208,7 +208,6 @@ void PlayState::Update(DX::StepTimer const& timer, Game* game)
 
 	swprintf_s(m_scoreDisplay, L"Score: %d\n", m_playerStatus.GetScore());
 	swprintf_s(m_multiplierDisplay, L"Multiplier: %d\n", m_playerStatus.GetMultiplier());
-	// TODO: Fix this! Maybe player status should be a component and fold into entity system?
 	int shieldValue = 0;
 	if (m_playerStatus.IsAlive())
 	{
@@ -445,6 +444,11 @@ void PlayState::Render(DX::DeviceResources const& deviceResources)
 	
 	context->ClearRenderTargetView(renderTarget, DirectX::Colors::Black);
 
+	if (m_playerStatus.IsGameOver())
+	{
+		return;
+	}
+
 	RECT outputSize = deviceResources.GetOutputSize();
 		
 	Matrix viewPortTransform = GetViewportTransform(outputSize);
@@ -484,14 +488,13 @@ void PlayState::Render(DX::DeviceResources const& deviceResources)
 	m_particleManager->Draw(*m_spriteBatch.get());
 	m_spriteBatch->End();
 
-	// TODO: Refactor drawing helpers so we can call draw rect!
 	RegionComponent& region = m_entityManager->GetComponentStore<RegionComponent>().Get(m_regionEntity);
 	m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Deferred, nullptr, nullptr, nullptr, nullptr, nullptr, cameraViewMatrix);
-	Rectangle r = Rectangle(region.min.x, region.min.y, region.max.x, region.max.y);
-	m_spriteBatch->Draw(m_assetManager->GetTexture(DebugAsset)->GetSrv(), Rectangle(r.x, r.y, r.width, 8), DirectX::Colors::White);
-	m_spriteBatch->Draw(m_assetManager->GetTexture(DebugAsset)->GetSrv(), Rectangle(r.x, r.y, 8, r.height), DirectX::Colors::White);
-	m_spriteBatch->Draw(m_assetManager->GetTexture(DebugAsset)->GetSrv(), Rectangle(r.x + r.width - 8, r.y, 8, r.height), DirectX::Colors::White);
-	m_spriteBatch->Draw(m_assetManager->GetTexture(DebugAsset)->GetSrv(), Rectangle(r.x, r.y + r.height - 8, r.width, 8), DirectX::Colors::White);
+	GraphicsHelper::DrawRectangleOutline(*m_spriteBatch.get(),
+		m_assetManager->GetTexture(DebugAsset)->GetSrv(), 
+		Rectangle(static_cast<long>(region.min.x), static_cast<long>(region.min.y), static_cast<long>(region.max.x), static_cast<long>(region.max.y)),
+		8,
+		DirectX::Colors::White);
 	m_spriteBatch->End();
 
 	// GUI
@@ -506,21 +509,16 @@ void PlayState::Render(DX::DeviceResources const& deviceResources)
 	if (ShowDebugInformation)
 	{
 		m_spriteBatch->Begin();
-		m_spriteFont->DrawString(m_spriteBatch.get(), m_framesPerSecond, XMFLOAT2(10, 80), Colors::White, 0.0f, XMFLOAT2(0, 0), 0.7f);
-		m_spriteFont->DrawString(m_spriteBatch.get(), m_entityCount, XMFLOAT2(10, 100), Colors::White, 0.0f, XMFLOAT2(0, 0), 0.7f);
-		m_spriteFont->DrawString(m_spriteBatch.get(), m_particleCount, XMFLOAT2(10, 120), Colors::White, 0.0f, XMFLOAT2(0, 0), 0.7f);
+		m_spriteFont->DrawString(m_spriteBatch.get(), m_framesPerSecond, XMFLOAT2(10, 90), Colors::White, 0.0f, XMFLOAT2(0, 0), 0.7f);
+		m_spriteFont->DrawString(m_spriteBatch.get(), m_entityCount, XMFLOAT2(10, 110), Colors::White, 0.0f, XMFLOAT2(0, 0), 0.7f);
+		m_spriteFont->DrawString(m_spriteBatch.get(), m_particleCount, XMFLOAT2(10, 130), Colors::White, 0.0f, XMFLOAT2(0, 0), 0.7f);
 		m_spriteBatch->End();
 
 		m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Deferred, nullptr, nullptr, nullptr, nullptr, nullptr, cameraViewMatrix);
 		std::vector<Rectangle> quadTreeBounds = m_entityManager->GetQuadTree()->GetAllBounds(m_entityManager->GetQuadTree());
 		for (size_t i = 0; i < quadTreeBounds.size(); ++i)
 		{
-			Rectangle r = quadTreeBounds[i];
-
-			m_spriteBatch->Draw(m_assetManager->GetTexture(DebugAsset)->GetSrv(), Rectangle(r.x, r.y, r.width, 1), DirectX::Colors::White);
-			m_spriteBatch->Draw(m_assetManager->GetTexture(DebugAsset)->GetSrv(), Rectangle(r.x, r.y, 1, r.height), DirectX::Colors::White);
-			m_spriteBatch->Draw(m_assetManager->GetTexture(DebugAsset)->GetSrv(), Rectangle(r.x + r.width - 1, r.y, 1, r.height), DirectX::Colors::White);
-			m_spriteBatch->Draw(m_assetManager->GetTexture(DebugAsset)->GetSrv(), Rectangle(r.x, r.y + r.height - 1, r.width, 1), DirectX::Colors::White);
+			GraphicsHelper::DrawRectangleOutline(*m_spriteBatch.get(), m_assetManager->GetTexture(DebugAsset)->GetSrv(), quadTreeBounds[i], 1, DirectX::Colors::White);
 		}
 		m_spriteBatch->End();
 	}

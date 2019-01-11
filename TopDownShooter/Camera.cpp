@@ -20,6 +20,11 @@ Camera::Camera(Rectangle screenBounds) :
 {
 }
 
+void Camera::Reset()
+{
+	m_trauma = 0.0f;
+}
+
 void Camera::Update(float dt)
 {
 	Vector2 targetPosition = m_targetPosition - m_origin;

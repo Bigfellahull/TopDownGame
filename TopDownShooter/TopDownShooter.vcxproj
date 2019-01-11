@@ -192,6 +192,7 @@
     <ClInclude Include="FollowPlayerSystem.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameOverState.h" />
+    <ClInclude Include="GraphicsHelper.h" />
     <ClInclude Include="HealthComponent.h" />
     <ClInclude Include="IGameState.h" />
     <ClInclude Include="InputManager.h" />
@@ -238,6 +239,7 @@
     <ClCompile Include="FollowPlayerSystem.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameOverState.cpp" />
+    <ClCompile Include="GraphicsHelper.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="IntroState.cpp" />
     <ClCompile Include="EntityManager.cpp" />

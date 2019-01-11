@@ -50,6 +50,7 @@
 #include "SpriteFont.h"
 
 #include "MathHelper.h"
+#include "GraphicsHelper.h"
 #include "Config.h"
 #include "ColourUtility.h"
 #include "ReadData.h"
