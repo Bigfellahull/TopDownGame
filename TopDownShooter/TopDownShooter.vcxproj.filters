@@ -230,6 +230,12 @@
     <ClInclude Include="GraphicsHelper.h">
       <Filter>Inc\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="EntityContainerComponent.h">
+      <Filter>Inc\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityContainerSystem.h">
+      <Filter>Inc\Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -333,6 +339,9 @@
     </ClCompile>
     <ClCompile Include="GraphicsHelper.cpp">
       <Filter>Src\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityContainerSystem.cpp">
+      <Filter>Src\Systems</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

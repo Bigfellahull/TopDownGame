@@ -21,6 +21,7 @@
 #include "DestructableComponent.h"
 #include "ExhaustPlumeComponent.h"
 #include "HealthComponent.h"
+#include "EntityContainerComponent.h"
 
 #include "MoveSystem.h"
 #include "RenderSystem.h"
@@ -36,6 +37,7 @@
 #include "DestructableSystem.h"
 #include "ExhaustPlumeSystem.h"
 #include "CollisionHandlerSystem.h"
+#include "EntityContainerSystem.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -75,6 +77,7 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_entityManager->CreateComponentStore<DestructableComponent>();
 	m_entityManager->CreateComponentStore<ExhaustPlumeComponent>();
 	m_entityManager->CreateComponentStore<HealthComponent>();
+	m_entityManager->CreateComponentStore<EntityContainerComponent>();
 		
 	// The order systems are added in is important.
 	// They are executed in order from first added to last.
@@ -88,6 +91,7 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_entityManager->AddSystem(std::make_shared<SystemMove>(*m_entityManager.get()));
 	m_entityManager->AddSystem(std::make_shared<SystemCollider>(*m_entityManager.get()));
 	m_entityManager->AddSystem(std::make_shared<SystemCollisionHandler>(*m_entityManager.get()));
+	m_entityManager->AddSystem(std::make_shared<SystemEntityContainer>(*m_entityManager.get()));
 	m_entityManager->AddSystem(std::make_shared<SystemExhaustPlume>(*m_entityManager.get()));
 	m_entityManager->AddSystem(std::make_shared<SystemDestructable>(*m_entityManager.get()));
 	m_entityManager->AddSystem(std::make_shared<SystemRender>(*m_entityManager.get()));
@@ -110,6 +114,10 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_regionEntity = m_entityManager->CreateEntity();
 	m_entityManager->AddComponent(m_regionEntity, RegionComponent(Vector2(0, 0), Vector2(static_cast<float>(worldBounds.width), static_cast<float>(worldBounds.height))));
 	m_entityManager->RegisterEntity(m_regionEntity);
+	
+	m_cameraPlayerContainer = m_entityManager->CreateEntity();
+	m_entityManager->AddComponent(m_cameraPlayerContainer, EntityContainerComponent(InvalidEntity, 200, 300));
+	m_entityManager->RegisterEntity(m_cameraPlayerContainer);
 
     SpawnPlayer(true);
 
@@ -181,6 +189,8 @@ void PlayState::SpawnPlayer(bool reset)
 	m_entityManager->AddComponent(m_playerStatus.GetCurrentEntityId(), HealthComponent(30.0f));
 	m_entityManager->RegisterEntity(m_playerStatus.GetCurrentEntityId());
 
+	m_entityManager->GetComponentStore<EntityContainerComponent>().Get(m_cameraPlayerContainer).containingEntity = m_playerStatus.GetCurrentEntityId();
+
 	m_camera->LookAt(position);
 }
 
@@ -232,8 +242,8 @@ void PlayState::Update(DX::StepTimer const& timer, Game* game)
 
 	if (m_playerStatus.IsAlive())
 	{
-		TranslationComponent& translation = m_entityManager->GetComponentStore<TranslationComponent>().Get(m_playerStatus.GetCurrentEntityId());
-		m_camera->LookAt(translation.position);
+		EntityContainerComponent& container = m_entityManager->GetComponentStore<EntityContainerComponent>().Get(m_cameraPlayerContainer);
+		m_camera->LookAt(container.boundingRect.Center());
 
 		m_playerStatus.Update(dt);
 	}
@@ -520,6 +530,10 @@ void PlayState::Render(DX::DeviceResources const& deviceResources)
 		{
 			GraphicsHelper::DrawRectangleOutline(*m_spriteBatch.get(), m_assetManager->GetTexture(DebugAsset)->GetSrv(), quadTreeBounds[i], 1, DirectX::Colors::White);
 		}
+
+		Rectangle playerContainer = m_entityManager->GetComponentStore<EntityContainerComponent>().Get(m_cameraPlayerContainer).boundingRect;
+		m_spriteBatch->Draw(m_assetManager->GetTexture(DebugAsset)->GetSrv(), playerContainer, XMVECTORF32{ 1.0f, 0.0f, 0.0f, 0.2f });
+
 		m_spriteBatch->End();
 	}
 #endif

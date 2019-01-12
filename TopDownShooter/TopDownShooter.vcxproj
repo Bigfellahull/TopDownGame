@@ -186,6 +186,8 @@
     <ClInclude Include="EnemyActivatorSystem.h" />
     <ClInclude Include="EnemyComponent.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="EntityContainerComponent.h" />
+    <ClInclude Include="EntityContainerSystem.h" />
     <ClInclude Include="ExhaustPlumeComponent.h" />
     <ClInclude Include="ExhaustPlumeSystem.h" />
     <ClInclude Include="FollowPlayerComponent.h" />
@@ -235,6 +237,7 @@
     <ClCompile Include="DestructableSystem.cpp" />
     <ClCompile Include="DeviceResources.cpp" />
     <ClCompile Include="EnemyActivatorSystem.cpp" />
+    <ClCompile Include="EntityContainerSystem.cpp" />
     <ClCompile Include="ExhaustPlumeSystem.cpp" />
     <ClCompile Include="FollowPlayerSystem.cpp" />
     <ClCompile Include="Game.cpp" />

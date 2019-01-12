@@ -15,7 +15,7 @@ Camera::Camera(Rectangle screenBounds) :
 	m_origin(Vector2(screenBounds.width / 2.0f, screenBounds.height / 2.0f)),
 	m_zoom(1.0f),
 	m_rotation(0.0f),
-	m_moveSpeed(3.0f),
+	m_moveSpeed(3.5f),
 	m_limitSet(false)
 {
 }

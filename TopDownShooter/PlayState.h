@@ -60,6 +60,7 @@ private:
 	std::unique_ptr<DirectX::SpriteFont> m_spriteFont;
 	
     PlayerStatus m_playerStatus;
+	Entity m_cameraPlayerContainer;
 	Entity m_regionEntity;
 	
 	std::unique_ptr<Camera> m_camera;
