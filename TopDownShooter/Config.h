@@ -9,7 +9,10 @@ constexpr bool FullScreen = true;
 #endif
 
 #if _DEBUG
-constexpr bool ShowDebugInformation = false;
+constexpr bool ShowDebugVisuals = false;
+constexpr bool ShowDebugText = false;
+constexpr bool ShowDebugQuadTree = true;
+constexpr bool ShowDebugPlayerContainer = false;
 #endif
 
 constexpr const wchar_t* DebugAsset = L"1x1.dds";
@@ -18,6 +21,7 @@ constexpr const wchar_t* BulletAsset = L"Bullet.dds";
 constexpr const wchar_t* SeekerEnemyAsset = L"Seeker.dds";
 constexpr const wchar_t* SeekerAEnemyAsset = L"SeekerA.dds";
 constexpr const wchar_t* WanderEnemyAsset = L"Wanderer.dds";
+constexpr const wchar_t* BlackHoleAsset = L"BlackHole.dds";
 
 constexpr const wchar_t* ParticleAsset = L"Particle.dds";
 constexpr const wchar_t* ParticleGlowAsset = L"GlowParticle.dds";

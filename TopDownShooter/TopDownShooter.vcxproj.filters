@@ -239,6 +239,12 @@
     <ClInclude Include="ParticleSystem.h">
       <Filter>Inc\Systems</Filter>
     </ClInclude>
+    <ClInclude Include="AttractionSystem.h">
+      <Filter>Inc\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="AttractionSourceComponent.h">
+      <Filter>Inc\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -346,6 +352,9 @@
     <ClCompile Include="ParticleSystem.cpp">
       <Filter>Src\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="AttractionSystem.cpp">
+      <Filter>Src\Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -388,6 +397,9 @@
       <Filter>Content\Sprites</Filter>
     </ImageContentTask>
     <ImageContentTask Include="Content\1x1.png">
+      <Filter>Content\Sprites</Filter>
+    </ImageContentTask>
+    <ImageContentTask Include="Content\BlackHole.png">
       <Filter>Content\Sprites</Filter>
     </ImageContentTask>
   </ItemGroup>

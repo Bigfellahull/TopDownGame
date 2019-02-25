@@ -166,10 +166,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AssetManager.h" />
+    <ClInclude Include="AttractionSystem.h" />
     <ClInclude Include="AvoidableComponent.h" />
     <ClInclude Include="AvoidanceComponent.h" />
     <ClInclude Include="AvoidanceSystem.h" />
     <ClInclude Include="BackgroundLayer.h" />
+    <ClInclude Include="AttractionSourceComponent.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CircularArray.h" />
     <ClInclude Include="ColliderComponent.h" />
@@ -229,6 +231,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetManager.cpp" />
+    <ClCompile Include="AttractionSystem.cpp" />
     <ClCompile Include="AvoidanceSystem.cpp" />
     <ClCompile Include="BackgroundLayer.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -328,6 +331,9 @@
   </ItemGroup>
   <ItemGroup>
     <ImageContentTask Include="Content\SeekerA.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ImageContentTask Include="Content\BlackHole.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

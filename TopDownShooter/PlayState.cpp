@@ -23,6 +23,7 @@
 #include "HealthComponent.h"
 #include "EntityContainerComponent.h"
 #include "ParticleComponent.h"
+#include "AttractionSourceComponent.h"
 
 #include "MoveSystem.h"
 #include "RenderSystem.h"
@@ -40,6 +41,7 @@
 #include "CollisionHandlerSystem.h"
 #include "EntityContainerSystem.h"
 #include "ParticleSystem.h"
+#include "AttractionSystem.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -80,6 +82,7 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_entityManager->CreateComponentStore<HealthComponent>();
 	m_entityManager->CreateComponentStore<EntityContainerComponent>();
 	m_entityManager->CreateComponentStore<ParticleComponent>();
+	m_entityManager->CreateComponentStore<AttractionSourceComponent>();
 		
 	// The order systems are added in is important.
 	// They are executed in order from first added to last.
@@ -90,6 +93,7 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_entityManager->AddSystem(std::make_shared<SystemWander>(*m_entityManager.get()));
 	m_entityManager->AddSystem(std::make_shared<SystemAvoidance>(*m_entityManager.get()));
 	m_entityManager->AddSystem(std::make_shared<SystemSeparation>(*m_entityManager.get()));
+	m_entityManager->AddSystem(std::make_shared<SystemAttraction>(*m_entityManager.get()));
 	m_entityManager->AddSystem(std::make_shared<SystemMove>(*m_entityManager.get()));
 	m_entityManager->AddSystem(std::make_shared<SystemCollider>(*m_entityManager.get()));
 	m_entityManager->AddSystem(std::make_shared<SystemCollisionHandler>(*m_entityManager.get()));
@@ -99,10 +103,7 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_entityManager->AddSystem(std::make_shared<SystemParticle>(*m_entityManager.get()));
 	m_entityManager->AddSystem(std::make_shared<SystemRender>(*m_entityManager.get()));
 #if _DEBUG
-	if (ShowDebugInformation)
-	{
-		m_entityManager->AddSystem(std::make_shared<SystemDebugRender>(*m_entityManager.get(), m_assetManager->GetTexture(DebugAsset)));
-	}
+	m_entityManager->AddSystem(std::make_shared<SystemDebugRender>(*m_entityManager.get(), m_assetManager->GetTexture(DebugAsset)));
 #endif
 
 	m_camera = std::make_unique<Camera>(screenBounds);
@@ -349,7 +350,7 @@ void PlayState::SpawnEnemies(float dt)
 	// TODO: Improve this to take into account dt.
 	if (MathHelper::Random(0, static_cast<int>(m_enemyInverseSpawnChance)) == 0)
 	{
-		TranslationComponent& playerTranslation = m_entityManager->GetComponentStore<TranslationComponent>().Get(m_playerStatus.GetCurrentEntityId());
+		/*TranslationComponent& playerTranslation = m_entityManager->GetComponentStore<TranslationComponent>().Get(m_playerStatus.GetCurrentEntityId());
 
 		Vector2 spawnPosition = Vector2::Zero;
 		int positionChecks = 0;
@@ -369,12 +370,12 @@ void PlayState::SpawnEnemies(float dt)
 		m_entityManager->AddComponent(enemy, ColliderComponent(15.0f, 35.0f));
 		m_entityManager->AddComponent(enemy, DestructableComponent(m_assetManager->GetTexture(ParticleAsset), m_camera.get()));
 		m_entityManager->AddComponent(enemy, HealthComponent(10.0f));
-		m_entityManager->RegisterEntity(enemy);
+		m_entityManager->RegisterEntity(enemy);*/
 	}
 
 	if (MathHelper::Random(0, static_cast<int>(m_enemyInverseSpawnChance)) == 0)
 	{
-		auto enemy = m_entityManager->CreateEntity();
+		/*auto enemy = m_entityManager->CreateEntity();
 		m_entityManager->AddComponent(enemy, TranslationComponent(GenerateRandomPosition(), Vector2(0, 0), MathHelper::Random(0.0f, 6.2f)));
 		m_entityManager->AddComponent(enemy, RenderComponent(*m_spriteBatch.get(), m_assetManager->GetTexture(WanderEnemyAsset), m_spriteFont.get()));
 		m_entityManager->AddComponent(enemy, EnemyComponent(1.2f, 10));
@@ -383,6 +384,19 @@ void PlayState::SpawnEnemies(float dt)
 		m_entityManager->AddComponent(enemy, ColliderComponent(15.0f, 35.0f));
 		m_entityManager->AddComponent(enemy, DestructableComponent(m_assetManager->GetTexture(ParticleAsset), m_camera.get()));
 		m_entityManager->AddComponent(enemy, HealthComponent(20.0f));
+		m_entityManager->RegisterEntity(enemy);*/
+	}
+
+	if (MathHelper::Random(0, static_cast<int>(m_enemyInverseSpawnChance)) == 0)
+	{
+		auto enemy = m_entityManager->CreateEntity();
+		m_entityManager->AddComponent(enemy, TranslationComponent(GenerateRandomPosition(), Vector2(0, 0), MathHelper::Random(0.0f, 6.2f)));
+		m_entityManager->AddComponent(enemy, RenderComponent(*m_spriteBatch.get(), m_assetManager->GetTexture(BlackHoleAsset), m_spriteFont.get()));
+		m_entityManager->AddComponent(enemy, EnemyComponent(1.0f, 30));
+		m_entityManager->AddComponent(enemy, AttractionSourceComponent());
+		m_entityManager->AddComponent(enemy, ColliderComponent(15.0f, 35.0f));
+		m_entityManager->AddComponent(enemy, DestructableComponent(m_assetManager->GetTexture(ParticleAsset), m_camera.get()));
+		m_entityManager->AddComponent(enemy, HealthComponent(70.0f));
 		m_entityManager->RegisterEntity(enemy);
 	}
 
@@ -506,25 +520,29 @@ void PlayState::Render(DX::DeviceResources const& deviceResources)
 	m_spriteBatch->End();
 
 #if _DEBUG
-	if (ShowDebugInformation)
-	{
-		m_spriteBatch->Begin();
-		m_spriteFont->DrawString(m_spriteBatch.get(), m_framesPerSecond, XMFLOAT2(10, 90), Colors::White, 0.0f, XMFLOAT2(0, 0), 0.7f);
-		m_spriteFont->DrawString(m_spriteBatch.get(), m_entityCount, XMFLOAT2(10, 110), Colors::White, 0.0f, XMFLOAT2(0, 0), 0.7f);
-		m_spriteBatch->End();
+	m_spriteBatch->Begin();
+	m_spriteFont->DrawString(m_spriteBatch.get(), m_framesPerSecond, XMFLOAT2(10, 90), Colors::White, 0.0f, XMFLOAT2(0, 0), 0.7f);
+	m_spriteFont->DrawString(m_spriteBatch.get(), m_entityCount, XMFLOAT2(10, 110), Colors::White, 0.0f, XMFLOAT2(0, 0), 0.7f);
+	m_spriteBatch->End();
 
-		m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Deferred, nullptr, nullptr, nullptr, nullptr, nullptr, cameraViewMatrix);
+	m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Deferred, nullptr, nullptr, nullptr, nullptr, nullptr, cameraViewMatrix);
+	
+	if (ShowDebugQuadTree)
+	{
 		std::vector<Rectangle> quadTreeBounds = m_entityManager->GetQuadTree()->GetAllBounds(m_entityManager->GetQuadTree());
 		for (size_t i = 0; i < quadTreeBounds.size(); ++i)
 		{
 			GraphicsHelper::DrawRectangleOutline(*m_spriteBatch.get(), m_assetManager->GetTexture(DebugAsset)->GetSrv(), quadTreeBounds[i], 1, DirectX::Colors::White);
 		}
+	}
 
+	if (ShowDebugPlayerContainer)
+	{
 		Rectangle playerContainer = m_entityManager->GetComponentStore<EntityContainerComponent>().Get(m_cameraPlayerContainer).boundingRect;
 		m_spriteBatch->Draw(m_assetManager->GetTexture(DebugAsset)->GetSrv(), playerContainer, XMVECTORF32{ 1.0f, 0.0f, 0.0f, 0.2f });
-
-		m_spriteBatch->End();
 	}
+	
+	m_spriteBatch->End();
 #endif
 };
 
