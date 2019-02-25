@@ -4,6 +4,7 @@
 #include "DestructableComponent.h"
 #include "RenderComponent.h"
 #include "TranslationComponent.h"
+#include "ParticleComponent.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -23,6 +24,7 @@ void SystemDestructable::UpdateEntity(float dt, float totalTime, Entity entity)
 {
 	DestructableComponent& destructable = m_manager.GetComponentStore<DestructableComponent>().Get(entity);
 	TranslationComponent& translation = m_manager.GetComponentStore<TranslationComponent>().Get(entity);
+	RenderComponent& render = m_manager.GetComponentStore<RenderComponent>().Get(entity);
 	
 	if (destructable.destroy)
 	{
@@ -55,14 +57,12 @@ void SystemDestructable::UpdateEntity(float dt, float totalTime, Entity entity)
 			float speed = destructable.particleSpeed * (1.0f - 1 / MathHelper::Random(1.0f, 10.0f));
 			
 			Vector2 velocity = MathHelper::NextVector2(speed, speed);
-			
-			destructable.particleManger->CreateParticle(
-				destructable.particleTexture,
-				translation.position + Vector2(10, 10),
-				velocity,
-				colour,
-				100.0f,
-				Vector2(0.7f, 0.7f));			
+						
+			Entity particle = m_manager.CreateEntity();
+			m_manager.AddComponent(particle, TranslationComponent(translation.position + Vector2(10, 10), velocity, 1.0f));
+			m_manager.AddComponent(particle, RenderComponent(render.spriteBatch, destructable.particleTexture, render.spriteFont, 1, 1, colour));
+			m_manager.AddComponent(particle, ParticleComponent(25.0f));
+			m_manager.RegisterEntity(particle);
 		}
 	}
 }

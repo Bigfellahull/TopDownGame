@@ -22,6 +22,7 @@
 #include "ExhaustPlumeComponent.h"
 #include "HealthComponent.h"
 #include "EntityContainerComponent.h"
+#include "ParticleComponent.h"
 
 #include "MoveSystem.h"
 #include "RenderSystem.h"
@@ -38,6 +39,7 @@
 #include "ExhaustPlumeSystem.h"
 #include "CollisionHandlerSystem.h"
 #include "EntityContainerSystem.h"
+#include "ParticleSystem.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -59,8 +61,7 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_spriteFont = std::make_unique<SpriteFont>(device, L"SegoeUI_18.spritefont");
 	m_assetManager = std::make_unique<AssetManager>(device);
 	m_entityManager = std::make_unique<EntityManager>(worldBounds);
-	m_particleManager = std::make_unique<ParticleManager>(worldBounds);
-
+	
 	m_entityManager->CreateComponentStore<TranslationComponent>();
 	m_entityManager->CreateComponentStore<RenderComponent>();
 	m_entityManager->CreateComponentStore<ProjectileSourceComponent>();
@@ -78,6 +79,7 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_entityManager->CreateComponentStore<ExhaustPlumeComponent>();
 	m_entityManager->CreateComponentStore<HealthComponent>();
 	m_entityManager->CreateComponentStore<EntityContainerComponent>();
+	m_entityManager->CreateComponentStore<ParticleComponent>();
 		
 	// The order systems are added in is important.
 	// They are executed in order from first added to last.
@@ -94,6 +96,7 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_entityManager->AddSystem(std::make_shared<SystemEntityContainer>(*m_entityManager.get()));
 	m_entityManager->AddSystem(std::make_shared<SystemExhaustPlume>(*m_entityManager.get()));
 	m_entityManager->AddSystem(std::make_shared<SystemDestructable>(*m_entityManager.get()));
+	m_entityManager->AddSystem(std::make_shared<SystemParticle>(*m_entityManager.get()));
 	m_entityManager->AddSystem(std::make_shared<SystemRender>(*m_entityManager.get()));
 #if _DEBUG
 	if (ShowDebugInformation)
@@ -160,7 +163,6 @@ void PlayState::RestartGame()
 		m_entityManager->QueueEntityForDrop(x.first);
 	}
 	m_entityManager->DropEntities();
-	m_particleManager->ClearParticles();
 	m_camera->Reset();
 	SpawnPlayer(true);
 }
@@ -181,11 +183,11 @@ void PlayState::SpawnPlayer(bool reset)
 	Vector2 position = GenerateRandomPosition();
     m_entityManager->AddComponent(m_playerStatus.GetCurrentEntityId(), TranslationComponent(position, Vector2::Zero, 0.0f));
     m_entityManager->AddComponent(m_playerStatus.GetCurrentEntityId(), RenderComponent(*m_spriteBatch.get(), m_assetManager->GetTexture(PlayerAsset), m_spriteFont.get()));
-    m_entityManager->AddComponent(m_playerStatus.GetCurrentEntityId(), ProjectileSourceComponent(m_assetManager.get(), m_particleManager.get()));
+    m_entityManager->AddComponent(m_playerStatus.GetCurrentEntityId(), ProjectileSourceComponent(m_assetManager.get()));
     m_entityManager->AddComponent(m_playerStatus.GetCurrentEntityId(), ColliderComponent(20.0f, 40.0f));
     m_entityManager->AddComponent(m_playerStatus.GetCurrentEntityId(), PlayerComponent(&m_playerStatus));
-	m_entityManager->AddComponent(m_playerStatus.GetCurrentEntityId(), DestructableComponent(m_particleManager.get(), m_assetManager->GetTexture(ParticleAsset), m_camera.get(), 900.0f, 300));
-	m_entityManager->AddComponent(m_playerStatus.GetCurrentEntityId(), ExhaustPlumeComponent(m_particleManager.get(), m_assetManager->GetTexture(ParticleAsset), m_assetManager->GetTexture(ParticleGlowAsset)));
+	m_entityManager->AddComponent(m_playerStatus.GetCurrentEntityId(), DestructableComponent(m_assetManager->GetTexture(ParticleAsset), m_camera.get(), 900.0f, 300));
+	m_entityManager->AddComponent(m_playerStatus.GetCurrentEntityId(), ExhaustPlumeComponent(m_assetManager->GetTexture(ParticleAsset), m_assetManager->GetTexture(ParticleGlowAsset)));
 	m_entityManager->AddComponent(m_playerStatus.GetCurrentEntityId(), HealthComponent(30.0f));
 	m_entityManager->RegisterEntity(m_playerStatus.GetCurrentEntityId());
 
@@ -236,10 +238,7 @@ void PlayState::Update(DX::StepTimer const& timer, Game* game)
 
 	m_entityManager->RebuildQuadTree();
     m_entityManager->UpdateEntities(dt, static_cast<float>(timer.GetTotalSeconds()));
-	// Ensure we update particles after entities as particles get 
-	// added in the entity systems.
-	m_particleManager->Update(dt);
-
+	
 	if (m_playerStatus.IsAlive())
 	{
 		EntityContainerComponent& container = m_entityManager->GetComponentStore<EntityContainerComponent>().Get(m_cameraPlayerContainer);
@@ -253,7 +252,6 @@ void PlayState::Update(DX::StepTimer const& timer, Game* game)
 #if _DEBUG
 	swprintf_s(m_framesPerSecond, L"FPS %d\n", timer.GetFramesPerSecond());
 	swprintf_s(m_entityCount, L"Entities: %zd\n", m_entityManager->GetNumberOfEntities());
-	swprintf_s(m_particleCount, L"Particles: %d\n", m_particleManager->GetNumberOfParticles());
 #endif
 
 	if (m_playerStatus.IsGameOver())
@@ -348,11 +346,7 @@ Vector2 PlayState::GenerateRandomPosition()
 
 void PlayState::SpawnEnemies(float dt)
 {
-	if (m_entityManager->GetNumberOfEntities() > 20)
-	{
-		return;
-	}
-
+	// TODO: Improve this to take into account dt.
 	if (MathHelper::Random(0, static_cast<int>(m_enemyInverseSpawnChance)) == 0)
 	{
 		TranslationComponent& playerTranslation = m_entityManager->GetComponentStore<TranslationComponent>().Get(m_playerStatus.GetCurrentEntityId());
@@ -373,7 +367,7 @@ void PlayState::SpawnEnemies(float dt)
 		m_entityManager->AddComponent(enemy, AvoidanceComponent());
 		m_entityManager->AddComponent(enemy, SeparationComponent());
 		m_entityManager->AddComponent(enemy, ColliderComponent(15.0f, 35.0f));
-		m_entityManager->AddComponent(enemy, DestructableComponent(m_particleManager.get(), m_assetManager->GetTexture(ParticleAsset), m_camera.get()));
+		m_entityManager->AddComponent(enemy, DestructableComponent(m_assetManager->GetTexture(ParticleAsset), m_camera.get()));
 		m_entityManager->AddComponent(enemy, HealthComponent(10.0f));
 		m_entityManager->RegisterEntity(enemy);
 	}
@@ -387,7 +381,7 @@ void PlayState::SpawnEnemies(float dt)
 		m_entityManager->AddComponent(enemy, WanderComponent(&m_playerStatus, 2500.0f, 10.0f));
 		m_entityManager->AddComponent(enemy, SeparationComponent());
 		m_entityManager->AddComponent(enemy, ColliderComponent(15.0f, 35.0f));
-		m_entityManager->AddComponent(enemy, DestructableComponent(m_particleManager.get(), m_assetManager->GetTexture(ParticleAsset), m_camera.get()));
+		m_entityManager->AddComponent(enemy, DestructableComponent(m_assetManager->GetTexture(ParticleAsset), m_camera.get()));
 		m_entityManager->AddComponent(enemy, HealthComponent(20.0f));
 		m_entityManager->RegisterEntity(enemy);
 	}
@@ -490,12 +484,8 @@ void PlayState::Render(DX::DeviceResources const& deviceResources)
 
 	Matrix cameraViewMatrix = m_camera->GetViewMatrix();
 
-	m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Deferred, nullptr, nullptr, nullptr, nullptr, nullptr, cameraViewMatrix);
+	m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Deferred, m_states->Additive(), nullptr, nullptr, nullptr, nullptr, cameraViewMatrix);
 	m_entityManager->RenderEntities();
-	m_spriteBatch->End();
-
-	m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Texture, m_states->Additive(), nullptr, nullptr, nullptr, nullptr, cameraViewMatrix);
-	m_particleManager->Draw(*m_spriteBatch.get());
 	m_spriteBatch->End();
 
 	RegionComponent& region = m_entityManager->GetComponentStore<RegionComponent>().Get(m_regionEntity);
@@ -521,7 +511,6 @@ void PlayState::Render(DX::DeviceResources const& deviceResources)
 		m_spriteBatch->Begin();
 		m_spriteFont->DrawString(m_spriteBatch.get(), m_framesPerSecond, XMFLOAT2(10, 90), Colors::White, 0.0f, XMFLOAT2(0, 0), 0.7f);
 		m_spriteFont->DrawString(m_spriteBatch.get(), m_entityCount, XMFLOAT2(10, 110), Colors::White, 0.0f, XMFLOAT2(0, 0), 0.7f);
-		m_spriteFont->DrawString(m_spriteBatch.get(), m_particleCount, XMFLOAT2(10, 130), Colors::White, 0.0f, XMFLOAT2(0, 0), 0.7f);
 		m_spriteBatch->End();
 
 		m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Deferred, nullptr, nullptr, nullptr, nullptr, nullptr, cameraViewMatrix);

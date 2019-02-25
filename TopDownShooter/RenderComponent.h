@@ -21,7 +21,8 @@ struct RenderComponent : public Component
 	DirectX::SimpleMath::Vector2 origin;
 	DirectX::SimpleMath::Vector4 colour;
 
-	RenderComponent(DirectX::SpriteBatch& aSpriteBatch, Texture2d* aTexture, DirectX::SpriteFont* aSpriteFont = nullptr, int frameCount = 1, int framesPerSecond = 1) :
+	RenderComponent(DirectX::SpriteBatch& aSpriteBatch, Texture2d* aTexture, DirectX::SpriteFont* aSpriteFont = nullptr, int frameCount = 1,
+		int framesPerSecond = 1, DirectX::SimpleMath::Vector4 colour = DirectX::SimpleMath::Vector4::One) :
 		spriteBatch(aSpriteBatch),
 		spriteFont(aSpriteFont),
 		texture(aTexture),
@@ -32,5 +33,5 @@ struct RenderComponent : public Component
 		totalElapsed(0.0f),
 		scale(1.0f, 1.0f),
 		origin(static_cast<float>(aTexture->GetWidth() / frameCount / 2), static_cast<float>(aTexture->GetHeight() / 2)),
-		colour(DirectX::Colors::White) { }
+		colour(colour) { }
 };

@@ -3,7 +3,6 @@
 #include "IGameState.h"
 #include "EntityManager.h"
 #include "AssetManager.h"
-#include "ParticleManager.h"
 
 #include "PlayerStatus.h"
 #include "Camera.h"
@@ -29,8 +28,7 @@ public:
 		m_livesDisplay()
 #if _DEBUG
 		,m_framesPerSecond(),
-		m_entityCount(),
-		m_particleCount()
+		m_entityCount()
 #endif
 	{
 		name = __func__;
@@ -66,8 +64,7 @@ private:
 	std::unique_ptr<Camera> m_camera;
 	std::unique_ptr<AssetManager> m_assetManager;
 	std::unique_ptr<EntityManager> m_entityManager;
-	std::unique_ptr<ParticleManager> m_particleManager;
-
+	
 	Texture2d* m_fixedBackground;
 	std::vector<std::unique_ptr<BackgroundLayer>> m_backgroundLayers;
 	std::unique_ptr<BackgroundBuffer> m_backgroundBuffer;
@@ -83,7 +80,6 @@ private:
 #if _DEBUG
 	wchar_t m_framesPerSecond[100];
 	wchar_t m_entityCount[100];
-	wchar_t m_particleCount[100];
 #endif
 
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> m_backgroundPs;

@@ -3,7 +3,6 @@
 #include "Component.h"
 #include "SimpleMath.h"
 #include "AssetManager.h"
-#include "ParticleManager.h"
 
 struct ProjectileSourceComponent : public Component
 {
@@ -13,12 +12,10 @@ struct ProjectileSourceComponent : public Component
 	DirectX::SimpleMath::Vector2 aimDirection;
 	float cooldownTime;
 	float cooldownRemaining;
-	ParticleManager* particleManager;
-
-	ProjectileSourceComponent(AssetManager* aAssetManager, ParticleManager* aParticleManager) :
+	
+	ProjectileSourceComponent(AssetManager* aAssetManager) :
 		assetManager(aAssetManager),
 		aimDirection(DirectX::SimpleMath::Vector2(0, 0)),
 		cooldownTime(0.10f),
-		cooldownRemaining(0),
-		particleManager(aParticleManager) { }
+		cooldownRemaining(0) { }
 };

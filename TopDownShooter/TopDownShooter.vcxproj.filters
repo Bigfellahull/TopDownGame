@@ -182,9 +182,6 @@
     <ClInclude Include="WanderSystem.h">
       <Filter>Inc\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="ParticleManager.h">
-      <Filter>Inc</Filter>
-    </ClInclude>
     <ClInclude Include="DestructableComponent.h">
       <Filter>Inc\Components</Filter>
     </ClInclude>
@@ -234,6 +231,12 @@
       <Filter>Inc\Components</Filter>
     </ClInclude>
     <ClInclude Include="EntityContainerSystem.h">
+      <Filter>Inc\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleComponent.h">
+      <Filter>Inc\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem.h">
       <Filter>Inc\Systems</Filter>
     </ClInclude>
   </ItemGroup>
@@ -310,9 +313,6 @@
     <ClCompile Include="WanderSystem.cpp">
       <Filter>Src\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="ParticleManager.cpp">
-      <Filter>Src</Filter>
-    </ClCompile>
     <ClCompile Include="DestructableSystem.cpp">
       <Filter>Src\Systems</Filter>
     </ClCompile>
@@ -341,6 +341,9 @@
       <Filter>Src\Utils</Filter>
     </ClCompile>
     <ClCompile Include="EntityContainerSystem.cpp">
+      <Filter>Src\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystem.cpp">
       <Filter>Src\Systems</Filter>
     </ClCompile>
   </ItemGroup>

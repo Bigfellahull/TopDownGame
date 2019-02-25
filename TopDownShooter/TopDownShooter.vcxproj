@@ -195,12 +195,13 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameOverState.h" />
     <ClInclude Include="GraphicsHelper.h" />
+    <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="HealthComponent.h" />
     <ClInclude Include="IGameState.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="IntroState.h" />
     <ClInclude Include="EntityManager.h" />
-    <ClInclude Include="ParticleManager.h" />
+    <ClInclude Include="ParticleComponent.h" />
     <ClInclude Include="PlayerComponent.h" />
     <ClInclude Include="PlayerStatus.h" />
     <ClInclude Include="ProjectileSystem.h" />
@@ -248,7 +249,7 @@
     <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="MathHelper.cpp" />
     <ClCompile Include="MoveSystem.cpp" />
-    <ClCompile Include="ParticleManager.cpp" />
+    <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="PauseState.cpp" />
     <ClCompile Include="PlayerStatus.cpp" />
     <ClCompile Include="PlayState.cpp" />
