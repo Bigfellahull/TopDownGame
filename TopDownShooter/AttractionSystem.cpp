@@ -46,12 +46,12 @@ void SystemAttraction::UpdateEntity(float dt, float totalTime, Entity entity)
 			float distance = deltaPosition.Length();
 			deltaPosition.Normalize();
 
-			f += (deltaPosition * 10000.0f) / (distance * distance + 10000.0f);
-			
-			if (distance < 200.0f)
+			f += (100000.0f * deltaPosition) / (distance * distance);
+
+			/*if (distance < 200.0f)
 			{
-				f += 600.0f * Vector2(deltaPosition.y, -deltaPosition.x);
-			}
+				f += 400.0f * Vector2(deltaPosition.y, -deltaPosition.x);
+			}*/
 		}
 	}
 

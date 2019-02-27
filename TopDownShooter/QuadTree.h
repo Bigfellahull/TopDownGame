@@ -28,8 +28,8 @@ private:
 	int GetIndex(DirectX::SimpleMath::Vector2 position);
 	void Split();
 
-	const size_t m_maxObjects = 10;
-	const int m_maxLevels = 3;
+	const size_t m_maxObjects = 40;
+	const int m_maxLevels = 2;
 
 	int m_level;
 	std::vector<QuadTreeEntry> m_entities;

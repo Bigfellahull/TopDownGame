@@ -9,6 +9,7 @@ class IComponentStore
 {
 public:
 	virtual bool Remove(Entity entity) = 0;
+	virtual const size_t Count() const = 0;
 };
 
 template<typename T>
@@ -53,6 +54,8 @@ public:
 	{
 		return m_store;
 	}
+
+	inline const size_t Count() const { return m_store.size(); }
 
 private:
 	std::unordered_map<Entity, T> m_store;             

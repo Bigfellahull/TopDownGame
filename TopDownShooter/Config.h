@@ -5,11 +5,11 @@ constexpr bool SlowModeEnabled = false;
 #if _DEBUG
 constexpr bool FullScreen = false;
 #else
-constexpr bool FullScreen = true;
+constexpr bool FullScreen = false;
 #endif
 
 #if _DEBUG
-constexpr bool ShowDebugVisuals = false;
+constexpr bool ShowDebugVisuals = true;
 constexpr bool ShowDebugText = false;
 constexpr bool ShowDebugQuadTree = true;
 constexpr bool ShowDebugPlayerContainer = false;

@@ -5,6 +5,7 @@
 #include "RenderComponent.h"
 #include "TranslationComponent.h"
 #include "ParticleComponent.h"
+#include "ColliderComponent.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -62,6 +63,7 @@ void SystemDestructable::UpdateEntity(float dt, float totalTime, Entity entity)
 			m_manager.AddComponent(particle, TranslationComponent(translation.position + Vector2(10, 10), velocity, 1.0f));
 			m_manager.AddComponent(particle, RenderComponent(render.spriteBatch, destructable.particleTexture, render.spriteFont, 1, 1, colour));
 			m_manager.AddComponent(particle, ParticleComponent(25.0f));
+			m_manager.AddComponent(particle, ColliderComponent(2.0f, 2.0f));
 			m_manager.RegisterEntity(particle);
 		}
 	}

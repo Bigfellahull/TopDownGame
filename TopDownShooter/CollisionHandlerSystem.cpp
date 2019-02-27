@@ -8,6 +8,7 @@
 #include "DestructableComponent.h"
 #include "ProjectileComponent.h"
 #include "HealthComponent.h"
+#include "ParticleComponent.h"
 
 using namespace DirectX::SimpleMath;
 
@@ -34,6 +35,13 @@ void SystemCollisionHandler::UpdateEntity(float dt, float totalTime, Entity enti
 	ComponentStore<EnemyComponent>& enemyComponents = m_manager.GetComponentStore<EnemyComponent>();
 	ComponentStore<ProjectileComponent>& projectileComponents = m_manager.GetComponentStore<ProjectileComponent>();
 	ComponentStore<HealthComponent>& healthComponents = m_manager.GetComponentStore<HealthComponent>();
+	ComponentStore<ParticleComponent>& particleComponents = m_manager.GetComponentStore<ParticleComponent>();
+
+	if (particleComponents.Has(entity) || particleComponents.Has(collider.collidedWith))
+	{
+		// For now we skip particle collisions.
+		return;
+	}
 
 	if (playerComponents.Has(entity))
 	{
@@ -90,7 +98,10 @@ void SystemCollisionHandler::UpdateEntity(float dt, float totalTime, Entity enti
 
 	if (projectileComponents.Has(entity))
 	{
-		DestroyEntity(entity);
+		if (!projectileComponents.Has(collider.collidedWith))
+		{
+			DestroyEntity(entity);
+		}
 	}
 
 	// Collision handled so now clear out

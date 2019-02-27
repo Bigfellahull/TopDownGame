@@ -350,7 +350,7 @@ void PlayState::SpawnEnemies(float dt)
 	// TODO: Improve this to take into account dt.
 	if (MathHelper::Random(0, static_cast<int>(m_enemyInverseSpawnChance)) == 0)
 	{
-		/*TranslationComponent& playerTranslation = m_entityManager->GetComponentStore<TranslationComponent>().Get(m_playerStatus.GetCurrentEntityId());
+		TranslationComponent& playerTranslation = m_entityManager->GetComponentStore<TranslationComponent>().Get(m_playerStatus.GetCurrentEntityId());
 
 		Vector2 spawnPosition = Vector2::Zero;
 		int positionChecks = 0;
@@ -370,12 +370,12 @@ void PlayState::SpawnEnemies(float dt)
 		m_entityManager->AddComponent(enemy, ColliderComponent(15.0f, 35.0f));
 		m_entityManager->AddComponent(enemy, DestructableComponent(m_assetManager->GetTexture(ParticleAsset), m_camera.get()));
 		m_entityManager->AddComponent(enemy, HealthComponent(10.0f));
-		m_entityManager->RegisterEntity(enemy);*/
+		m_entityManager->RegisterEntity(enemy);
 	}
 
 	if (MathHelper::Random(0, static_cast<int>(m_enemyInverseSpawnChance)) == 0)
 	{
-		/*auto enemy = m_entityManager->CreateEntity();
+		auto enemy = m_entityManager->CreateEntity();
 		m_entityManager->AddComponent(enemy, TranslationComponent(GenerateRandomPosition(), Vector2(0, 0), MathHelper::Random(0.0f, 6.2f)));
 		m_entityManager->AddComponent(enemy, RenderComponent(*m_spriteBatch.get(), m_assetManager->GetTexture(WanderEnemyAsset), m_spriteFont.get()));
 		m_entityManager->AddComponent(enemy, EnemyComponent(1.2f, 10));
@@ -384,10 +384,10 @@ void PlayState::SpawnEnemies(float dt)
 		m_entityManager->AddComponent(enemy, ColliderComponent(15.0f, 35.0f));
 		m_entityManager->AddComponent(enemy, DestructableComponent(m_assetManager->GetTexture(ParticleAsset), m_camera.get()));
 		m_entityManager->AddComponent(enemy, HealthComponent(20.0f));
-		m_entityManager->RegisterEntity(enemy);*/
+		m_entityManager->RegisterEntity(enemy);
 	}
 
-	if (MathHelper::Random(0, static_cast<int>(m_enemyInverseSpawnChance)) == 0)
+	if (MathHelper::Random(0, static_cast<int>(m_enemyInverseSpawnChance)) == 0 && m_entityManager->GetNumberOfEntities(AttractionSourceComponent::Type) < 3)
 	{
 		auto enemy = m_entityManager->CreateEntity();
 		m_entityManager->AddComponent(enemy, TranslationComponent(GenerateRandomPosition(), Vector2(0, 0), MathHelper::Random(0.0f, 6.2f)));

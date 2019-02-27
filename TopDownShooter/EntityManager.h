@@ -67,6 +67,7 @@ public:
 	}
 
 	const size_t GetNumberOfEntities() const { return m_entities.size(); }
+	const size_t GetNumberOfEntities(ComponentType type) const { return m_componentStores.at(type)->Count(); }
 
 	void RebuildQuadTree();
 	

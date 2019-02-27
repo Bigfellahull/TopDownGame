@@ -5,6 +5,7 @@
 #include "TranslationComponent.h"
 #include "RenderComponent.h"
 #include "ParticleComponent.h"
+#include "ColliderComponent.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -46,42 +47,56 @@ void SystemExhaustPlume::UpdateEntity(float dt, float totalTime, Entity entity)
 	Vector2 velocityMid = baseVelocity + MathHelper::NextVector2(0.0f, 1.0f);
 
 	// TODO: Make time based. In slow mode this creates too many particles!
-	Entity particle = m_manager.CreateEntity();
-	m_manager.AddComponent(particle, TranslationComponent(position, velocityMid, orientation));
-	m_manager.AddComponent(particle, RenderComponent(render.spriteBatch, exhaustPlume.particleTexture, render.spriteFont, 1, 1, Vector4::One * alpha));
-	m_manager.AddComponent(particle, ParticleComponent(10.0f));
-	m_manager.RegisterEntity(particle);
-
-	Entity particle2 = m_manager.CreateEntity();
-	m_manager.AddComponent(particle2, TranslationComponent(position, velocityMid, orientation));
-	m_manager.AddComponent(particle2, RenderComponent(render.spriteBatch, exhaustPlume.particleGlowTexture, render.spriteFont, 1, 1, colour2 * alpha));
-	m_manager.AddComponent(particle2, ParticleComponent(10.0f));
-	m_manager.RegisterEntity(particle2);
+	{
+		Entity particle = m_manager.CreateEntity();
+		m_manager.AddComponent(particle, TranslationComponent(position, velocityMid, orientation));
+		m_manager.AddComponent(particle, RenderComponent(render.spriteBatch, exhaustPlume.particleTexture, render.spriteFont, 1, 1, Vector4::One * alpha));
+		m_manager.AddComponent(particle, ParticleComponent(10.0f));
+		m_manager.AddComponent(particle, ColliderComponent(2.0f, 2.0f));
+		m_manager.RegisterEntity(particle);
+	}
+	{
+		Entity particle = m_manager.CreateEntity();
+		m_manager.AddComponent(particle, TranslationComponent(position, velocityMid, orientation));
+		m_manager.AddComponent(particle, RenderComponent(render.spriteBatch, exhaustPlume.particleGlowTexture, render.spriteFont, 1, 1, colour2 * alpha));
+		m_manager.AddComponent(particle, ParticleComponent(10.0f));
+		m_manager.AddComponent(particle, ColliderComponent(2.0f, 2.0f));
+		m_manager.RegisterEntity(particle);
+	}
 
 	Vector2 velocitySide1 = baseVelocity + perpendicularVelocity + MathHelper::NextVector2(0.0f, 0.3f);
 	Vector2 velocitySide2 = baseVelocity - perpendicularVelocity + MathHelper::NextVector2(0.0f, 0.3f);
 
-	Entity particle3 = m_manager.CreateEntity();
-	m_manager.AddComponent(particle3, TranslationComponent(position, velocitySide1, orientation));
-	m_manager.AddComponent(particle3, RenderComponent(render.spriteBatch, exhaustPlume.particleTexture, render.spriteFont, 1, 1, Vector4::One * alpha));
-	m_manager.AddComponent(particle3, ParticleComponent(15.0f));
-	m_manager.RegisterEntity(particle3);
-
-	Entity particle4 = m_manager.CreateEntity();
-	m_manager.AddComponent(particle4, TranslationComponent(position, velocitySide1, orientation));
-	m_manager.AddComponent(particle4, RenderComponent(render.spriteBatch, exhaustPlume.particleGlowTexture, render.spriteFont, 1, 1, colour1 * alpha));
-	m_manager.AddComponent(particle4, ParticleComponent(15.0f));
-	m_manager.RegisterEntity(particle4);
-
-	Entity particle5 = m_manager.CreateEntity();
-	m_manager.AddComponent(particle5, TranslationComponent(position, velocitySide2, orientation));
-	m_manager.AddComponent(particle5, RenderComponent(render.spriteBatch, exhaustPlume.particleTexture, render.spriteFont, 1, 1, Vector4::One * alpha));
-	m_manager.AddComponent(particle5, ParticleComponent(15.0f));
-	m_manager.RegisterEntity(particle5);
-
-	Entity particle6 = m_manager.CreateEntity();
-	m_manager.AddComponent(particle6, TranslationComponent(position, velocitySide2, orientation));
-	m_manager.AddComponent(particle6, RenderComponent(render.spriteBatch, exhaustPlume.particleGlowTexture, render.spriteFont, 1, 1, colour1 * alpha));
-	m_manager.AddComponent(particle6, ParticleComponent(15.0f));
-	m_manager.RegisterEntity(particle6);
+	{
+		Entity particle = m_manager.CreateEntity();
+		m_manager.AddComponent(particle, TranslationComponent(position, velocitySide1, orientation));
+		m_manager.AddComponent(particle, RenderComponent(render.spriteBatch, exhaustPlume.particleTexture, render.spriteFont, 1, 1, Vector4::One * alpha));
+		m_manager.AddComponent(particle, ParticleComponent(15.0f));
+		m_manager.AddComponent(particle, ColliderComponent(2.0f, 2.0f));
+		m_manager.RegisterEntity(particle);
+	}
+	{
+		Entity particle = m_manager.CreateEntity();
+		m_manager.AddComponent(particle, TranslationComponent(position, velocitySide1, orientation));
+		m_manager.AddComponent(particle, RenderComponent(render.spriteBatch, exhaustPlume.particleGlowTexture, render.spriteFont, 1, 1, colour1 * alpha));
+		m_manager.AddComponent(particle, ParticleComponent(15.0f));
+		m_manager.AddComponent(particle, ColliderComponent(2.0f, 2.0f));
+		m_manager.RegisterEntity(particle);
+	}
+	{
+		Entity particle = m_manager.CreateEntity();
+		m_manager.AddComponent(particle, TranslationComponent(position, velocitySide2, orientation));
+		m_manager.AddComponent(particle, RenderComponent(render.spriteBatch, exhaustPlume.particleTexture, render.spriteFont, 1, 1, Vector4::One * alpha));
+		m_manager.AddComponent(particle, ParticleComponent(15.0f));
+		m_manager.AddComponent(particle, ColliderComponent(2.0f, 2.0f));
+		m_manager.RegisterEntity(particle);
+	}
+	{
+		Entity particle = m_manager.CreateEntity();
+		m_manager.AddComponent(particle, TranslationComponent(position, velocitySide2, orientation));
+		m_manager.AddComponent(particle, RenderComponent(render.spriteBatch, exhaustPlume.particleGlowTexture, render.spriteFont, 1, 1, colour1 * alpha));
+		m_manager.AddComponent(particle, ParticleComponent(15.0f));
+		m_manager.AddComponent(particle, ColliderComponent(2.0f, 2.0f));
+		m_manager.RegisterEntity(particle);
+	}
 }
