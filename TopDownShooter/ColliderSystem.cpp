@@ -21,35 +21,30 @@ SystemCollider::SystemCollider(EntityManager& manager) :
 
 void SystemCollider::UpdateEntity(float dt, float totalTime, Entity entity)
 {
-	ComponentStore<EnemyComponent>& enemies = m_manager.GetComponentStore<EnemyComponent>();
-	ComponentStore<PlayerComponent>& players = m_manager.GetComponentStore<PlayerComponent>();
+	ComponentStore<EnemyComponent>& enemyComponents = m_manager.GetComponentStore<EnemyComponent>();
+	ComponentStore<PlayerComponent>& playerComponents = m_manager.GetComponentStore<PlayerComponent>();
+	ComponentStore<ColliderComponent>& colliderComponents = m_manager.GetComponentStore<ColliderComponent>();
+	ComponentStore<TranslationComponent>& translationComponents = m_manager.GetComponentStore<TranslationComponent>();
 
-	if ((enemies.Has(entity) && !enemies.Get(entity).alive) || 
-		(players.Has(entity) && !players.Get(entity).status->IsAlive()))
+	if ((enemyComponents.Has(entity) && !enemyComponents.Get(entity).alive) ||
+		(playerComponents.Has(entity) && !playerComponents.Get(entity).status->IsAlive()))
 	{
 		return;
 	}
 
-    ColliderComponent& collider = m_manager.GetComponentStore<ColliderComponent>().Get(entity);
-    TranslationComponent& translation = m_manager.GetComponentStore<TranslationComponent>().Get(entity);
+    ColliderComponent& collider = colliderComponents.Get(entity);
+    TranslationComponent& translation = translationComponents.Get(entity);
 
 	std::vector<Entity> nearTranslationEntities = m_manager.GetQuadTree()->Retrieve(translation.position);
     for (auto e : nearTranslationEntities)
-    {
-		ComponentStore<ColliderComponent>& colliderComponents = m_manager.GetComponentStore<ColliderComponent>();
-		if (!colliderComponents.Has(e))
+    {		
+		if (!colliderComponents.Has(e) || e == entity || !translationComponents.Has(e))
 		{
 			continue;
 		}
 
-        ComponentStore<TranslationComponent>& translationComponents = m_manager.GetComponentStore<TranslationComponent>();
-		if (e == entity || !translationComponents.Has(e))
-        {
-            continue;
-        }
-
-		if ((enemies.Has(e) && !enemies.Get(e).alive) ||
-			(players.Has(e) && !players.Get(e).status->IsAlive()))
+		if ((enemyComponents.Has(e) && !enemyComponents.Get(e).alive) ||
+			(playerComponents.Has(e) && !playerComponents.Get(e).status->IsAlive()))
 		{
 			continue;
 		}
