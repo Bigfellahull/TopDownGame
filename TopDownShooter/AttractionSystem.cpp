@@ -29,8 +29,7 @@ void SystemAttraction::UpdateEntity(float dt, float totalTime, Entity entity)
 	TranslationComponent& translation = translationComponents.Get(entity);
 
 	std::vector<Entity> nearTranslationEntities = m_manager.GetQuadTree()->Retrieve(translation.position);
-	
-	Vector2 f = Vector2::Zero;
+
 	for (auto e : nearTranslationEntities)
 	{		
 		if (e == entity || !attractionSourceComponents.Has(e))
@@ -46,14 +45,14 @@ void SystemAttraction::UpdateEntity(float dt, float totalTime, Entity entity)
 			float distance = deltaPosition.Length();
 			deltaPosition.Normalize();
 
-			f += (100000.0f * deltaPosition) / (distance * distance);
+			Vector2 f = (100000.0f * deltaPosition) / (distance * distance + 10000.0f);
 
-			/*if (distance < 200.0f)
+			if (distance < 200.0f)
 			{
-				f += 400.0f * Vector2(deltaPosition.y, -deltaPosition.x);
-			}*/
+				f += 10000.0f * Vector2(deltaPosition.y, -deltaPosition.x) / (distance + 100.0f);
+			}
+
+			translation.acceleration += f;
 		}
 	}
-
-	translation.acceleration += f;
 }

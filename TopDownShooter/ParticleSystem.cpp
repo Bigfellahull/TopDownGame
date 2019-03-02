@@ -25,6 +25,8 @@ void SystemParticle::UpdateEntity(float dt, float totalTime, Entity entity)
 	TranslationComponent& translation = m_manager.GetComponentStore<TranslationComponent>().Get(entity);
 	RenderComponent& render = m_manager.GetComponentStore<RenderComponent>().Get(entity);
 
+	translation.acceleration = Vector2::Zero;
+
 	float speed = translation.velocity.Length();
 	float alpha = std::min(1.0f, std::min(particle.percentLife * 2, speed * 1.0f));
 	alpha *= alpha;

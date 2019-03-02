@@ -24,6 +24,7 @@
 #include "EntityContainerComponent.h"
 #include "ParticleComponent.h"
 #include "AttractionSourceComponent.h"
+#include "ParticleEmitterComponent.h"
 
 #include "MoveSystem.h"
 #include "RenderSystem.h"
@@ -42,6 +43,7 @@
 #include "EntityContainerSystem.h"
 #include "ParticleSystem.h"
 #include "AttractionSystem.h"
+#include "ParticleEmitterSystem.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -83,6 +85,7 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_entityManager->CreateComponentStore<EntityContainerComponent>();
 	m_entityManager->CreateComponentStore<ParticleComponent>();
 	m_entityManager->CreateComponentStore<AttractionSourceComponent>();
+	m_entityManager->CreateComponentStore<ParticleEmmiterComponent>();
 		
 	// The order systems are added in is important.
 	// They are executed in order from first added to last.
@@ -94,6 +97,7 @@ void PlayState::Initialise(DX::DeviceResources const& deviceResources)
 	m_entityManager->AddSystem(std::make_shared<SystemAvoidance>(*m_entityManager.get()));
 	m_entityManager->AddSystem(std::make_shared<SystemSeparation>(*m_entityManager.get()));
 	m_entityManager->AddSystem(std::make_shared<SystemAttraction>(*m_entityManager.get()));
+	m_entityManager->AddSystem(std::make_shared<SystemParticleEmitter>(*m_entityManager.get()));
 	m_entityManager->AddSystem(std::make_shared<SystemMove>(*m_entityManager.get()));
 	m_entityManager->AddSystem(std::make_shared<SystemCollider>(*m_entityManager.get()));
 	m_entityManager->AddSystem(std::make_shared<SystemCollisionHandler>(*m_entityManager.get()));
@@ -348,7 +352,7 @@ Vector2 PlayState::GenerateRandomPosition()
 void PlayState::SpawnEnemies(float dt)
 {
 	// TODO: Improve this to take into account dt.
-	if (MathHelper::Random(0, static_cast<int>(m_enemyInverseSpawnChance)) == 0)
+	/*if (MathHelper::Random(0, static_cast<int>(m_enemyInverseSpawnChance)) == 0)
 	{
 		TranslationComponent& playerTranslation = m_entityManager->GetComponentStore<TranslationComponent>().Get(m_playerStatus.GetCurrentEntityId());
 
@@ -385,7 +389,7 @@ void PlayState::SpawnEnemies(float dt)
 		m_entityManager->AddComponent(enemy, DestructableComponent(m_assetManager->GetTexture(ParticleAsset), m_camera.get()));
 		m_entityManager->AddComponent(enemy, HealthComponent(20.0f));
 		m_entityManager->RegisterEntity(enemy);
-	}
+	}*/
 
 	if (MathHelper::Random(0, static_cast<int>(m_enemyInverseSpawnChance)) == 0 && m_entityManager->GetNumberOfEntities(AttractionSourceComponent::Type) < 3)
 	{
@@ -397,6 +401,7 @@ void PlayState::SpawnEnemies(float dt)
 		m_entityManager->AddComponent(enemy, ColliderComponent(15.0f, 35.0f));
 		m_entityManager->AddComponent(enemy, DestructableComponent(m_assetManager->GetTexture(ParticleAsset), m_camera.get()));
 		m_entityManager->AddComponent(enemy, HealthComponent(70.0f));
+		m_entityManager->AddComponent(enemy, ParticleEmmiterComponent(m_assetManager->GetTexture(ParticleAsset), 0.0f));
 		m_entityManager->RegisterEntity(enemy);
 	}
 

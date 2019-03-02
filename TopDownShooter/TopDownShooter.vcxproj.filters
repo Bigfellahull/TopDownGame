@@ -245,6 +245,12 @@
     <ClInclude Include="AttractionSourceComponent.h">
       <Filter>Inc\Components</Filter>
     </ClInclude>
+    <ClInclude Include="ParticleEmitterComponent.h">
+      <Filter>Inc\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleEmitterSystem.h">
+      <Filter>Inc\Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -353,6 +359,9 @@
       <Filter>Src\Systems</Filter>
     </ClCompile>
     <ClCompile Include="AttractionSystem.cpp">
+      <Filter>Src\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleEmitterSystem.cpp">
       <Filter>Src\Systems</Filter>
     </ClCompile>
   </ItemGroup>
