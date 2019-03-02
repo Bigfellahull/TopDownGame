@@ -529,10 +529,14 @@ void PlayState::Render(DX::DeviceResources const& deviceResources)
 	
 	if (ShowDebugQuadTree)
 	{
-		std::vector<Rectangle> quadTreeBounds = m_entityManager->GetQuadTree()->GetAllBounds(m_entityManager->GetQuadTree());
+		std::vector<QuadTreeBounds> quadTreeBounds = QuadTree::GetAllBounds(m_entityManager->GetQuadTree());
 		for (size_t i = 0; i < quadTreeBounds.size(); ++i)
 		{
-			GraphicsHelper::DrawRectangleOutline(*m_spriteBatch.get(), m_assetManager->GetTexture(DebugAsset)->GetSrv(), quadTreeBounds[i], 1, DirectX::Colors::White);
+			QuadTreeBounds bounds = quadTreeBounds[i];
+			GraphicsHelper::DrawRectangleOutline(*m_spriteBatch.get(), m_assetManager->GetTexture(DebugAsset)->GetSrv(), bounds.bounds, 1, DirectX::Colors::White);
+			wchar_t temp[100];
+			swprintf_s(temp, L"Entity Count: %d\n", bounds.entityCount);
+			m_spriteFont->DrawString(m_spriteBatch.get(), temp, XMFLOAT2(bounds.bounds.x + 10.0f, bounds.bounds.y + 10.0f), Colors::White, 0.0f, XMFLOAT2(0, 0), 0.6f);
 		}
 	}
 

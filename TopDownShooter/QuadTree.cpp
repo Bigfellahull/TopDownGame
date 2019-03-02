@@ -130,10 +130,14 @@ std::vector<Entity> QuadTree::Retrieve(Vector2 position)
 	return ret;
 }
 
-std::vector<Rectangle> QuadTree::GetAllBounds(QuadTree* node)
+std::vector<QuadTreeBounds> QuadTree::GetAllBounds(QuadTree* node)
 {
-	std::vector<Rectangle> ret;
-	ret.push_back(node->m_bounds);
+	std::vector<QuadTreeBounds> ret;
+
+	QuadTreeBounds b;
+	b.bounds = node->m_bounds;
+	b.entityCount = node->m_entities.size();
+	ret.push_back(b);
 
 	if (node->m_nodes.size() <= 0)
 	{
@@ -142,7 +146,7 @@ std::vector<Rectangle> QuadTree::GetAllBounds(QuadTree* node)
 
 	for (size_t i = 0; i < node->m_nodes.size(); ++i)
 	{
-		std::vector<Rectangle> temp = GetAllBounds(node->m_nodes[i].get());
+		std::vector<QuadTreeBounds> temp = GetAllBounds(node->m_nodes[i].get());
 		ret.insert(ret.end(), temp.begin(), temp.end());
 	}
 

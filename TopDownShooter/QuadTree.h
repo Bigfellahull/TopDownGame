@@ -15,6 +15,12 @@ struct QuadTreeEntry
 		position(aPosition) { }
 };
 
+struct QuadTreeBounds
+{
+	DirectX::SimpleMath::Rectangle bounds;
+	int entityCount;
+};
+
 class QuadTree
 {
 public:
@@ -23,7 +29,7 @@ public:
 	void Clear();
 	std::vector<Entity> Retrieve(DirectX::SimpleMath::Vector2 position);
 
-    static std::vector<DirectX::SimpleMath::Rectangle> GetAllBounds(QuadTree* node);
+    static std::vector<QuadTreeBounds> GetAllBounds(QuadTree* node);
 private:
 	int GetIndex(DirectX::SimpleMath::Vector2 position);
 	void Split();
