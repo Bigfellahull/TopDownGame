@@ -58,7 +58,7 @@ void SystemProjectileSource::UpdateEntity(float dt, float totalTime, Entity enti
             m_manager.AddComponent(bullet, ProjectileComponent(entity));
 			m_manager.AddComponent(bullet, AvoidableComponent());
             m_manager.AddComponent(bullet, ColliderComponent(4.0f, 40.0f));
-			m_manager.AddComponent(bullet, DestructableComponent(projectile.assetManager->GetTexture(ParticleAsset), nullptr, 300.0f, 5, false, Vector4::One));
+			m_manager.AddComponent(bullet, DestructableComponent(projectile.assetManager->GetTexture(ParticleAsset), nullptr, 300.0f, false, 5, false, Vector4::One));
             m_manager.RegisterEntity(bullet);
         }
 
@@ -70,7 +70,7 @@ void SystemProjectileSource::UpdateEntity(float dt, float totalTime, Entity enti
             m_manager.AddComponent(bullet, ProjectileComponent(entity));
 			m_manager.AddComponent(bullet, AvoidableComponent());
             m_manager.AddComponent(bullet, ColliderComponent(4.0f, 40.0f));
-			m_manager.AddComponent(bullet, DestructableComponent(projectile.assetManager->GetTexture(ParticleAsset), nullptr, 300.0f, 5, false, Vector4::One));
+			m_manager.AddComponent(bullet, DestructableComponent(projectile.assetManager->GetTexture(ParticleAsset), nullptr, 300.0f, false, 5, false, Vector4::One));
             m_manager.RegisterEntity(bullet);
         }
     }

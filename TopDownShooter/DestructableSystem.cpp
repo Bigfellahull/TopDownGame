@@ -53,18 +53,24 @@ void SystemDestructable::UpdateEntity(float dt, float totalTime, Entity entity)
 			colour = destructable.colour;
 		}
 
-		for (int i = 0; i < destructable.numberOfParticles; i++)
+		if (!DisableParticles)
 		{
-			float speed = destructable.particleSpeed * (1.0f - 1 / MathHelper::Random(1.0f, 10.0f));
-			
-			Vector2 velocity = MathHelper::NextVector2(speed, speed);
-						
-			Entity particle = m_manager.CreateEntity();
-			m_manager.AddComponent(particle, TranslationComponent(translation.position + Vector2(10, 10), velocity, 1.0f));
-			m_manager.AddComponent(particle, RenderComponent(render.spriteBatch, destructable.particleTexture, render.spriteFont, 1, 1, colour));
-			m_manager.AddComponent(particle, ParticleComponent(25.0f));
-			m_manager.AddComponent(particle, ColliderComponent(2.0f, 2.0f));
-			m_manager.RegisterEntity(particle);
+			for (int i = 0; i < destructable.numberOfParticles; i++)
+			{
+				float speed = destructable.particleSpeed * (1.0f - 1 / MathHelper::Random(1.0f, 10.0f));
+
+				Vector2 velocity = MathHelper::NextVector2(speed, speed);
+
+				Entity particle = m_manager.CreateEntity();
+				m_manager.AddComponent(particle, TranslationComponent(translation.position + Vector2(10, 10), velocity, 1.0f));
+				m_manager.AddComponent(particle, RenderComponent(render.spriteBatch, destructable.particleTexture, render.spriteFont, 1, 1, colour));
+				m_manager.AddComponent(particle, ParticleComponent(25.0f));
+				if (destructable.collidableParticles)
+				{
+					m_manager.AddComponent(particle, ColliderComponent(2.0f, 2.0f));
+				}
+				m_manager.RegisterEntity(particle);
+			}
 		}
 	}
 }

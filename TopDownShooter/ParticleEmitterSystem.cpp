@@ -26,22 +26,25 @@ void SystemParticleEmitter::UpdateEntity(float dt, float totalTime, Entity entit
 	TranslationComponent& translation = m_manager.GetComponentStore<TranslationComponent>().Get(entity);
 	RenderComponent& render = m_manager.GetComponentStore<RenderComponent>().Get(entity);
 	
-	if (((int)(totalTime * 1000) / 250) % 2 == 0)
+	if (!DisableParticles)
 	{
-		Vector2 sprayVelocity = MathHelper::Random(12.0f, 15.0f) * Vector2(static_cast<float>(std::cosf(particleEmitter.sprayAngle)), static_cast<float>(std::sinf(particleEmitter.sprayAngle)));
-		Vector4 colour = ColourUtility::HsvToColour(5.0f, 0.5f, 0.8f);
+		if (((int)(totalTime * 1000) / 250) % 2 == 0)
+		{
+			Vector2 sprayVelocity = MathHelper::Random(12.0f, 15.0f) * Vector2(static_cast<float>(std::cosf(particleEmitter.sprayAngle)), static_cast<float>(std::sinf(particleEmitter.sprayAngle)));
+			Vector4 colour = ColourUtility::HsvToColour(5.0f, 0.5f, 0.8f);
 
-		Vector2 velocity = MathHelper::NextVector2(3.0f, 7.0f);
+			Vector2 velocity = MathHelper::NextVector2(3.0f, 7.0f);
 
-		Vector2 position = translation.position + 2.0f * Vector2(sprayVelocity.y, -sprayVelocity.x) + velocity;
+			Vector2 position = translation.position + 2.0f * Vector2(sprayVelocity.y, -sprayVelocity.x) + velocity;
 
-		Entity particle = m_manager.CreateEntity();
-		m_manager.AddComponent(particle, TranslationComponent(position, velocity, 0.0f));
-		m_manager.AddComponent(particle, RenderComponent(render.spriteBatch, particleEmitter.particleTexture, render.spriteFont, 1, 1, colour));
-		m_manager.AddComponent(particle, ParticleComponent(190.0f));
-		m_manager.AddComponent(particle, ColliderComponent(2.0f, 2.0f));
-		m_manager.RegisterEntity(particle);
+			Entity particle = m_manager.CreateEntity();
+			m_manager.AddComponent(particle, TranslationComponent(position, velocity, 0.0f));
+			m_manager.AddComponent(particle, RenderComponent(render.spriteBatch, particleEmitter.particleTexture, render.spriteFont, 1, 1, colour));
+			m_manager.AddComponent(particle, ParticleComponent(190.0f));
+			m_manager.AddComponent(particle, ColliderComponent(2.0f, 2.0f));
+			m_manager.RegisterEntity(particle);
+		}
+
+		particleEmitter.sprayAngle -= 3.142f * 2.0f / 50.0f;
 	}
-
-	particleEmitter.sprayAngle -= 3.142f * 2.0f / 50.0f;
 }

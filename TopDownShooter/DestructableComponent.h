@@ -11,6 +11,7 @@ struct DestructableComponent : public Component
 	Texture2d* particleTexture;
 	float particleSpeed;
 	int numberOfParticles;
+	bool collidableParticles;
 	bool destroy;
 	bool randomColour;
 	DirectX::SimpleMath::Vector4 colour;
@@ -22,11 +23,13 @@ struct DestructableComponent : public Component
 		Texture2d* aParticleTexture,
 		Camera* aCamera,
 		float aParticleSpeed = 500.0f, 
+		bool collidableParticles = false,
 		int aNumberOfParticles = 200, 
 		bool aRandomColour = true, 
 		DirectX::SimpleMath::Vector4 aColour = DirectX::SimpleMath::Vector4::Zero) :
 		particleTexture(aParticleTexture),
 		particleSpeed(aParticleSpeed),
+		collidableParticles(collidableParticles),
 		numberOfParticles(aNumberOfParticles),
 		destroy(false),
 		randomColour(aRandomColour),

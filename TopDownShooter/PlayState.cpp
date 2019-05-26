@@ -352,7 +352,7 @@ Vector2 PlayState::GenerateRandomPosition()
 void PlayState::SpawnEnemies(float dt)
 {
 	// TODO: Improve this to take into account dt.
-	/*if (MathHelper::Random(0, static_cast<int>(m_enemyInverseSpawnChance)) == 0)
+	if (MathHelper::Random(0, static_cast<int>(m_enemyInverseSpawnChance)) == 0)
 	{
 		TranslationComponent& playerTranslation = m_entityManager->GetComponentStore<TranslationComponent>().Get(m_playerStatus.GetCurrentEntityId());
 
@@ -389,7 +389,7 @@ void PlayState::SpawnEnemies(float dt)
 		m_entityManager->AddComponent(enemy, DestructableComponent(m_assetManager->GetTexture(ParticleAsset), m_camera.get()));
 		m_entityManager->AddComponent(enemy, HealthComponent(20.0f));
 		m_entityManager->RegisterEntity(enemy);
-	}*/
+	}
 
 	if (MathHelper::Random(0, static_cast<int>(m_enemyInverseSpawnChance)) == 0 && m_entityManager->GetNumberOfEntities(AttractionSourceComponent::Type) < 3)
 	{

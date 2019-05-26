@@ -4,14 +4,16 @@ constexpr bool SlowModeEnabled = false;
 
 #if _DEBUG
 constexpr bool FullScreen = false;
+constexpr bool DisableParticles = false;
 #else
+constexpr bool DisableParticles = false;
 constexpr bool FullScreen = false;
 #endif
 
 #if _DEBUG
-constexpr bool ShowDebugVisuals = true;
+constexpr bool ShowDebugVisuals = false;
 constexpr bool ShowDebugText = false;
-constexpr bool ShowDebugQuadTree = true;
+constexpr bool ShowDebugQuadTree = false;
 constexpr bool ShowDebugPlayerContainer = false;
 #endif
 
